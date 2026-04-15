@@ -1,18 +1,16 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Expediente Taekwondo</title>
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
 <body>
+    <div class="card-principal">
+        <h1>Expediente Completo del Estudiante 🥋</h1>
+        <div id="contenedor-estudiantes"></div>
+    </div>
 
-<h1>Estudiantes</h1>
-
-<ul id="lista"></ul>
-
-<script>
-fetch('http://localhost:3000')
-.then(res => res.text())
-.then(data => {
-    console.log(data);
-});
-</script>
-
+    <script src="js/api.js"></script>
 </body>
 </html>
