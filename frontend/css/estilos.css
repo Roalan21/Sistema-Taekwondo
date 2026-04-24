@@ -1,32 +1,34 @@
-/* Configuración General */
+/* Modifica solo la parte de Configuración General en estilos.css */
 body {
     font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     background-color: #eef2f7;
     margin: 0;
-    padding: 20px;
+    padding: 0; /* Cambiado de 20px a 0 */
     color: #333;
+    overflow-x: hidden; /* Evita scroll horizontal innecesario */
 }
 
-.card-principal {
-    max-width: 1000px;
-    margin: auto;
+.card-principal, .card-form {
+    max-width: 1100px;
+    margin: 20px auto; /* Añadimos margen arriba/abajo para que no pegue al techo */
     background: white;
     padding: 30px;
     border-radius: 15px;
     box-shadow: 0 10px 25px rgba(0,0,0,0.1);
 }
+/* ... el resto de tu estilos.css queda igual ... */
 
 h1 {
     text-align: center;
-    color: #1a2a6c; /* Azul oscuro marcial */
-    border-bottom: 4px solid #b21f1f; /* Rojo Taekwondo */
+    color: #1a2a6c; 
+    border-bottom: 4px solid #b21f1f; 
     padding-bottom: 15px;
     margin-bottom: 30px;
     text-transform: uppercase;
     letter-spacing: 2px;
 }
 
-/* Contenedor de cada Estudiante */
+/* BLOQUE DE EXPEDIENTE (Lista) */
 .estudiante-block {
     background: #ffffff;
     border: 1px solid #d1d9e6;
@@ -37,12 +39,6 @@ h1 {
     transition: transform 0.2s;
 }
 
-.estudiante-block:hover {
-    transform: scale(1.01);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-}
-
-/* Encabezado del bloque */
 .header-estudiante {
     background: #1a2a6c;
     color: white;
@@ -51,19 +47,16 @@ h1 {
     font-weight: bold;
     display: flex;
     justify-content: space-between;
+    align-items: center;
 }
 
-/* La cuadrícula mágica para los 22 atributos */
 .grid-datos {
     display: grid;
-    /* Crea columnas automáticas de mínimo 200px */
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
     gap: 15px;
     padding: 20px;
-    background: #fff;
 }
 
-/* Cada cuadrito de dato */
 .dato-item {
     padding: 8px;
     border-bottom: 1px solid #f0f0f0;
@@ -71,11 +64,10 @@ h1 {
 
 .label {
     display: block;
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     color: #7f8c8d;
     text-transform: uppercase;
     font-weight: 700;
-    margin-bottom: 3px;
 }
 
 .valor {
@@ -83,18 +75,59 @@ h1 {
     font-size: 0.95rem;
     color: #2c3e50;
     font-weight: 500;
-    word-break: break-all;
 }
 
-/* Colores especiales para ciertos datos (opcional) */
-.valor-destacado {
+/* FORMULARIO */
+.form-seccion {
+    background: #fdfdfd;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 25px;
+    border: 1px solid #e0e0e0;
+}
+
+.form-seccion h3 {
+    margin-top: 0;
     color: #b21f1f;
-    font-weight: bold;
+    font-size: 1.2rem;
+    border-bottom: 2px solid #b21f1f;
+    padding-bottom: 8px;
+    margin-bottom: 15px;
 }
 
-/* Responsive: en celulares se ve una sola columna */
-@media (max-width: 600px) {
-    .grid-datos {
-        grid-template-columns: 1fr;
-    }
+.grid-form {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+}
+
+input, select {
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 0.95rem;
+}
+
+input:focus, select:focus {
+    border-color: #1a2a6c;
+    outline: none;
+    box-shadow: 0 0 5px rgba(26,42,108,0.2);
+}
+
+.btn-guardar {
+    background: #1a2a6c;
+    color: white;
+    padding: 18px;
+    border: none;
+    width: 100%;
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 8px;
+    text-transform: uppercase;
+    transition: background 0.3s;
+}
+
+.btn-guardar:hover {
+    background: #b21f1f;
 }

@@ -4,13 +4,27 @@
     <meta charset="UTF-8">
     <title>Expediente Taekwondo</title>
     <link rel="stylesheet" href="css/estilos.css">
+    <link rel="stylesheet" href="css/sidebar.css">
 </head>
 <body>
-    <div class="card-principal">
-        <h1>Expediente Completo del Estudiante 🥋</h1>
-        <div id="contenedor-estudiantes"></div>
-    </div>
+        <main class="contenido-pagina">
+            <div class="card-principal">
+                <h1>Expediente Completo del Estudiante</h1>
+                <div id="contenedor-estudiantes"></div>
+            </div>
 
+        </main>
+
+    <script src="js/main.js"></script>
     <script src="js/api.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Verificamos que cargarEstudiantes exista antes de llamarlo
+            if (typeof cargarEstudiantes === 'function') {
+                cargarEstudiantes();
+            }
+        });
+    </script>
+    
 </body>
 </html>

@@ -1,0 +1,116 @@
+/* sidebar.css corregido */
+.main-layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: 260px;
+    background: #1a2a6c;
+    color: white;
+    position: fixed;
+    height: 100vh; /* Cambiado a vh para asegurar el alto total */
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 4px 0 10px rgba(0,0,0,0.2);
+    z-index: 1000;
+}
+
+.sidebar-header {
+    padding: 25px;
+    text-align: center;
+    background: #b21f1f;
+    font-weight: bold;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+}
+
+.sidebar-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar-menu li a {
+    display: block;
+    padding: 15px 25px;
+    color: #ecf0f1;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    transition: 0.3s;
+}
+
+.sidebar-menu li a:hover {
+    background: #2c3e50;
+    border-left: 5px solid #ffd700;
+}
+
+/* Busca esta parte en tu sidebar.css y asegúrate de que esté así */
+.contenido-pagina {
+    margin-left: 260px; /* Debe ser igual al ancho de la sidebar */
+    width: calc(100% - 260px);
+    padding: 40px;
+    box-sizing: border-box; /* Esto evita que el padding empuje el contenido hacia afuera */
+    display: block;
+    position: relative;
+}
+
+/* Ajustes para el Dashboard Principal */
+.dashboard-welcome {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    text-align: center;
+}
+
+/* Busca .logo-grande en sidebar.css y cámbialo por esto */
+.logo-grande {
+    max-width: 320px; /* Un poco más grande para que tenga presencia */
+    height: auto;
+    margin-bottom: 25px;
+    
+    /* TRUCO: Volvemos la imagen circular para disimular las esquinas blancas */
+    border-radius: 50%;
+    
+    /* TRUCO: Le damos un borde y fondo blanco total para que se vea limpio */
+    border: 15px solid white; /* Un borde grueso blanco para que resalte */
+    background-color: white; /* Asegura el fondo blanco detrás */
+    
+    /* Sombra suave para darle profundidad */
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    
+    /* Importante para mantener el círculo perfecto */
+    display: block;
+}
+
+.status-db {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: #f8f9fa;
+    padding: 10px 20px;
+    border-radius: 50px;
+    border: 1px solid #e0e0e0;
+    font-weight: 600;
+}
+
+.dot-online {
+    height: 12px;
+    width: 12px;
+    background-color: #2ecc71;
+    border-radius: 50%;
+    display: inline-block;
+    box-shadow: 0 0 8px #2ecc71;
+}
+
+/* Si usas una laptop pequeña, esto asegura que no se amontone */
+@media (max-width: 1200px) {
+    .contenido-pagina {
+        margin-left: 260px;
+        padding: 20px;
+    }
+}

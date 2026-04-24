@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Atleta</title>
+    <link rel="stylesheet" href="css/estilos.css">
+    <link rel="stylesheet" href="css/sidebar.css">
+</head>
+<body>
+        <main class="contenido-pagina">
+
+            <div class="card-form">
+                <h1>Registro de Nuevo Atleta</h1>
+                
+                <form id="formRegistro">
+                    <div class="form-seccion">
+                        <h3>Información Personal</h3>
+                        <div class="grid-form">
+                            <input type="text" name="PrimerNombre" placeholder="Primer Nombre" required>
+                            <input type="text" name="SegundoNombre" placeholder="Segundo Nombre" required>
+                            <input type="text" name="PrimerApellido" placeholder="Primer Apellido" required>
+                            <input type="text" name="SegundoApellido" placeholder="Segundo Apellido" required>
+                        </div>
+                        <div class="grid-form" style="margin-top: 15px;">
+                            <label>Nacimiento: <input type="date" name="FechaDeNacimiento" required></label>
+                            <input type="number" step="0.1" name="Peso" placeholder="Peso (Lb)">
+                            <input type="text" name="EnfermedadoAlergia" placeholder="Alergias o Enfermedades">
+                        </div>
+                        <div class="dato-item">
+                            <label class="label">Teléfono(s) del Atleta</label>
+                            <input type="text" id="telefonosInput" name="TelefonosTexto" placeholder="Ej: 8888-8888, 2222-2222">
+                            <small style="color: #7f8c8d;">Sepárelos con una coma (,)</small>
+                        </div>
+                    </div>
+                    <div class="form-seccion">
+                        <div class="dato-item">
+                            <label class="label">Nacionalidad(es)</label>
+                            <input type="text" id="nacionalidadInput" name="NacionalidadTexto" placeholder="Ej: Nicaragüense, Española" required>
+                            <small style="color: #7f8c8d;">Si tiene varias, sepárelas con una coma (,)</small>
+                        </div>
+                    </div>
+        
+                    <div class="form-seccion">
+                        <h3>Ubicación y Contacto de Emergencia</h3>
+                        <div class="grid-form">
+                            <input type="text" name="Ciudad" placeholder="Ciudad" required>
+                            <input type="text" name="Barrio" placeholder="Barrio">
+                            <input type="text" name="Distrito" placeholder="Distrito">
+                            <input type="text" name="ComoSupo" placeholder="¿Cómo supo de la academia?">
+                        </div>
+                        <div class="grid-form" style="margin-top: 15px;">
+                            <input type="text" name="NomMadreOPadre" placeholder="Nombre Padre/Madre" required>
+                            <input type="text" name="ApellMadreOPadre" placeholder="Apellido Padre/Madre" required>
+                            <input type="tel" name="TelefonoDeEmergencia" placeholder="Teléfono Emergencia" required>
+                            <input type="text" name="FacebookPadreOMadre" placeholder="Facebook (Opcional)">
+                        </div>
+                    </div>
+        
+                    <div class="form-seccion">
+                        <h3>Datos de Ingreso y Grado</h3>
+                        <div class="grid-form">
+                            <label>Categoría: 
+                                <select id="CategoriaID" name="CategoriaID" required>
+                                    <option value="">Cargando categorías...</option>
+                                </select>
+                            </label>
+                            <input type="text" name="CintaActual" placeholder="Cinta Actual (Ej: Blanca)" required>
+                            <label>Fecha Ingreso: <input type="date" name="FechaDeIngreso" required></label>
+                          <label class="label">¿Permite tomar fotos?</label>
+                                <select id="PermiteFoto" name="PermiteFoto" class="input-control">
+                                    <option value="1">Sí, permite fotos</option>
+                                    <option value="0">No permite fotos</option>
+                                </select>
+                        </div>
+                    </div>
+        
+                    <div style="display: flex; gap: 10px;">
+                        <button type="submit" class="btn-guardar">Guardar Expediente</button>
+                        <button type="button" onclick="location.href='estudiantes.html'" 
+                                style="background: #7f8c8d; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer;">
+                            Cancelar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </main>
+
+
+    <script src="js/main.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/registro.js"></script>
+
+    <script>
+        // Al cargar la página, llenamos el select de categorías
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof cargarCategorias === 'function') {
+                cargarCategorias();
+            }
+        });
+    </script>
+
+</body>
+</html>

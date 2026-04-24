@@ -1,13 +1,39 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-    <title>Taekwondo</title>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="css/estilos.css">
+    <link rel="stylesheet" href="css/sidebar.css">
 </head>
 <body>
 
-<h1>Sistema Taekwondo</h1>
+    <main class="contenido-pagina">
+        <div class="card-principal">
+            
+            <div class="dashboard-welcome">
+                <img src="img/logo-academia.jpeg" alt="Logo Academia" class="logo-grande">
+                
+                <h1 style="border: none; margin-bottom: 10px;">Sistema de Gestión Administrativa</h1>
+                <p style="color: #7f8c8d; font-size: 1.2rem;">Academia de Taekwondo - Nicaragua</p>
+                
+                <div style="margin-top: 40px;">
+                    <div class="status-db">
+                        <span class="dot-online"></span>
+                        <span style="color: #2c3e50;">Base de Datos: Conectada</span>
+                    </div>
+                </div>
+            </div>
 
-<a href="estudiantes.html">Ir a estudiantes</a>
+            <div class="form-seccion" style="text-align: center; background: #f1f4f8; border: none;">
+                <p style="margin: 0; color: #576574;">
+                    Bienvenido. Utiliza el menú lateral para gestionar los expedientes de atletas o el inventario.
+                </p>
+            </div>
+            
+        </div>
+    </main>
 
+    <script src="js/main.js"></script>
 </body>
 </html>
