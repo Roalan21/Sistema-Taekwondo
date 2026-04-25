@@ -1,0 +1,45 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestión de turnos - Taekwondo</title>
+    <link rel="stylesheet" href="css/estilos.css">
+    <link rel="stylesheet" href="css/sidebar.css">
+</head>
+<body>
+    <div class ="contenido-pagina"><h2>Modalidades</h2>
+
+        <form id="formModalidad">
+            <select id="turno"></select>
+
+            <div id="dias">
+                <label><input type="checkbox" value="Lunes"> Lunes</label>
+                <label><input type="checkbox" value="Martes"> Martes</label>
+                <label><input type="checkbox" value="Miércoles"> Miércoles</label>
+                <label><input type="checkbox" value="Jueves"> Jueves</label>
+                <label><input type="checkbox" value="Viernes"> Viernes</label>
+                <label><input type="checkbox" value="Sábado"> Sábado</label>
+            </div>
+
+            <button type="submit">Guardar</button>
+        </form>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Día</th>
+                    <th>Horario</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="tablaModalidad"></tbody>
+        </table>
+    
+        <script src="js/main.js"></script>
+        <script src="js/modalidad.js"></script>
+    </div>
+
+
+</body>
+</html>

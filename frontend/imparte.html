@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestión de turnos - Taekwondo</title>
+    <link rel="stylesheet" href="css/estilos.css">
+    <link rel="stylesheet" href="css/sidebar.css">
+</head>
+<body>
+    <div class ="contenido-pagina"><h2>Asignar Profesor a Turno</h2>
+
+        <form id="formImparte">
+            <select id="profesor"></select>
+            <select id="turno"></select>
+
+            <input type="text" id="tipoClase" placeholder="Tipo de clase (Ej: Combate)" required>
+
+            <button type="submit">Guardar</button>
+        </form>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Profesor</th>
+                    <th>Horario</th>
+                    <th>Tipo</th>
+                    <th>Fecha</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="tablaImparte"></tbody>
+        </table>
+
+        <script src="js/imparte.js"></script>
+        <script src="js/main.js"></script>
+    </div>
+
+
+</body>
+</html>

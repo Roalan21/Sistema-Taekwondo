@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestión de Profesores - Taekwondo</title>
+    <link rel="stylesheet" href="css/estilos.css">
+    <link rel="stylesheet" href="css/sidebar.css">
+</head>
+<body>
+    <div class="contenido-pagina"> <h2>Registro de Profesores</h2>
+        <div class="container-form">
+            <form id="formProfesor">
+                <div class="row">
+                    <input type="text" id="pNombre" placeholder="Primer Nombre" required>
+                    <input type="text" id="sNombre" placeholder="Segundo Nombre">
+                </div>
+                <div class="row">
+                    <input type="text" id="pApellido" placeholder="Primer Apellido" required>
+                    <input type="text" id="sApellido" placeholder="Segundo Apellido">
+                </div>
+                <div class="row">
+                    <label>Fecha Nacimiento:</label>
+                    <input type="date" id="fNac" required>
+                    <label>Fecha Contratación:</label>
+                    <input type="date" id="fCon" required>
+                </div>
+                <button type="submit" class="btn-guardar">Guardar Profesor</button>
+            </form>
+        </div>
+
+        <h3>Lista de Profesores</h3>
+        <div class="container-tabla">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nombre Completo</th>
+                        <th>Contratación</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="tablaProfesores"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script src="js/profesores.js"></script>
+</body>
+</html>

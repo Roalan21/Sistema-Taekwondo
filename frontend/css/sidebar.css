@@ -3,6 +3,11 @@
     display: flex;
     min-height: 100vh;
 }
+.main-content {
+    margin-left: 260px; /* Un poco más que el ancho del sidebar */
+    padding: 20px;
+    transition: 0.3s;
+}
 
 .sidebar {
     width: 260px;

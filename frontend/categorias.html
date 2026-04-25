@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Categorías</title>
+    <link rel="stylesheet" href="css/estilos.css">
+    <link rel="stylesheet" href="css/sidebar.css">
+</head>
+<body>
+
+<main class="contenido-pagina">
+    <div class="card-principal">
+        <h1>Gestión de Categorías</h1>
+
+        <!-- FORM -->
+        <form id="formCategoria">
+            <input type="text" id="nombre" placeholder="Nombre" required>
+            <input type="number" id="precio" placeholder="Precio" required>
+            <button type="submit" class="btn-guardar">Guardar</button>
+        </form>
+
+        <hr>
+
+        <!-- TABLA -->
+        <table>
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Precio</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="tablaCategorias"></tbody>
+        </table>
+    </div>
+</main>
+
+<script src="js/main.js"></script>
+<script src="js/categorias.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,42 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestión de turnos - Taekwondo</title>
+    <link rel="stylesheet" href="css/estilos.css">
+    <link rel="stylesheet" href="css/sidebar.css">
+</head>
+<body>
+    <div class ="contenido-pagina"><h2>Inscribir Estudiantes a Evento</h2>
+
+        <form id="formParticipa">
+            <select id="estudiante"></select>
+            <select id="evento"></select>
+
+            <input type="text" id="resultado" placeholder="Resultado (Ej: Oro, Plata)">
+
+            <button type="submit">Registrar</button>
+        </form>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Estudiante</th>
+                    <th>Evento</th>
+                    <th>Resultado</th>
+                </tr>
+            </thead>
+            <tbody id="tablaParticipa"></tbody>
+        </table>
+
+        <script src="js/participa.js"></script>
+        <script src="js/main.js"></script>
+    </div>
+
+
+</body>
+</html>
+
+
+

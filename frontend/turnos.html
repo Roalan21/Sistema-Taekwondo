@@ -1,0 +1,47 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestión de turnos - Taekwondo</title>
+    <link rel="stylesheet" href="css/estilos.css">
+    <link rel="stylesheet" href="css/sidebar.css">
+</head>
+<body>
+    <div class ="contenido-pagina"><h2>Turnos</h2>
+
+        <form id="formTurno">
+           <select id="horaInicio">
+            <option value="">Inicio</option>
+            <option value="15:00:00">3:00 PM</option>
+            <option value="16:00:00">4:00 PM</option>
+            <option value="14:00:00">2:00 PM</option>
+        </select>
+
+        <select id="horaFin">
+            <option value="">Fin</option>
+            <option value="16:00:00">4:00 PM</option>
+            <option value="17:00:00">5:00 PM</option>
+            <option value="15:00:00">3:00 PM</option>
+        </select>
+            <button type="submit">Guardar</button>
+        </form>
+    
+        <table>
+            <thead>
+                <tr>
+                    <th>Inicio</th>
+                    <th>Fin</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="tablaTurnos"></tbody>
+        </table>
+    
+        <script src="js/main.js"></script>
+        <script src="js/turnos.js"></script>
+    </div>
+
+
+</body>
+</html>
