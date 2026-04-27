@@ -1,42 +1,66 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Gestión de turnos - Taekwondo</title>
+    <title>Inscribir Estudiantes - Taekwondo</title>
     <link rel="stylesheet" href="css/estilos.css">
     <link rel="stylesheet" href="css/sidebar.css">
 </head>
 <body>
-    <div class ="contenido-pagina"><h2>Inscribir Estudiantes a Evento</h2>
+    <div class="contenido-pagina">
+        <!-- Encabezado similar a estudiantes -->
+        <div class="header-estudiantes">
+            <div class="header-texto">
+                <h1>👥 Inscribir Estudiantes a Evento</h1>
+                <p id="infoEvento">Registra la participación de estudiantes en eventos</p>
+            </div>
+            <button class="btn-nuevo" id="btnVolver">
+                ← Volver a Eventos
+            </button>
+        </div>
 
-        <form id="formParticipa">
-            <select id="estudiante"></select>
-            <select id="evento"></select>
+        <!-- Formulario de inscripción -->
+        <div class="card-form" style="margin-bottom: 30px;">
+            <form id="formParticipa" class="grid-form" style="display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 15px; align-items: end;">
+                <div>
+                    <label>Estudiante</label>
+                    <select id="estudiante" required>
+                        <option value="">Seleccione estudiante...</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Evento</label>
+                    <select id="evento" required>
+                        <option value="">Seleccione evento...</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Resultado</label>
+                    <select id="resultado">
+                        <option value="">Sin resultado</option>
+                        <option value="Oro">🥇 Oro</option>
+                        <option value="Plata">🥈 Plata</option>
+                        <option value="Bronce">🥉 Bronce</option>
+                        <option value="Participación">📋 Participación</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-guardar" style="margin: 0; padding: 12px;">Registrar</button>
+            </form>
+        </div>
 
-            <input type="text" id="resultado" placeholder="Resultado (Ej: Oro, Plata)">
-
-            <button type="submit">Registrar</button>
-        </form>
-
-        <table>
-            <thead>
-                <tr>
-                    <th>Estudiante</th>
-                    <th>Evento</th>
-                    <th>Resultado</th>
-                </tr>
-            </thead>
-            <tbody id="tablaParticipa"></tbody>
-        </table>
-
-        <script src="js/participa.js"></script>
-        <script src="js/main.js"></script>
+        <!-- Tabla de participantes -->
+        <div class="tabla-header">
+            <span>Estudiante</span>
+            <span>Evento</span>
+            <span>Fecha Registro</span>
+            <span>Resultado</span>
+            <span>Acciones</span>
+        </div>
+        
+        <div id="contenedor-participaciones"></div>
     </div>
 
-
+    <script src="js/participa.js"></script>
+    <script src="js/main.js"></script>
 </body>
 </html>
-
-
-

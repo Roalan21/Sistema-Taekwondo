@@ -2,40 +2,76 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Gestión de turnos - Taekwondo</title>
+    <title>Gestión de Eventos - Taekwondo</title>
     <link rel="stylesheet" href="css/estilos.css">
     <link rel="stylesheet" href="css/sidebar.css">
 </head>
 <body>
-    <div class ="contenido-pagina"><h2>Eventos (Competencias)</h2>
+    <div class="contenido-pagina">
+        <!-- Encabezado similar a estudiantes -->
+        <div class="header-estudiantes">
+            <div class="header-texto">
+                <h1>📅 Gestión de Eventos</h1>
+                <p>Administra y consulta la información de los eventos registrados.</p>
+            </div>
+            <div class="header-acciones">
+                <div class="buscador-contenedor">
+                    <span class="icono-busqueda">🔍</span>
+                    <input type="text" id="buscarEvento" placeholder="Buscar evento...">
+                </div>
+                <button class="btn-nuevo" id="btnAbrirModalEvento">
+                    ➕ Nuevo Evento
+                </button>
+            </div>
+        </div>
 
-        <form id="formEvento">
-            <input type="text" id="nombre" placeholder="Nombre evento" required>
-            <input type="text" id="lugar" placeholder="Lugar" required>
-            <input type="date" id="fecha" required>
-            <input type="number" id="precio" placeholder="Precio" required>
-            <input type="text" id="descripcion" placeholder="Descripción">
+        <!-- Filtros de estado (Vigentes / Caducados) -->
+        <div class="filtros-estado">
+            <button class="btn-filtro activo-verde active" data-filtro="vigentes">
+                <span class="punto"></span> Eventos Vigentes
+            </button>
+            <button class="btn-filtro inactivo-rojo" data-filtro="caducados">
+                <span class="punto"></span> Eventos Caducados
+            </button>
+        </div>
 
-            <button type="submit">Guardar</button>
-        </form>
+        <!-- Header de la tabla -->
+        <div class="tabla-header">
+            <span>Nombre del Evento</span>
+            <span>Lugar</span>
+            <span>Fecha</span>
+            <span>Precio</span>
+            <span>Acciones</span>
+        </div>
 
-        <table>
-            <thead>
-                <tr>
-                    <th>Nombre</th>
-                    <th>Lugar</th>
-                    <th>Fecha</th>
-                    <th>Precio</th>
-                </tr>
-            </thead>
-            <tbody id="tablaEventos"></tbody>
-        </table>
+        <!-- Contenedor de eventos -->
+        <div id="contenedor-eventos"></div>
 
-        <script src="js/eventos.js"></script>
-        <script src="js/main.js"></script>
+        <!-- Modal para crear/editar evento -->
+        <div id="modalEvento" class="modal">
+            <div class="modal-contenido">
+                <span class="cerrar" id="cerrarModalEvento">&times;</span>
+                <div class="top-expediente">
+                    <div class="icono-expediente">🥋</div>
+                    <div class="info-principal">
+                        <h2 id="modalTituloEvento">Nuevo Evento</h2>
+                        <p>Completa los datos del evento</p>
+                    </div>
+                </div>
+                <form id="formEvento">
+                    <input type="hidden" id="eventoId">
+                    <input type="text" id="nombre" placeholder="Nombre del evento" required>
+                    <input type="text" id="lugar" placeholder="Lugar" required>
+                    <input type="date" id="fecha" required>
+                    <input type="number" id="precio" placeholder="Precio" required step="0.01">
+                    <input type="text" id="descripcion" placeholder="Descripción">
+                    <button type="submit" class="btn-guardar">Guardar Evento</button>
+                </form>
+            </div>
+        </div>
     </div>
 
-
+    <script src="js/evento.js"></script>
+    <script src="js/main.js"></script>
 </body>
 </html>
-

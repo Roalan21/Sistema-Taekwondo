@@ -9,34 +9,62 @@
 <body>
 
 <main class="contenido-pagina">
+
     <div class="card-principal">
-        <h1>Gestión de Categorías</h1>
 
-        <!-- FORM -->
-        <form id="formCategoria">
-            <input type="text" id="nombre" placeholder="Nombre" required>
-            <input type="number" id="precio" placeholder="Precio" required>
-            <button type="submit" class="btn-guardar">Guardar</button>
-        </form>
+        <!-- HEADER -->
+        <div class="header-estudiantes">
 
-        <hr>
+            <div class="header-texto">
+                <h1>Gestión de Categorías</h1>
+                <p>Administra todas las categorías registradas</p>
+            </div>
 
-        <!-- TABLA -->
-        <table>
-            <thead>
-                <tr>
-                    <th>Nombre</th>
-                    <th>Precio</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody id="tablaCategorias"></tbody>
-        </table>
+            <div class="header-acciones">
+                <div class="buscador-contenedor">
+                    <span class="icono-busqueda">🔍</span>
+                    <input type="text" id="buscarCategoria" placeholder="Buscar categoría..." onkeyup="filtrarCategorias()">
+                </div>
+
+                <button class="btn-nuevo" onclick="abrirModal()">
+                    + Nueva Categoría
+                </button>
+            </div>
+
+        </div>
+
+        <!-- HEADER TABLA -->
+        <div class="tabla-header">
+            <span>Nombre de la Categoría</span>
+            <span>Precio</span>
+            <span>Acciones</span>
+        </div>
+
+        <!-- LISTA -->
+        <div id="contenedor-categorias"></div>
+
     </div>
+
 </main>
 
-<script src="js/main.js"></script>
+<!-- MODAL -->
+<div id="modalCategoria" class="modal">
+    <div class="modal-contenido">
+
+        <span class="cerrar" onclick="cerrarModal()">×</span>
+
+        <h2 id="tituloModal">Nueva Categoría</h2>
+
+        <input type="text" id="nombre" placeholder="Nombre">
+        <input type="number" id="precio" placeholder="Precio">
+
+        <button class="btn-guardar" onclick="guardarCategoria()">Guardar</button>
+
+    </div>
+</div>
+
 <script src="js/categorias.js"></script>
+<script src="js/main.js"></script>
 
 </body>
 </html>

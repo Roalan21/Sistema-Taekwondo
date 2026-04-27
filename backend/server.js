@@ -15,6 +15,7 @@ const pagoRoutes = require('./routes/pago.routes');
 const generaRoutes = require('./routes/genera.routes');
 const metodoPagoRoutes = require('./routes/metodoPago.routes');
 
+
 const app = express();
 
 // Middlewares

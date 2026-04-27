@@ -7,39 +7,89 @@
     <link rel="stylesheet" href="css/sidebar.css">
 </head>
 <body>
-    <div class="contenido-pagina"> <h2>Registro de Profesores</h2>
-        <div class="container-form">
-            <form id="formProfesor">
-                <div class="row">
-                    <input type="text" id="pNombre" placeholder="Primer Nombre" required>
+    <div class="contenido-pagina">
+        <!-- ENCABEZADO PROFESORES -->
+        <div class="header-estudiantes">
+            <div class="header-texto">
+                <h1>Gestión de Profesores</h1>
+                <p>Administra los instructores y su asignación de turnos.</p>
+            </div>
+            <div class="header-acciones">
+                <div class="buscador-contenedor">
+                    <span class="icono-busqueda">🔍</span>
+                    <input type="text" id="buscadorProfesor" placeholder="Buscar profesor...">
+                </div>
+                <button id="btnNuevoProfesor" class="btn-nuevo">
+                    ➕ Nuevo Profesor
+                </button>
+            </div>
+        </div>
+
+        <!-- FILTROS ACTIVOS/INACTIVOS -->
+        <div class="filtros-estado">
+            <button id="btnActivos" class="btn-filtro activo-verde active">
+                <span class="punto"></span> Activos
+            </button>
+            <button id="btnInactivos" class="btn-filtro inactivo-rojo">
+                <span class="punto"></span> Inactivos
+            </button>
+        </div>
+
+        <!-- LISTA DE PROFESORES -->
+        <div id="contenedor-profesores"></div>
+    </div>
+
+    <!-- MODAL PARA CREAR/EDITAR PROFESOR -->
+    <div id="modalProfesor" class="modal">
+        <div class="modal-contenido" style="max-width: 500px;">
+            <span class="cerrar" id="cerrarModalProfesor">&times;</span>
+            <h2 id="modalTitleProfesor">Nuevo Profesor</h2>
+            <form id="formProfesorModal">
+                <div style="display: grid; gap: 15px;">
+                    <input type="text" id="pNombre" placeholder="Primer Nombre *" required>
                     <input type="text" id="sNombre" placeholder="Segundo Nombre">
-                </div>
-                <div class="row">
-                    <input type="text" id="pApellido" placeholder="Primer Apellido" required>
+                    <input type="text" id="pApellido" placeholder="Primer Apellido *" required>
                     <input type="text" id="sApellido" placeholder="Segundo Apellido">
-                </div>
-                <div class="row">
-                    <label>Fecha Nacimiento:</label>
+                    <label>Fecha de Nacimiento:</label>
                     <input type="date" id="fNac" required>
-                    <label>Fecha Contratación:</label>
+                    <label>Fecha de Contratación:</label>
                     <input type="date" id="fCon" required>
                 </div>
                 <button type="submit" class="btn-guardar">Guardar Profesor</button>
             </form>
         </div>
+    </div>
 
-        <h3>Lista de Profesores</h3>
-        <div class="container-tabla">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Nombre Completo</th>
-                        <th>Contratación</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody id="tablaProfesores"></tbody>
-            </table>
+    <!-- MODAL PARA ASIGNAR TURNO -->
+    <div id="modalAsignarTurno" class="modal">
+        <div class="modal-contenido" style="max-width: 550px;">
+            <span class="cerrar" id="cerrarModalAsignarTurno">&times;</span>
+            <h2>Asignar Turno a Profesor</h2>
+            <div id="infoProfesorAsignar" style="background: #f0fdf4; padding: 10px; border-radius: 8px; margin-bottom: 15px;"></div>
+            
+            <form id="formAsignarTurno">
+                <div style="margin-bottom: 15px;">
+                    <label>Seleccione Turno:</label>
+                    <select id="selectTurno" style="width: 100%; padding: 10px; margin-top: 5px; border-radius: 8px; border: 1px solid #ccc;" required>
+                        <option value="">-- Seleccione un turno --</option>
+                    </select>
+                </div>
+                
+                <div style="margin-bottom: 15px;">
+                    <label>Tipo de Clase:</label>
+                    <input type="text" id="tipoClase" placeholder="Ej: Combate, Poomsae, Acondicionamiento" style="width: 100%; padding: 10px; margin-top: 5px; border-radius: 8px; border: 1px solid #ccc;" required>
+                </div>
+                
+                <button type="submit" class="btn-guardar">Asignar Turno</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL PARA VER EXPEDIENTE DEL PROFESOR (similar a estudiantes) -->
+    <div id="modalExpediente" class="modal">
+        <div class="modal-contenido" style="max-width: 800px;">
+            <span class="cerrar" id="cerrarModalExpediente">&times;</span>
+            <div id="contenidoExpediente"></div>
         </div>
     </div>
 

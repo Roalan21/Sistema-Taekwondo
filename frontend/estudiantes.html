@@ -7,13 +7,55 @@
     <link rel="stylesheet" href="css/sidebar.css">
 </head>
 <body>
-        <main class="contenido-pagina">
-            <div class="card-principal">
-                <h1>Expediente Completo del Estudiante</h1>
-                <div id="contenedor-estudiantes"></div>
+    <main class="contenido-pagina">
+        <div class="card-principal">
+
+            <div class="header-estudiantes">
+                <div class="header-texto">
+                    <h1>Lista de Estudiantes</h1>
+                    <p>Administra y consulta la información de los estudiantes registrados.</p>
+                </div>
+
+                <div class="header-acciones">
+                    <div class="buscador-contenedor">
+                        <input type="text" id="buscarEstudiante" placeholder="Buscar estudiante..." onkeyup="filtrarEstudiantes()">
+                        <span class="icono-busqueda">🔍</span>
+                    </div>
+                    <button class="btn-nuevo" onclick="window.location.href='nuevo-estudiante.html'">
+                        <span>+</span> Nuevo Estudiante
+                    </button>
+                </div>
+
+                <div id="modalEstudiante" class="modal">
+                    <div class="modal-contenido">
+                        <span class="cerrar" onclick="cerrarModal()">&times;</span>
+                        <div id="detalle-estudiante"></div>
+                    </div>
+                </div>
+
+
             </div>
 
-        </main>
+            <div class="filtros-estado">
+    <button class="btn-filtro activo-verde" onclick="cambiarFiltroEstado(1)">
+        <span class="punto"></span> Estudiantes Activos
+    </button>
+    <button class="btn-filtro inactivo-rojo" onclick="cambiarFiltroEstado(0)">
+        <span class="punto"></span> Estudiantes Inactivos
+    </button>
+</div>
+
+            <div class="tabla-header">
+                <span class="col-nombre">Nombre del Estudiante</span>
+                <span class="col-acciones">Acciones</span>
+            </div>
+
+            <div id="contenedor-estudiantes"></div>
+        
+            </div>
+
+        </div>       
+    </main>
 
     <script src="js/main.js"></script>
     <script src="js/api.js"></script>

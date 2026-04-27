@@ -1,108 +1,379 @@
-const URL = "http://localhost:3000/turnos";
+// ==================== TURNOS ====================
+const URL_TURNOS = "http://localhost:3000/turnos";
+const URL_MODALIDAD = "http://localhost:3000/modalidades";
 
-let editando = false;
-let idEditar = null;
+let editandoTurno = false;
+let idEditarTurno = null;
+
+// Elementos del DOM
+const contenedorTurnos = document.getElementById("contenedor-turnos");
+const modalTurno = document.getElementById("modalTurno");
+const formTurno = document.getElementById("formTurnoModal");
+const modalTitleTurno = document.getElementById("modalTitleTurno");
+const btnNuevoTurno = document.getElementById("btnNuevoTurno");
+const cerrarModalTurno = document.getElementById("cerrarModalTurno");
+const buscadorTurno = document.getElementById("buscadorTurno");
+
+// Elementos para Modalidad
+const modalAgregarModalidad = document.getElementById("modalAgregarModalidad");
+const cerrarModalAgregarModalidad = document.getElementById("cerrarModalAgregarModalidad");
+const infoTurnoSeleccionado = document.getElementById("infoTurnoSeleccionado");
+const btnGuardarModalidad = document.getElementById("btnGuardarModalidad");
+
+let turnoSeleccionadoId = null;
+let turnoSeleccionadoHorario = null;
+
+let turnosOriginales = [];
+let modalidadesPorTurno = {};
 
 document.addEventListener("DOMContentLoaded", () => {
-    listar();
+    listarTurnos();
 
-    document.getElementById("formTurno").addEventListener("submit", async (e) => {
+    // Eventos Turnos
+    btnNuevoTurno.addEventListener("click", () => {
+        editandoTurno = false;
+        idEditarTurno = null;
+        modalTitleTurno.innerText = "Nuevo Turno";
+        formTurno.reset();
+        modalTurno.style.display = "flex";
+    });
+
+    cerrarModalTurno.addEventListener("click", () => {
+        modalTurno.style.display = "none";
+    });
+
+    // FORMULARIO DE TURNO CON MEJORAS
+    formTurno.addEventListener("submit", async (e) => {
         e.preventDefault();
 
-        const datos = {
-            HoraInicio: document.getElementById("horaInicio").value,
-            HoraFin: document.getElementById("horaFin").value
-        };
+        const HoraInicio = document.getElementById("horaInicio").value;
+        const HoraFin = document.getElementById("horaFin").value;
 
-        if (datos.HoraInicio >= datos.HoraFin) {
-            alert("La hora inicio debe ser menor que la final");
+        if (!HoraInicio || !HoraFin) {
+            alert("Debe seleccionar ambas horas.");
             return;
         }
 
+        if (HoraInicio >= HoraFin) {
+            alert("La hora inicio debe ser menor que la hora fin.");
+            return;
+        }
+
+        const datos = { HoraInicio, HoraFin };
+
         let metodo = "POST";
-        let url = URL;
+        let url = URL_TURNOS;
 
-        if (editando) {
+        if (editandoTurno) {
             metodo = "PUT";
-            url = `${URL}/${idEditar}`;
+            url = `${URL_TURNOS}/${idEditarTurno}`;
         }
 
-        const res = await fetch(url, {
-            method: metodo,
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(datos)
-        });
+        try {
+            const res = await fetch(url, {
+                method: metodo,
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(datos)
+            });
 
-        if (res.ok) {
-            alert(editando ? "Actualizado" : "Creado");
+            const data = await res.json();
 
-            editando = false;
-            idEditar = null;
-
-            document.getElementById("formTurno").reset();
-            listar();
+            if (res.ok) {
+                alert(editandoTurno ? "✅ Turno actualizado" : "✅ Turno creado");
+                modalTurno.style.display = "none";
+                await listarTurnos(); // Esperar a que se recargue
+                formTurno.reset(); // Limpiar el formulario
+            } else {
+                // Mostrar mensaje de error específico del servidor
+                const errorMsg = data.error || "Error al guardar el turno";
+                alert(`❌ ${errorMsg}`);
+                console.error("Error del servidor:", errorMsg);
+            }
+        } catch (error) {
+            console.error("Error de red:", error);
+            alert("❌ Error de conexión con el servidor");
         }
+    });
+
+    buscadorTurno.addEventListener("input", filtrarTurnos);
+
+    // Eventos Modalidad
+    cerrarModalAgregarModalidad.addEventListener("click", () => {
+        modalAgregarModalidad.style.display = "none";
+        // Resetear checkboxes
+        document.querySelectorAll('#dias input[type="checkbox"]').forEach(cb => cb.checked = false);
+    });
+
+    btnGuardarModalidad.addEventListener("click", async () => {
+        await guardarModalidad();
+    });
+
+    // Cerrar modales al hacer clic fuera
+    window.addEventListener("click", (e) => {
+        if (e.target === modalTurno) modalTurno.style.display = "none";
+        if (e.target === modalAgregarModalidad) modalAgregarModalidad.style.display = "none";
     });
 });
 
-async function listar() {
-    const res = await fetch(URL);
-    const data = await res.json();
+// ==================== FUNCIONES TURNOS ====================
+async function listarTurnos() {
+    try {
+        const res = await fetch(URL_TURNOS);
+        turnosOriginales = await res.json();
+        
+        // Cargar modalidades para cada turno
+        await cargarModalidadesPorTurno();
+        renderizarTurnos(turnosOriginales);
+    } catch (error) {
+        console.error("Error al cargar turnos:", error);
+    }
+}
 
-    const tabla = document.getElementById("tablaTurnos");
-    tabla.innerHTML = "";
+async function cargarModalidadesPorTurno() {
+    try {
+        const res = await fetch(URL_MODALIDAD);
+        const modalidades = await res.json();
+        
+        // Agrupar modalidades por TurnoID
+        modalidadesPorTurno = {};
+        modalidades.forEach(m => {
+            if (!modalidadesPorTurno[m.TurnoID]) {
+                modalidadesPorTurno[m.TurnoID] = [];
+            }
+            modalidadesPorTurno[m.TurnoID].push(m.Dia);
+        });
+    } catch (error) {
+        console.error("Error al cargar modalidades:", error);
+    }
+}
 
-    data.forEach(t => {
-        tabla.innerHTML += `
-            <tr>
-                <td>${formatearHora(t.HoraInicio)} - ${formatearHora(t.HoraFin)}</td>
-                <td>
-                    <button onclick="editar(${t.TurnoID}, '${t.HoraInicio}', '${t.HoraFin}')">Editar</button>
-                    <button onclick="eliminar(${t.TurnoID})">Eliminar</button>
-                </td>
-            </tr>
+function renderizarTurnos(turnos) {
+    if (!contenedorTurnos) return;
+
+    if (turnos.length === 0) {
+        contenedorTurnos.innerHTML = `<div class="sin-resultados">No hay turnos registrados.</div>`;
+        return;
+    }
+
+    let html = `
+        <div class="tabla-header" style="grid-template-columns: 2fr 1fr 1.5fr;">
+            <span>Horario</span>
+            <span>Días / Modalidad</span>
+            <span>Acciones</span>
+        </div>
+        <div id="lista-turnos">
+    `;
+
+    turnos.forEach(turno => {
+        const horarioMostrar = `${formatearHora(turno.HoraInicio)} - ${formatearHora(turno.HoraFin)}`;
+        const diasModalidad = modalidadesPorTurno[turno.TurnoID] || [];
+        
+        let diasHtml = '';
+        if (diasModalidad.length === 0) {
+            diasHtml = '<span style="color: #999; font-style: italic;">Sin días asignados</span>';
+        } else {
+            diasHtml = `<div style="display: flex; flex-wrap: wrap; gap: 5px;">
+                ${diasModalidad.map(dia => `<span style="background: #e0e7ff; padding: 2px 8px; border-radius: 12px; font-size: 0.75rem;">${dia}</span>`).join('')}
+            </div>`;
+        }
+
+        html += `
+            <div class="fila-estudiante" style="grid-template-columns: 2fr 1fr 1.5fr; display: grid; align-items: center;">
+                <div class="info-izquierda">
+                    <div class="avatar-estudiante">⏰</div>
+                    <span class="nombre-estudiante">${horarioMostrar}</span>
+                </div>
+                <div>
+                    ${diasHtml}
+                </div>
+                <div class="acciones">
+                    <button class="btn-agregar-modalidad" data-id="${turno.TurnoID}" data-horario="${horarioMostrar}">
+                        📅 + Modalidad
+                    </button>
+                    <button class="btn-editar-turno" data-id="${turno.TurnoID}" data-inicio="${turno.HoraInicio}" data-fin="${turno.HoraFin}">
+                        ✏️ Editar
+                    </button>
+                    <button class="btn-eliminar-turno" data-id="${turno.TurnoID}">
+                        🗑️ Eliminar
+                    </button>
+                </div>
+            </div>
         `;
+    });
+
+    html += `</div>`;
+    contenedorTurnos.innerHTML = html;
+
+    // Eventos para botones dinámicos
+    document.querySelectorAll('.btn-agregar-modalidad').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const id = parseInt(btn.dataset.id);
+            const horario = btn.dataset.horario;
+            abrirModalAgregarModalidad(id, horario);
+        });
+    });
+
+    document.querySelectorAll('.btn-editar-turno').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const id = parseInt(btn.dataset.id);
+            const inicio = btn.dataset.inicio;
+            const fin = btn.dataset.fin;
+            editarTurno(id, inicio, fin);
+        });
+    });
+
+    document.querySelectorAll('.btn-eliminar-turno').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const id = parseInt(btn.dataset.id);
+            eliminarTurno(id);
+        });
     });
 }
 
-function editar(id, hi, hf) {
-    editando = true;
-    idEditar = id;
-
-    document.getElementById("horaInicio").value = hi;
-    document.getElementById("horaFin").value = hf;
+function editarTurno(id, horaInicio, horaFin) {
+    editandoTurno = true;
+    idEditarTurno = id;
+    modalTitleTurno.innerText = "Editar Turno";
+    document.getElementById("horaInicio").value = horaInicio;
+    document.getElementById("horaFin").value = horaFin;
+    modalTurno.style.display = "flex";
 }
 
-async function eliminar(id) {
-    if (!confirm("¿Eliminar turno?")) return;
+async function eliminarTurno(id) {
+    // Verificar si tiene modalidades asociadas
+    const tieneModalidades = modalidadesPorTurno[id] && modalidadesPorTurno[id].length > 0;
+    
+    let mensaje = "¿Eliminar este turno permanentemente?";
+    if (tieneModalidades) {
+        mensaje = "⚠️ Este turno tiene días asignados. Si lo eliminas, también se eliminarán sus modalidades asociadas. ¿Continuar?";
+    }
+    
+    if (!confirm(mensaje)) return;
+    
+    try {
+        // Primero eliminar modalidades asociadas si existen
+        if (tieneModalidades) {
+            const resModalidades = await fetch(URL_MODALIDAD);
+            const todasModalidades = await resModalidades.json();
+            const modalidadesAEliminar = todasModalidades.filter(m => m.TurnoID === id);
+            
+            for (let m of modalidadesAEliminar) {
+                await fetch(`${URL_MODALIDAD}/${m.ModalidadID}`, { method: "DELETE" });
+            }
+        }
+        
+        // Luego eliminar el turno
+        const res = await fetch(`${URL_TURNOS}/${id}`, { method: "DELETE" });
+        
+        if (res.ok) {
+            alert("✅ Turno eliminado");
+            await listarTurnos();
+        } else {
+            const error = await res.json();
+            alert("❌ Error al eliminar el turno: " + (error.error || "Error desconocido"));
+        }
+    } catch (error) {
+        console.error("Error al eliminar:", error);
+        alert("❌ Error al eliminar el turno");
+    }
+}
 
-    const res = await fetch(`${URL}/${id}`, { method: "DELETE" });
+function filtrarTurnos() {
+    const texto = buscadorTurno.value.toLowerCase();
+    if (!texto.trim()) {
+        renderizarTurnos(turnosOriginales);
+        return;
+    }
+    const filtrados = turnosOriginales.filter(turno => {
+        const horario = `${formatearHora(turno.HoraInicio)} - ${formatearHora(turno.HoraFin)}`;
+        return horario.toLowerCase().includes(texto);
+    });
+    renderizarTurnos(filtrados);
+}
 
-    if (res.ok) {
-        alert("Eliminado");
-        listar();
+// ==================== FUNCIONES MODALIDAD ====================
+function abrirModalAgregarModalidad(turnoId, horario) {
+    turnoSeleccionadoId = turnoId;
+    turnoSeleccionadoHorario = horario;
+    
+    infoTurnoSeleccionado.innerHTML = `
+        <strong>Turno seleccionado:</strong> ${horario}<br>
+        <small>Seleccione los días en los que se imparte este turno</small>
+    `;
+    
+    // Cargar días ya existentes para este turno
+    const diasExistentes = modalidadesPorTurno[turnoId] || [];
+    
+    // Resetear checkboxes y marcar los existentes
+    document.querySelectorAll('#dias input[type="checkbox"]').forEach(cb => {
+        cb.checked = diasExistentes.includes(cb.value);
+    });
+    
+    modalAgregarModalidad.style.display = "flex";
+}
+
+async function guardarModalidad() {
+    if (!turnoSeleccionadoId) {
+        alert("No hay turno seleccionado");
+        return;
+    }
+    
+    const diasSeleccionados = Array.from(
+        document.querySelectorAll('#dias input[type="checkbox"]:checked')
+    ).map(cb => cb.value);
+    
+    if (diasSeleccionados.length === 0) {
+        alert("Debe seleccionar al menos un día");
+        return;
+    }
+    
+    // Obtener días existentes para no duplicar
+    const diasExistentes = modalidadesPorTurno[turnoSeleccionadoId] || [];
+    const diasNuevos = diasSeleccionados.filter(dia => !diasExistentes.includes(dia));
+    
+    if (diasNuevos.length === 0) {
+        alert("Todos los días seleccionados ya están registrados para este turno");
+        modalAgregarModalidad.style.display = "none";
+        return;
+    }
+    
+    try {
+        const res = await fetch(URL_MODALIDAD, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                TurnoID: turnoSeleccionadoId,
+                Dias: diasNuevos
+            })
+        });
+        
+        if (res.ok) {
+            alert(`✅ Modalidad guardada para los días: ${diasNuevos.join(", ")}`);
+            modalAgregarModalidad.style.display = "none";
+            
+            // Resetear checkboxes
+            document.querySelectorAll('#dias input[type="checkbox"]').forEach(cb => cb.checked = false);
+            
+            // Recargar la lista
+            await listarTurnos();
+        } else {
+            const error = await res.json();
+            alert("Error al guardar modalidad: " + (error.error || "Error desconocido"));
+        }
+    } catch (error) {
+        console.error("Error:", error);
+        alert("Error al conectar con el servidor");
     }
 }
 
 function formatearHora(hora) {
     if (!hora) return "";
-
-    // 🔥 Si viene como Date completo (con T)
-    if (hora.includes("T")) {
-        hora = hora.split("T")[1];
-    }
-
-    // 🔥 quitar milisegundos
+    if (hora.includes("T")) hora = hora.split("T")[1];
     hora = hora.split('.')[0];
-
     let [h, m] = hora.split(':');
-
     h = parseInt(h);
-
     let ampm = h >= 12 ? 'PM' : 'AM';
-
     h = h % 12;
     if (h === 0) h = 12;
-
     return `${h}:${m} ${ampm}`;
 }

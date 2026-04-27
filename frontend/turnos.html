@@ -1,47 +1,92 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Gestión de turnos - Taekwondo</title>
+    <title>Gestión de Turnos - Taekwondo</title>
     <link rel="stylesheet" href="css/estilos.css">
     <link rel="stylesheet" href="css/sidebar.css">
 </head>
 <body>
-    <div class ="contenido-pagina"><h2>Turnos</h2>
+    <div class="contenido-pagina">
+        <!-- ENCABEZADO TURNOS -->
+        <div class="header-estudiantes">
+            <div class="header-texto">
+                <h1>Gestión de Turnos</h1>
+                <p>Administra los horarios de entrenamiento y sus modalidades (días de la semana).</p>
+            </div>
+            <div class="header-acciones">
+                <div class="buscador-contenedor">
+                    <span class="icono-busqueda">🔍</span>
+                    <input type="text" id="buscadorTurno" placeholder="Buscar turno...">
+                </div>
+                <button id="btnNuevoTurno" class="btn-nuevo">
+                    ➕ Nuevo Turno
+                </button>
+            </div>
+        </div>
 
-        <form id="formTurno">
-           <select id="horaInicio">
-            <option value="">Inicio</option>
-            <option value="15:00:00">3:00 PM</option>
-            <option value="16:00:00">4:00 PM</option>
-            <option value="14:00:00">2:00 PM</option>
-        </select>
-
-        <select id="horaFin">
-            <option value="">Fin</option>
-            <option value="16:00:00">4:00 PM</option>
-            <option value="17:00:00">5:00 PM</option>
-            <option value="15:00:00">3:00 PM</option>
-        </select>
-            <button type="submit">Guardar</button>
-        </form>
-    
-        <table>
-            <thead>
-                <tr>
-                    <th>Inicio</th>
-                    <th>Fin</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody id="tablaTurnos"></tbody>
-        </table>
-    
-        <script src="js/main.js"></script>
-        <script src="js/turnos.js"></script>
+        <!-- LISTA DE TURNOS -->
+        <div id="contenedor-turnos"></div>
     </div>
 
+    <!-- MODAL PARA CREAR/EDITAR TURNO -->
+    <div id="modalTurno" class="modal">
+        <div class="modal-contenido" style="max-width: 450px;">
+            <span class="cerrar" id="cerrarModalTurno">&times;</span>
+            <h2 id="modalTitleTurno">Nuevo Turno</h2>
+            <form id="formTurnoModal">
+                <select id="horaInicio" required style="width: 100%; margin-bottom: 15px;">
+                    <option value="">Seleccione Hora Inicio</option>
+                    <option value="14:00:00">2:00 PM</option>
+                    <option value="15:00:00">3:00 PM</option>
+                    <option value="16:00:00">4:00 PM</option>
+                    <option value="17:00:00">5:00 PM</option>
+                    <option value="18:00:00">6:00 PM</option>
+                    <option value="19:00:00">7:00 PM</option>
+                    <option value="20:00:00">8:00 PM</option>
+                </select>
 
+                <select id="horaFin" required style="width: 100%; margin-bottom: 15px;">
+                    <option value="">Seleccione Hora Fin</option>
+                    <option value="15:00:00">3:00 PM</option>
+                    <option value="16:00:00">4:00 PM</option>
+                    <option value="17:00:00">5:00 PM</option>
+                    <option value="18:00:00">6:00 PM</option>
+                    <option value="19:00:00">7:00 PM</option>
+                    <option value="20:00:00">8:00 PM</option>
+                    <option value="21:00:00">9:00 PM</option>
+                </select>
+
+                <button type="submit" class="btn-guardar">Guardar Turno</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL PARA AGREGAR MODALIDAD (DÍAS) A UN TURNO -->
+    <div id="modalAgregarModalidad" class="modal">
+        <div class="modal-contenido" style="max-width: 500px;">
+            <span class="cerrar" id="cerrarModalAgregarModalidad">&times;</span>
+            <h2 id="modalTitleAgregarModalidad">Agregar Modalidad al Turno</h2>
+            <div id="infoTurnoSeleccionado" style="background: #f0fdf4; padding: 10px; border-radius: 8px; margin-bottom: 15px;"></div>
+            
+            <div id="dias" style="margin-bottom: 20px;">
+                <label style="display: block; margin-bottom: 10px; font-weight: bold;">Seleccione los días:</label>
+                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px;">
+                    <label><input type="checkbox" value="Lunes"> Lunes</label>
+                    <label><input type="checkbox" value="Martes"> Martes</label>
+                    <label><input type="checkbox" value="Miércoles"> Miércoles</label>
+                    <label><input type="checkbox" value="Jueves"> Jueves</label>
+                    <label><input type="checkbox" value="Viernes"> Viernes</label>
+                    <label><input type="checkbox" value="Sábado"> Sábado</label>
+                    <label><input type="checkbox" value="Domingo"> Domingo</label>
+                </div>
+            </div>
+
+            <button id="btnGuardarModalidad" class="btn-guardar">Guardar Modalidad</button>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script src="js/turnos.js"></script>
 </body>
 </html>

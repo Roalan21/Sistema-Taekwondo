@@ -2,27 +2,56 @@ const { sql } = require('../db/conexion');
 
 const obtenerTodos = async (req, res) => {
     try {
-        const pool = await sql.connect(); 
-        const result = await pool.request().query(`
-            SELECT E.*, C.Nombre AS NombreCategoria,
-                   ISNULL(N.TodasLasNacionalidades, 'Nicaragüense') AS TodasLasNacionalidades,
-                   ISNULL(T.TodosLosTelefonos, 'Sin teléfono') AS TodosLosTelefonos
-            FROM Estudiante E
-            LEFT JOIN Categoria C ON E.CategoriaID = C.CategoriaID
-            LEFT JOIN (
-                SELECT EstudianteID, STRING_AGG(Pais, ', ') AS TodasLasNacionalidades
-                FROM Nacionalidad GROUP BY EstudianteID
-            ) N ON E.EstudianteID = N.EstudianteID
-            LEFT JOIN (
-                SELECT EstudianteID, STRING_AGG(Numero, ' / ') AS TodosLosTelefonos
-                FROM Telefono GROUP BY EstudianteID
-            ) T ON E.EstudianteID = T.EstudianteID
-            WHERE E.Estado = 1
-            ORDER BY E.FechaDeIngreso DESC;
-        `);
+        // Convertimos a número real
+        const estado = req.query.estado !== undefined
+            ? parseInt(req.query.estado)
+            : 1;
+
+        const pool = await sql.connect();
+
+        const result = await pool.request()
+            .input('estado', sql.Bit, estado)
+            .query(`
+                SELECT E.*, C.Nombre AS NombreCategoria
+                FROM Estudiante E
+                LEFT JOIN Categoria C 
+                    ON E.CategoriaID = C.CategoriaID
+                WHERE E.Estado = @estado
+                ORDER BY E.FechaDeIngreso DESC
+            `);
+
         res.json(result.recordset);
-    } catch (err) { res.status(500).json({ error: err.message }); }
+
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
 };
+
+// Actualiza tu función de inactivar para que sea genérica (Cambiar Estado)
+const actualizarEstado = async (req, res) => {
+    const { id } = req.params;
+    const { Estado } = req.body;
+
+    try {
+        const pool = await sql.connect();
+
+        await pool.request()
+            .input('id', sql.Int, id)
+            .input('estado', sql.Bit, Estado)
+            .query(`
+                UPDATE Estudiante
+                SET Estado = @estado
+                WHERE EstudianteID = @id
+            `);
+
+        res.json({ message: "Estado actualizado" });
+
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+
 //creamos para obetener solo a uno por id y luego usarlo en la parte de editar
 const obtenerPorId = async (req, res) => {
     const { id } = req.params;
@@ -161,4 +190,11 @@ const eliminarEstudiante = async (req, res) => {
     } catch (err) { res.status(500).json({ error: err.message }); }
 };
 
-module.exports = { obtenerTodos, obtenerPorId, crearEstudiante, actualizarEstudiante, eliminarEstudiante };
+module.exports = {
+    obtenerTodos,
+    obtenerPorId,
+    crearEstudiante,
+    actualizarEstudiante,
+    actualizarEstado,
+    eliminarEstudiante
+};

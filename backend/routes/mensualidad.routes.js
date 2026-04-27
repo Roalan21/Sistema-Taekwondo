@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const ctrl = require('../controllers/mensualidad.controller');
+const ctrl = require('../controllers/modalidad.controller');
 
-router.get('/', ctrl.obtenerMensualidades);
-router.post('/', ctrl.crearMensualidad);
+router.get('/', ctrl.obtener);
+router.post('/', ctrl.crear);
+router.delete('/:id', ctrl.eliminar);
 
 module.exports = router;
