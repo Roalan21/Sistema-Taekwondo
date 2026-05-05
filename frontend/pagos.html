@@ -7,22 +7,39 @@
     <link rel="stylesheet" href="css/sidebar.css">
 </head>
 <body>
-    <div class ="contenido-pagina"><h2>Registrar Pago</h2>
+    <div class ="contenido-pagina"><h2>Registrar Pago de Mensualidad</h2>
 
         <form id="formPago">
 
             <label>Estudiante</label>
             <select id="estudiante"></select>
 
-            <label>Mensualidad</label>
-            <select id="mensualidad"></select>
-
             <label>Método de Pago</label>
             <select id="metodo"></select>
+
+            <select id="tipoPago">
+                <option value="Mensualidad" selected>Mensualidad</option>
+                <option value="Examen">Examen</option>
+                <option value="Evento">Evento</option>
+            </select>
+
+            <div id="mensualidadCampos">
+                <label><input type="checkbox" id="esCuotas"> Pago en cuotas</label>
+                <input type="number" id="cuotas" placeholder="Cuotas (max 6)" disabled>
+            </div>
 
             <label>Monto</label>
             <input type="number" id="monto" required>
 
+            <div id="examenCampos" style="display:none;">
+                <label>Examen:</label>
+                <select id="examen"></select>
+            </div>
+            
+            <div id="eventoCampos" style="display:none;">
+                <label>Evento:</label>
+                <select id="evento"></select>
+            </div>
             <button type="submit">Pagar</button>
 
         </form>

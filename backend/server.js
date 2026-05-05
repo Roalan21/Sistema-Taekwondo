@@ -14,7 +14,11 @@ const reciboRoutes = require('./routes/recibo.routes');
 const pagoRoutes = require('./routes/pago.routes');
 const generaRoutes = require('./routes/genera.routes');
 const metodoPagoRoutes = require('./routes/metodoPago.routes');
-
+const examenRoutes = require('./routes/examen.routes');
+const tusahRoutes = require('./routes/tusah.routes');
+const productoRoutes = require('./routes/producto.routes');
+const salidasRoutes = require('./routes/salidas.routes');
+const inventarioRoutes = require('./routes/inventario.routes');
 
 const app = express();
 
@@ -30,12 +34,17 @@ app.use('/turnos', turnoRoutes);
 app.use('/modalidades', modalidadRoutes);
 app.use('/imparte', imparteRoutes);
 app.use('/eventos', eventoRoutes);
+app.use('/examenes', examenRoutes);
 app.use('/participa', participaRoutes);
 app.use('/mensualidades', mensualidadRoutes);
 app.use('/recibos', reciboRoutes);
 app.use('/pagos', pagoRoutes);
 app.use('/genera', generaRoutes);
 app.use('/metodos-pago', metodoPagoRoutes);
+app.use('/tusah', tusahRoutes);
+app.use('/productos', productoRoutes);
+app.use('/salidas', salidasRoutes);
+app.use('/inventario', inventarioRoutes);
 
 // Ruta de prueba rápida
 app.get('/', (req, res) => res.send("Servidor Activo 🥋"));

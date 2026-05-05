@@ -20,7 +20,8 @@ const crearCategoria = async (req, res) => {
         await pool.request()
             .input('Nombre', sql.VarChar, Nombre)
             .input('Precio', sql.Decimal(10,2), Precio)
-            .query("INSERT INTO Categoria (Nombre, Precio) VALUES (@Nombre, @Precio)");
+            .input('Estado', sql.Bit, 1) 
+            .query("INSERT INTO Categoria (Nombre, Precio, Estado) VALUES (@Nombre, @Precio, @Estado)");
 
         res.json({ message: "Categoría creada" });
     } catch (err) {

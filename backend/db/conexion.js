@@ -1,7 +1,7 @@
 const sql = require('mssql/msnodesqlv8');
 
 const config = {
-    connectionString: 'Driver={ODBC Driver 17 for SQL Server};Server=DESKTOP-IA4R3B8;Database=Taekwondo;Trusted_Connection=yes;'
+    connectionString: 'Driver={ODBC Driver 17 for SQL Server};Server=LOCALHOST;Database=Taekwondo4;Trusted_Connection=yes;'
 };
 
 async function conectar() {

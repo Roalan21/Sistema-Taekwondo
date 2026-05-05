@@ -47,10 +47,11 @@ const crearTurno = async (req, res) => {
         const result = await pool.request()
             .input('HI', sql.Time, HoraInicio)
             .input('HF', sql.Time, HoraFin)
+            .input('Estado', sql.Bit, 1)
             .query(`
-                INSERT INTO Turno (HoraInicio, HoraFin)
+                INSERT INTO Turno (HoraInicio, HoraFin, Estado)
                 OUTPUT INSERTED.TurnoID
-                VALUES (@HI, @HF)
+                VALUES (@HI, @HF, @Estado)
             `);
 
         const nuevoId = result.recordset[0].TurnoID;

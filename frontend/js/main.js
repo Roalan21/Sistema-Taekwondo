@@ -13,6 +13,9 @@ function cargarSidebar() {
             <li><a href="evento.html">evento</a></li>
             <li><a href="mensualidad.html">mensualidad</a></li>
             <li><a href="pagos.html">pagos</a></li>
+            <li><a href="producto.html">producto</a></li>
+            <li><a href="salidas.html">salidas</a></li>
+            <li><a href="inventario.html">inventario</a></li>
         </ul>
     </nav>`;
     

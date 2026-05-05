@@ -1,45 +1,55 @@
 const URL = "http://localhost:3000";
 
+document.getElementById("tipoPago").addEventListener("change", function () {
+
+    const tipo = this.value;
+
+    document.getElementById("mensualidadCampos").style.display = "none";
+    document.getElementById("examenCampos").style.display = "none";
+    document.getElementById("eventoCampos").style.display = "none";
+
+    if (tipo === "Mensualidad") {
+        document.getElementById("mensualidadCampos").style.display = "block";
+    }
+
+    if (tipo === "Examen") {
+        document.getElementById("examenCampos").style.display = "block";
+        cargarExamenes();
+    }
+
+    if (tipo === "Evento") {
+        document.getElementById("eventoCampos").style.display = "block";
+        cargarEventos();
+    }
+});
+document.getElementById("esCuotas").addEventListener("change", function () {
+    document.getElementById("cuotas").disabled = !this.checked;
+});
+
 document.addEventListener("DOMContentLoaded", () => {
     cargarEstudiantes();
     cargarMetodos();
-
+    document.getElementById("tipoPago").value = "Mensualidad";
+    document.getElementById("mensualidadCampos").style.display = "block";
     document.getElementById("formPago").addEventListener("submit", pagar);
 });
 
-// 🔹 cargar estudiantes
 async function cargarEstudiantes() {
     const res = await fetch(`${URL}/estudiantes`);
     const data = await res.json();
 
     const select = document.getElementById("estudiante");
 
+    // 🔥 opción por defecto
+    select.innerHTML = `<option value="">Seleccione un estudiante</option>`;
+
     data.forEach(e => {
-        select.innerHTML += `<option value="${e.EstudianteID}">
-            ${e.PrimerNombre} ${e.PrimerApellido}
-        </option>`;
+        select.innerHTML += `
+            <option value="${e.EstudianteID}">
+                ${e.PrimerNombre} ${e.PrimerApellido}
+            </option>
+        `;
     });
-
-    select.addEventListener("change", cargarMensualidades);
-}
-
-// 🔹 cargar mensualidades
-async function cargarMensualidades() {
-    const estudianteID = document.getElementById("estudiante").value;
-
-    const res = await fetch(`${URL}/mensualidades`);
-    const data = await res.json();
-
-    const select = document.getElementById("mensualidad");
-    select.innerHTML = "";
-
-    data
-        .filter(m => m.EstudianteID == estudianteID)
-        .forEach(m => {
-            select.innerHTML += `<option value="${m.MensualidadID}">
-                ${m.FechaLimite} - C$${m.Precio}
-            </option>`;
-        });
 }
 
 // 🔹 cargar métodos
@@ -56,49 +66,83 @@ async function cargarMetodos() {
     });
 }
 
-// 🔥 PROCESO COMPLETO
+// 🔹 cargar examenes
+async function cargarExamenes() {
+    try {
+        const res = await fetch(`${URL}/examenes`);
+        const data = await res.json();
+
+        console.log("EXAMENES:", data); // 👈 DEBUG
+
+        const select = document.getElementById("examen");
+
+        if (!select) {
+            console.error("No existe el select examen ❌");
+            return;
+        }
+
+        select.innerHTML = `<option value="">Seleccione un examen</option>`;
+
+        data.forEach(e => {
+            select.innerHTML += `
+                <option value="${e.ExamenID}">
+                    ${e.Fecha} - C$${e.Precio}
+                </option>
+            `;
+        });
+
+    } catch (error) {
+        console.error("Error cargando examenes:", error);
+    }
+}
+
+// 🔹 cargar eventos
+async function cargarEventos() {
+    const res = await fetch(`${URL}/eventos`);
+    const data = await res.json();
+
+    const select = document.getElementById("evento");
+    select.innerHTML = `<option value="">Seleccione un evento</option>`;
+
+    data.forEach(e => {
+        select.innerHTML += `
+            <option value="${e.EventoID}">
+                ${e.Nombre} - ${e.Fecha}
+            </option>
+        `;
+    });
+}
+
 async function pagar(e) {
     e.preventDefault();
 
-    const monto = parseFloat(document.getElementById("monto").value);
+    const tipo = document.getElementById("tipoPago").value;
 
-    // 1️⃣ RECIBO
-    const r1 = await fetch(`${URL}/recibos`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            Descripcion: "Pago mensualidad",
-            Tipo: "Mensualidad",
-            MontoFinal: monto
-        })
-    });
+    const data = {
+        EstudianteID: document.getElementById("estudiante").value,
+        MetodoPagoID: document.getElementById("metodo").value,
+        Monto: parseFloat(document.getElementById("monto").value),
+        TipoPago: tipo,
+        EsCuotas: document.getElementById("esCuotas").checked,
+        Cuotas: parseInt(document.getElementById("cuotas").value) || 1,
+        ExamenID: document.getElementById("examen").value,
+        EventoID: document.getElementById("evento").value
+    };
 
-    const recibo = await r1.json();
+    try {
+        const res = await fetch(`${URL}/pagos/pago-completo`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data)
+        });
 
-    // 2️⃣ PAGO
-    const r2 = await fetch(`${URL}/pagos`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            ReciboID: recibo.ReciboID,
-            MetodoPagoID: document.getElementById("metodo").value,
-            Monto: monto,
-            TipoPago: "Mensualidad"
-        })
-    });
+        const result = await res.json();
 
-    const pago = await r2.json();
+        alert(result.message);
+        document.getElementById("formPago").reset();
 
-    // 3️⃣ GENERA
-    await fetch(`${URL}/genera`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            MensualidadID: document.getElementById("mensualidad").value,
-            PagoID: pago.PagoID,
-            Monto: monto
-        })
-    });
-
-    alert("Pago realizado correctamente 💰");
+    } catch (error) {
+        alert("Error al procesar pago ❌");
+        console.error(error);
+    }
 }
