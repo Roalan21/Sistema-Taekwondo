@@ -2,7 +2,7 @@ const { sql } = require('../db/conexion');
 
 // 🔥 VENTA
 const crearVenta = async (req, res) => {
-    const { productos, MetodoPagoID } = req.body;
+    const { productos, MetodoPagoID, MontoFinal } = req.body;
 
     if (!productos || productos.length === 0) {
         return res.status(400).json({ error: "No hay productos en la venta" });
@@ -11,6 +11,7 @@ const crearVenta = async (req, res) => {
     if (!MetodoPagoID) {
         return res.status(400).json({ error: "Seleccione método de pago" });
     }
+
 
     const pool = await sql.connect();
     const transaction = new sql.Transaction(pool);
@@ -27,6 +28,25 @@ const crearVenta = async (req, res) => {
             totalFinal += subtotal;
         }
 
+        if (MontoFinal < totalFinal) {
+            return res.status(400).json({
+                error: `El monto (${MontoFinal}) no puede ser menor al total (${totalFinal})`
+            });
+        }
+
+        for (let p of productos) {
+            await transaction.request()
+                .input("ProductoID", sql.Int, p.id)
+                .input("Cantidad", sql.Int, p.cantidad)
+                .input("Descripcion", sql.VarChar, "Salida por venta")
+                .input("Tipo", sql.VarChar, "Salida")
+                .input("Fecha", sql.Date, new Date())
+                .input("Estado", sql.Bit, 1)
+                .query(`
+                    INSERT INTO Inventario (ProductoID, Cantidad, Descripcion, TipoMovimiento, Fecha, Estado)
+                    VALUES (@ProductoID, @Cantidad, @Descripcion, @Tipo, @Fecha, @Estado)
+                `);
+        }
 
         // 🔹 RECIBO
         const recibo = await transaction.request()
@@ -43,17 +63,6 @@ const crearVenta = async (req, res) => {
             `);
 
         const reciboID = recibo.recordset[0].ReciboID;
-
-        await transaction.request()
-            .input("ProductoID", sql.Int, p.id)
-            .input("Cantidad", sql.Int, p.cantidad)
-            .input("Descripcion", sql.VarChar, "Salida por venta")
-            .input("Tipo", sql.VarChar, "Salida")
-            .input("Fecha", sql.Date, new Date())
-            .query(`
-                INSERT INTO Inventario (ProductoID, Cantidad, Descripcion, TipoMovimiento, Fecha)
-                VALUES (@ProductoID, @Cantidad, @Descripcion, @Tipo, @Fecha)
-        `);
 
 
         // 🔹 VENTA
@@ -123,9 +132,10 @@ const crearRegalia = async (req, res) => {
             .input("Descripcion", sql.VarChar, "Salida por regalía")
             .input("Tipo", sql.VarChar, "Salida")
             .input("Fecha", sql.Date, new Date())
+            .input("Estado", sql.Bit, 1)
             .query(`
-                INSERT INTO Inventario (ProductoID, Cantidad, Descripcion, TipoMovimiento, Fecha)
-                VALUES (@ProductoID, @Cantidad, @Descripcion, @Tipo, @Fecha)
+                INSERT INTO Inventario (ProductoID, Cantidad, Descripcion, TipoMovimiento, Fecha, Estado)
+                VALUES (@ProductoID, @Cantidad, @Descripcion, @Tipo, @Fecha, @Estado)
         `);
 
         const regalia = await pool.request()
@@ -182,9 +192,10 @@ const crearPromocion = async (req, res) => {
             .input("Descripcion", sql.VarChar, "Salida por promoción")
             .input("Tipo", sql.VarChar, "Salida")
             .input("Fecha", sql.Date, new Date())
+            .input("Estado", sql.Bit, 1)
             .query(`
-                INSERT INTO Inventario (ProductoID, Cantidad, Descripcion, TipoMovimiento, Fecha)
-                VALUES (@ProductoID, @Cantidad, @Descripcion, @Tipo, @Fecha)
+                INSERT INTO Inventario (ProductoID, Cantidad, Descripcion, TipoMovimiento, Fecha, Estado)
+                VALUES (@ProductoID, @Cantidad, @Descripcion, @Tipo, @Fecha, @Estado)
         `);
 
         const promo = await pool.request()

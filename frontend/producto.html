@@ -2,35 +2,68 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestión de Productos - Taekwondo</title>
     <link rel="stylesheet" href="css/estilos.css">
     <link rel="stylesheet" href="css/sidebar.css">
+    
 </head>
 <body>
 
+    <!-- Contenedor principal para respetar tu sidebar.css -->
     <div class="contenido-pagina">
 
-        <h2>Registrar Producto 📦</h2>
+        <section class="formulario-registro">
+            <h2>Registrar Producto 📦</h2>
+            <p>Ingrese los detalles para dar de alta un nuevo artículo en el catálogo.</p>
 
-        <form id="formProducto">
+            <form id="formProducto">
+                <div class="grupo-input">
+                    <label for="nombre">Nombre del Producto</label>
+                    <input type="text" id="nombre" placeholder="Ej. Uniforme Dobok" required>
+                </div>
 
-            <label>Nombre</label>
-            <input type="text" id="nombre" required>
+                <div class="grupo-input">
+                    <label for="descripcion">Descripción</label>
+                    <input type="text" id="descripcion" placeholder="Ej. Talla M, algodón 100%">
+                </div>
 
-            <label>Descripción</label>
-            <input type="text" id="descripcion">
+                <div class="grupo-input">
+                    <label for="precio">Precio de Venta (C$)</label>
+                    <input type="number" id="precio" step="0.01" min="0" placeholder="0.00" required>
+                </div>
 
-            <label>Precio de Venta</label>
-            <input type="number" id="precio" required>
+                <button type="submit" class="btn-guardar">Guardar Producto</button>
+            </form>
+        </section>
 
-            <button type="submit">Guardar Producto</button>
-
-        </form>
+        <section class="seccion-lista">
+            <h2>Productos Registrados e Inventario</h2>
+            <div class="tabla-responsiva">
+                <table id="tablaProductos">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Descripción</th>
+                            <th>Precio Venta</th>
+                            <th>Stock Actual</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cuerpoTablaProductos">
+                        <!-- Los productos se cargarán aquí mediante producto.js -->
+                        <tr>
+                            <td colspan="4" style="text-align: center;">Cargando productos...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
 
     </div>
 
-    <script src="js/producto.js"></script>
-    <script src="js/main.js"></script>
+    <!-- Scripts en el orden correcto -->
+    <script src="js/main.js"></script>   <!-- Lógica general de la interfaz -->
+    <script src="js/producto.js"></script> <!-- Lógica específica de productos -->
 
 </body>
 </html>
