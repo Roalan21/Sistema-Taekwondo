@@ -9,94 +9,127 @@
 <body>
 
 <div class="contenido-pagina">
-
     <div class="card-principal">
+        <div class="header-estudiantes">
+            <div class="header-texto">
+                <h1>Salidas de Inventario 📤</h1>
+                <p>Gestiona ventas, regalías y promociones de artículos del catálogo.</p>
+            </div>
+        </div>
 
-        <h2>Salidas de Productos</h2>
+        <form id="formSalida" class="form-seccion">
+            <div class="input-group" style="margin-bottom: 25px; max-width: 300px;">
+                <label>Tipo de movimiento</label>
+                <select id="tipoSalida" style="border: 2px solid #1a2a6c; font-weight: bold;">
+                    <option value="Venta">Venta Directa</option>
+                    <option value="Regalia">Regalía</option>
+                    <option value="Promocion">Promoción Especial</option>
+                </select>
+            </div>
 
-        <form id="formSalida">
-
-            <label>Tipo de salida</label>
-            <select id="tipoSalida">
-                <option value="Venta">Venta</option>
-                <option value="Regalia">Regalía</option>
-                <option value="Promocion">Promoción</option>
-            </select>
-
-            <!-- 🔹 VENTA -->
-            <div id="ventaCampos">
-
-                <label>Producto</label>
-                <select id="productoVenta"></select>
+            <!-- 🔹 SECCIÓN: VENTA -->
+            <div id="ventaCampos" class="form-seccion" style="background: #f8fafc;">
+                <h3 style="color: #1a2a6c; border-bottom: 2px solid #1a2a6c;">Detalle de la Venta</h3>
+                <div class="grid-form">
+                    <div class="input-group">
+                        <label>Producto</label>
+                        <select id="productoVenta"></select>
+                    </div>
+                    <div class="input-group">
+                        <label>Método de Pago</label>
+                        <select id="metodoPago"></select>
+                    </div>
+                    <div class="input-group">
+                        <label>Cantidad</label>
+                        <input type="number" id="cantidadVenta" placeholder="0">
+                    </div>
+                    <div class="input-group">
+                        <label>Descuento (%)</label>
+                        <input type="number" id="descuentoVenta" placeholder="0" min="0" max="100">
+                    </div>
+                    <div class="input-group">
+                        <label>Total a pagar</label>
+                        <input type="text" id="totalCalculado" disabled style="background: #e2e8f0; font-weight: bold;">
+                    </div>
+                    <div class="input-group">
+                        <label>cantidad recibida</label>
+                        <input type="number" id="MontoFinal" placeholder="0.00" step="0.01">
+                    </div>
+                </div>
                 
-                <label>Método de Pago</label>
-                <select id="metodoPago"></select>
+                <div style="margin-top: 20px; display: flex; gap: 15px; flex-direction: column;">
+                    <button type="button" id="agregarProducto" class="btn-nuevo" style="background: #27ae60; width: fit-content;">
+                        ➕ Agregar a la lista
+                    </button>
+                    
+                    <div class="tabla-contenedor" style="background: white; border-radius: 8px; padding: 10px;">
+                        <h4 style="margin-bottom: 10px; color: #64748b;">Lista de artículos</h4>
+                        <ul id="listaVenta" style="list-style: none; padding: 0;"></ul>
+                    </div>
 
-                <label>Cantidad</label>
-                <input type="number" id="cantidadVenta" placeholder="Cantidad">
-
-                <label>Descuento (%)</label>
-                <input type="number" id="descuentoVenta" placeholder="0" min="0" max="100">
-
-                <label>Total calculado</label>
-                <input type="text" id="totalCalculado" disabled>
-
-                <label>Monto Final</label>
-                <input type="number" id="MontoFinal" placeholder="Monto Final" step="0.01">
-
-                <button type="button" id="agregarProducto">Agregar</button>
-
-                <ul id="listaVenta"></ul>
-
-                <button type="button" id="guardarVenta">Guardar Venta</button>
-
+                    <button type="button" id="guardarVenta" class="btn-nuevo" style="width: 100%; justify-content: center;">
+                        Confirmar y Procesar Venta 🛒
+                    </button>
+                </div>
             </div>
 
-            <!-- 🔹 REGALIA -->
-            <div id="regaliaCampos" style="display:none;">
-
-                <label>Destinatario</label>
-                <input type="text" id="destinatario" placeholder="Destinatario">
-
-                <label>Descripción</label>
-                <input type="text" id="descripcionRegalia" placeholder="Descripción">
-
-                <label>Producto</label>
-                <select id="productoRegalia"></select>
-
-                <label>Cantidad</label>
-                <input type="number" id="cantidadRegalia">
-
-                <button type="button" id="guardarRegalia">Guardar Regalía</button>
-
+            <!-- 🔹 SECCIÓN: REGALIA -->
+            <div id="regaliaCampos" class="form-seccion" style="display:none; background: #fff7ed;">
+                <h3 style="color: #ea580c; border-bottom: 2px solid #ea580c;">Registro de Regalía</h3>
+                <div class="grid-form">
+                    <div class="input-group">
+                        <label>Destinatario</label>
+                        <input type="text" id="destinatario" placeholder="Nombre de la persona">
+                    </div>
+                    <div class="input-group">
+                        <label>Motivo / Descripción</label>
+                        <input type="text" id="descripcionRegalia" placeholder="Ej: Premio torneo">
+                    </div>
+                    <div class="input-group">
+                        <label>Producto</label>
+                        <select id="productoRegalia"></select>
+                    </div>
+                    <div class="input-group">
+                        <label>Cantidad</label>
+                        <input type="number" id="cantidadRegalia">
+                    </div>
+                </div>
+                <button type="button" id="guardarRegalia" class="btn-nuevo" style="background: #ea580c; width: 100%; justify-content: center; margin-top: 20px;">
+                    Registrar Salida por Regalía 🎁
+                </button>
             </div>
 
-            <!-- 🔹 PROMOCION -->
-            <div id="promocionCampos" style="display:none;">
-
-                <label>Tipo de promoción</label>
-                <input type="text" id="tipoPromocion" placeholder="Tipo">
-
-                <label>Fecha inicio</label>
-                <input type="date" id="fechaInicio">
-
-                <label>Fecha fin</label>
-                <input type="date" id="fechaFin">
-
-                <label>Precio promoción</label>
-                <input type="number" id="PrecioPromocion">
-
-                <label>Producto</label>
-                <select id="productoPromocion"></select>
-
-                <button type="button" id="guardarPromocion">Guardar Promoción</button>
-
+            <!-- 🔹 SECCIÓN: PROMOCIÓN -->
+            <div id="promocionCampos" class="form-seccion" style="display:none; background: #f0fdf4;">
+                <h3 style="color: #16a34a; border-bottom: 2px solid #16a34a;">Configurar Promoción</h3>
+                <div class="grid-form">
+                    <div class="input-group">
+                        <label>Nombre de promoción</label>
+                        <input type="text" id="tipoPromocion" placeholder="Ej: Black Friday">
+                    </div>
+                    <div class="input-group">
+                        <label>Fecha inicio</label>
+                        <input type="date" id="fechaInicio">
+                    </div>
+                    <div class="input-group">
+                        <label>Fecha fin</label>
+                        <input type="date" id="fechaFin">
+                    </div>
+                    <div class="input-group">
+                        <label>Producto</label>
+                        <select id="productoPromocion"></select>
+                    </div>
+                    <div class="input-group">
+                        <label>Precio Especial</label>
+                        <input type="number" id="PrecioPromocion" placeholder="0.00">
+                    </div>
+                </div>
+                <button type="button" id="guardarPromocion" class="btn-nuevo" style="background: #16a34a; width: 100%; justify-content: center; margin-top: 20px;">
+                    Activar Promoción 🚀
+                </button>
             </div>
-
         </form>
-
     </div>
-
 </div>
 
 <script src="js/salidas.js"></script>

@@ -7,9 +7,8 @@ function cargarSidebar() {
             <li><a href="index.html">  Dashboard</a></li>
             <li><a href="estudiantes.html">Ver Estudiantes</a></li>
             <li><a href="profesores.html">Profesores</a></li>
-            <li><a href="categorias.html">categorias</a></li>
             <li><a href="turnos.html">turnos</a></li>
-            <li><a href="imparte.html">imparte</a></li>
+            <li><a href="categorias.html">categorias</a></li>
             <li><a href="evento.html">evento</a></li>
             <li><a href="mensualidad.html">mensualidad</a></li>
             <li><a href="pagos.html">pagos</a></li>

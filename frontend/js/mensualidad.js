@@ -41,16 +41,16 @@ async function listar() {
     const res = await fetch(URL);
     const data = await res.json();
 
-    const tabla = document.getElementById("tablaMensualidad");
-    tabla.innerHTML = "";
+    const contenedor = document.getElementById("tablaMensualidad");
+    contenedor.innerHTML = "";
 
     data.forEach(m => {
-        tabla.innerHTML += `
-            <tr>
-                <td>${m.Estudiante}</td>
-                <td>${m.Precio}</td>
-                <td>${new Date(m.FechaLimite).toLocaleDateString()}</td>
-            </tr>
+        contenedor.innerHTML += `
+            <div class="fila-pago">
+                <span class="pago-nombre">${m.Estudiante}</span>
+                <span class="pago-monto">C$ ${m.Precio}</span>
+                <span class="pago-fecha">${new Date(m.FechaLimite).toLocaleDateString()}</span>
+            </div>
         `;
     });
 }

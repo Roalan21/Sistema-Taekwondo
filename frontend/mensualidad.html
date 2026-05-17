@@ -8,30 +8,55 @@
     <link rel="stylesheet" href="css/sidebar.css">
 </head>
 <body>
-    <div class ="contenido-pagina"><h2>Mensualidades</h2>
+    <div class="contenido-pagina">
+    <div class="card-principal">
+        <div class="header-estudiantes">
+            <div class="header-texto">
+                <h1>Gestión de Mensualidades</h1>
+                <p>Registra y consulta los pagos mensuales de los estudiantes.</p>
+            </div>
+        </div>
 
-        <form id="formMensualidad">
-            <select id="estudiante"></select>
-            <input type="number" id="precio" placeholder="Precio">
-            <input type="date" id="fecha">
+        <!-- Sección del Formulario -->
+        <div class="form-seccion">
+            <h3>Registrar Nuevo Pago</h3>
+            <form id="formMensualidad" class="grid-form">
+                <div class="input-group">
+                    <label>Estudiante</label>
+                    <select id="estudiante" required></select>
+                </div>
+                <div class="input-group">
+                    <label>Monto (C$)</label>
+                    <input type="number" id="precio" placeholder="Ej: 500" required>
+                </div>
+                <div class="input-group">
+                    <label>Fecha Límite</label>
+                    <input type="date" id="fecha" required>
+                </div>
+                <div class="input-group" style="display: flex; align-items: flex-end;">
+                    <button type="submit" class="btn-nuevo" style="width: 100%; justify-content: center;">
+                        Guardar mensualidad
+                    </button>
+                </div>
+            </form>
+        </div>
 
-            <button type="submit">Guardar</button>
-        </form>
-
-        <table>
-            <thead>
-                <tr>
-                    <th>Estudiante</th>
-                    <th>Precio</th>
-                    <th>Fecha Límite</th>
-                </tr>
-            </thead>
-            <tbody id="tablaMensualidad"></tbody>
-        </table>
-
-        <script src="js/mensualidad.js"></script>
-        <script src="js/main.js"></script>
+        <!-- Tabla Estilizada -->
+        <div class="tabla-contenedor">
+            <div class="tabla-header">
+                <span>Estudiante</span>
+                <span>Precio</span>
+                <span>Fecha Límite</span>
+            </div>
+            <div id="tablaMensualidad">
+                 
+            </div>
+        </div>
     </div>
+</div>
+<script src="js/mensualidad.js"></script>
+ <script src="js/main.js"></script>
+
 </body>
 </html>
 

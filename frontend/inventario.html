@@ -2,6 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestión de Inventario - Taekwondo</title>
     <link rel="stylesheet" href="css/estilos.css">
     <link rel="stylesheet" href="css/sidebar.css">
@@ -10,23 +11,52 @@
 
     <div class="contenido-pagina">
         <div class="card-principal">
+            
+            <!-- Encabezado del Módulo -->
+            <div class="header-estudiantes">
+                <div class="header-texto">
+                    <h1>Entradas de Inventario 📥</h1>
+                    <p>Registra el ingreso de nueva mercadería o suministros al sistema.</p>
+                </div>
+            </div>
 
-            <h2>Gestión de Inventario</h2>
+            <!-- Formulario de Registro -->
+            <section class="form-seccion">
+                <form id="formInventario" class="grid-form">
+                    
+                    <div class="input-group">
+                        <label for="producto">Seleccionar Producto</label>
+                        <select id="producto" required>
+                            <!-- Los productos se cargan desde inventario.js -->
+                        </select>
+                    </div>
 
-            <form id="formInventario">
+                    <div class="input-group">
+                        <label for="cantidad">Cantidad de entrada</label>
+                        <input type="number" id="cantidad" placeholder="Cantidad que ingresa" min="1" required>
+                    </div>
 
-                <label>Producto</label>
-                <select id="producto"></select>
+                    <div class="input-group" style="grid-column: span 2;">
+                        <label for="descripcion">Motivo o Descripción</label>
+                        <input type="text" id="descripcion" placeholder="Ej: Compra a proveedor, devolución, etc.">
+                    </div>
 
-                <label>Cantidad de entrada</label>
-                <input type="number" id="cantidad" placeholder="Cantidad">
+                    <div class="input-group" style="grid-column: span 2; margin-top: 10px;">
+                        <button type="submit" class="btn-nuevo" style="width: 100%; justify-content: center;">
+                            Confirmar Ingreso de Stock
+                        </button>
+                    </div>
 
-                <label>Descripción</label>
-                <input type="text" id="descripcion" placeholder="Ej: Compra proveedor">
+                </form>
+            </section>
 
-                <button type="submit">Registrar Entrada</button>
-
-            </form>
+            <!-- Opcional: Historial rápido de entradas -->
+            <div class="tabla-contenedor" style="margin-top: 30px;">
+                <h3 style="margin-bottom: 15px; color: #1e293b;">Resumen de Movimientos Recientes</h3>
+                <div id="cuerpoTablaInventario">
+                    <div class="sin-resultados">Los registros de entrada aparecerán aquí.</div>
+                </div>
+            </div>
 
         </div>
     </div>

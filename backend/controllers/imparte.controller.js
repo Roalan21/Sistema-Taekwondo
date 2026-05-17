@@ -1,11 +1,13 @@
 const { sql } = require('../db/conexion');
 
-// 🔹 LISTAR
+// 🔹 LISTAR (Corregido)
 const obtenerImparte = async (req, res) => {
     try {
         const pool = await sql.connect();
         const result = await pool.request().query(`
             SELECT I.ImparteID,
+                   I.ProfesorID,  -- 👈 AGREGAR ESTO
+                   I.TurnoID,     -- 👈 AGREGAR ESTO
                    P.PrimerNombre + ' ' + P.PrimerApellido AS Profesor,
                    T.HoraInicio,
                    T.HoraFin,

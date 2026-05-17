@@ -731,3 +731,75 @@ input:focus, select:focus {
     margin: 8px 0;
     line-height: 1.4;
 }
+
+/* Estilos específicos para la tabla de Mensualidades */
+.tabla-contenedor {
+    margin-top: 20px;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.input-group label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #64748b;
+}
+
+/* Reutilizamos el diseño de filas para la tabla */
+#tablaMensualidad .fila-pago {
+    background: white;
+    padding: 15px 20px;
+    border-radius: 12px;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr; /* Misma estructura que el header */
+    align-items: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,.05);
+    margin-bottom: 10px;
+    border: 1px solid #f1f5f9;
+    transition: transform 0.2s;
+}
+
+#tablaMensualidad .fila-pago:hover {
+    transform: scale(1.01);
+    border-color: #cbd5e1;
+}
+
+#tablaMensualidad .pago-nombre {
+    font-weight: bold;
+    color: #1e293b;
+}
+
+#tablaMensualidad .pago-monto {
+    color: #16a34a;
+    font-weight: 600;
+}
+
+#tablaMensualidad .pago-fecha {
+    color: #64748b;
+    font-size: 0.9rem;
+}
+
+/* Clase para las filas de productos */
+.fila-producto {
+    display: grid;
+    grid-template-columns: 2fr 2fr 1fr 1fr; /* Debe ser igual al header */
+    padding: 15px 20px;
+    background: white;
+    border-radius: 12px;
+    margin-bottom: 10px;
+    align-items: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,.05);
+    border: 1px solid #f1f5f9;
+    width: 100%;
+}
+
+.fila-producto span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding-right: 10px;
+}

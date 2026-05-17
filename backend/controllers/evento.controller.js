@@ -34,9 +34,8 @@ const obtenerEventoPorId = async (req, res) => {
     }
 };
 
-// CREAR
 const crearEvento = async (req, res) => {
-    const { Nombre, Lugar, Fecha, Descripcion, Precio } = req.body;
+    const { Nombre, Lugar, Fecha, Descripcion, Precio, PagoID, Estado } = req.body;
     try {
         const pool = await sql.connect();
         await pool.request()
@@ -45,17 +44,18 @@ const crearEvento = async (req, res) => {
             .input('Fecha', sql.Date, Fecha)
             .input('Descripcion', sql.VarChar, Descripcion || '')
             .input('Precio', sql.Decimal(10,2), Precio)
+            .input('PagoID', sql.Int, PagoID || 1) // Valor temporal
+            .input('Estado', sql.Bit, Estado || 1)
             .query(`
-                INSERT INTO Evento (Nombre, Lugar, Fecha, Descripcion, Precio)
-                VALUES (@Nombre, @Lugar, @Fecha, @Descripcion, @Precio)
+                INSERT INTO Evento (Nombre, Lugar, Fecha, Descripcion, Precio, PagoID, Estado)
+                VALUES (@Nombre, @Lugar, @Fecha, @Descripcion, @Precio, @PagoID, @Estado)
             `);
         res.json({ message: "Evento creado" });
     } catch (error) {
-        console.error("Error en crearEvento:", error);
+        console.error(error); // ESTO TE DIRÁ EL ERROR REAL EN LA TERMINAL
         res.status(500).json({ error: error.message });
     }
 };
-
 // ACTUALIZAR
 const actualizarEvento = async (req, res) => {
     const { id } = req.params;

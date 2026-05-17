@@ -37,7 +37,7 @@ const crearVenta = async (req, res) => {
         for (let p of productos) {
             await transaction.request()
                 .input("ProductoID", sql.Int, p.id)
-                .input("Cantidad", sql.Int, p.cantidad)
+                .input("Cantidad", sql.Int, p.cantidad * -1)
                 .input("Descripcion", sql.VarChar, "Salida por venta")
                 .input("Tipo", sql.VarChar, "Salida")
                 .input("Fecha", sql.Date, new Date())
@@ -128,7 +128,7 @@ const crearRegalia = async (req, res) => {
 
         await pool.request()
             .input("ProductoID", sql.Int, productoID)
-            .input("Cantidad", sql.Int, cantidad)
+            .input("Cantidad", sql.Int, cantidad * -1)
             .input("Descripcion", sql.VarChar, "Salida por regalía")
             .input("Tipo", sql.VarChar, "Salida")
             .input("Fecha", sql.Date, new Date())
@@ -188,7 +188,7 @@ const crearPromocion = async (req, res) => {
 
         await pool.request()
             .input("ProductoID", sql.Int, productoID)
-            .input("Cantidad", sql.Int, cantidad)
+            .input("Cantidad", sql.Int, cantidad * -1)
             .input("Descripcion", sql.VarChar, "Salida por promoción")
             .input("Tipo", sql.VarChar, "Salida")
             .input("Fecha", sql.Date, new Date())

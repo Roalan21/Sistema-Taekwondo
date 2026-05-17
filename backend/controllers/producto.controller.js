@@ -23,19 +23,30 @@ const crearProducto = async (req, res) => {
         res.json({ message: "Producto guardado 📦" });
 
     } catch (err) {
-        console.error("❌ ERROR:", err);
-        res.status(500).json({ error: err.message });
+        if (err.message.includes('CHK_Precio')) {
+            return res.status(400).json({ error: "El precio debe ser un valor mayor a cero." });
+        }
+        if (err.message.includes('CHK_Hora')) {
+            return res.status(400).json({ error: "La hora de fin debe ser posterior a la hora de inicio." });
+        }
+        res.status(500).json({ error: "Error interno del servidor." });
     }
 };
 
-// 🔹 Listar productos
+// 🔹 Listar productos (Modificado)
 const obtenerProductos = async (req, res) => {
     try {
         const pool = await sql.connect();
 
         const result = await pool.request().query(`
-            SELECT Distinct P.ProductoID, P.Nombre, P.PrecioVenta
-            FROM Producto P
+            SELECT 
+                ProductoID, 
+                Nombre, 
+                Descripcion, 
+                PrecioVenta, 
+                StockActual 
+            FROM Producto
+            WHERE Estado = 1 
         `);
 
         res.json(result.recordset);
@@ -44,5 +55,4 @@ const obtenerProductos = async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 };
-
 module.exports = { crearProducto, obtenerProductos };

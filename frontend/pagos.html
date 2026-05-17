@@ -2,53 +2,85 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Gestión de turnos - Taekwondo</title>
+    <title>Gestión de Pagos - Taekwondo</title>
     <link rel="stylesheet" href="css/estilos.css">
     <link rel="stylesheet" href="css/sidebar.css">
 </head>
 <body>
-    <div class ="contenido-pagina"><h2>Registrar Pago de Mensualidad</h2>
-
-        <form id="formPago">
-
-            <label>Estudiante</label>
-            <select id="estudiante"></select>
-
-            <label>Método de Pago</label>
-            <select id="metodo"></select>
-
-            <select id="tipoPago">
-                <option value="Mensualidad" selected>Mensualidad</option>
-                <option value="Examen">Examen</option>
-                <option value="Evento">Evento</option>
-            </select>
-
-            <div id="mensualidadCampos">
-                <label><input type="checkbox" id="esCuotas"> Pago en cuotas</label>
-                <input type="number" id="cuotas" placeholder="Cuotas (max 6)" disabled>
+    <div class="contenido-pagina">
+        <div class="card-principal">
+            <div class="header-estudiantes">
+                <div class="header-texto">
+                    <h1>Registrar Pago</h1>
+                    <p>Procesa pagos de mensualidades, exámenes o eventos especiales.</p>
+                </div>
             </div>
 
-            <label>Monto</label>
-            <input type="number" id="monto" required>
+            <form id="formPago" class="form-seccion">
+                <div class="grid-form">
+                    <!-- Información Principal -->
+                    <div class="input-group">
+                        <label for="estudiante">Estudiante</label>
+                        <select id="estudiante" required></select>
+                    </div>
 
-            <div id="examenCampos" style="display:none;">
-                <label>Examen:</label>
-                <select id="examen"></select>
-            </div>
-            
-            <div id="eventoCampos" style="display:none;">
-                <label>Evento:</label>
-                <select id="evento"></select>
-            </div>
-            <button type="submit">Pagar</button>
+                    <div class="input-group">
+                        <label for="tipoPago">Tipo de Pago</label>
+                        <select id="tipoPago">
+                            <option value="Mensualidad" selected>Mensualidad</option>
+                            <option value="Examen">Examen</option>
+                            <option value="Evento">Evento</option>
+                        </select>
+                    </div>
 
-        </form>
+                    <div class="input-group">
+                        <label for="metodo">Método de Pago</label>
+                        <select id="metodo" required></select>
+                    </div>
 
-        <script src="js/pagos.js"></script>
-        <script src="js/main.js"></script>
+                    <div class="input-group">
+                        <label for="monto">Monto (C$)</label>
+                        <input type="number" id="monto" placeholder="0.00" required>
+                    </div>
+                </div>
+
+                <!-- Campos Dinámicos (Mensualidad) -->
+                <div id="mensualidadCampos" class="form-seccion" style="margin-top: 20px; background: #f8fafc;">
+                    <div style="display: flex; align-items: center; gap: 20px;">
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                            <input type="checkbox" id="esCuotas" style="width: auto;"> 
+                            <strong>Habilitar pago en cuotas</strong>
+                        </label>
+                        <input type="number" id="cuotas" placeholder="Número de cuotas (máx 6)" disabled style="flex: 1;">
+                    </div>
+                </div>
+
+                <!-- Campos Dinámicos (Examen) -->
+                <div id="examenCampos" class="form-seccion" style="display:none; margin-top: 20px; background: #fdf2f2;">
+                    <div class="input-group">
+                        <label for="examen">Seleccionar Examen</label>
+                        <select id="examen"></select>
+                    </div>
+                </div>
+
+                <!-- Campos Dinámicos (Evento) -->
+                <div id="eventoCampos" class="form-seccion" style="display:none; margin-top: 20px; background: #f0fdf4;">
+                    <div class="input-group">
+                        <label for="evento">Seleccionar Evento</label>
+                        <select id="evento"></select>
+                    </div>
+                </div>
+
+                <div style="margin-top: 30px;">
+                    <button type="submit" class="btn-nuevo" style="width: 100%; justify-content: center; font-size: 1.1rem;">
+                        Procesar Pago 💰
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
 
-
+    <script src="js/pagos.js"></script>
+    <script src="js/main.js"></script>
 </body>
 </html>
-

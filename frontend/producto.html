@@ -6,64 +6,65 @@
     <title>Gestión de Productos - Taekwondo</title>
     <link rel="stylesheet" href="css/estilos.css">
     <link rel="stylesheet" href="css/sidebar.css">
-    
 </head>
 <body>
 
-    <!-- Contenedor principal para respetar tu sidebar.css -->
     <div class="contenido-pagina">
-
-        <section class="formulario-registro">
-            <h2>Registrar Producto 📦</h2>
-            <p>Ingrese los detalles para dar de alta un nuevo artículo en el catálogo.</p>
-
-            <form id="formProducto">
-                <div class="grupo-input">
-                    <label for="nombre">Nombre del Producto</label>
-                    <input type="text" id="nombre" placeholder="Ej. Uniforme Dobok" required>
+        <div class="card-principal">
+            <!-- Encabezado -->
+            <div class="header-estudiantes">
+                <div class="header-texto">
+                    <h1>Catálogo e Inventario 📦</h1>
+                    <p>Administra los artículos disponibles y controla el stock en tiempo real.</p>
                 </div>
-
-                <div class="grupo-input">
-                    <label for="descripcion">Descripción</label>
-                    <input type="text" id="descripcion" placeholder="Ej. Talla M, algodón 100%">
-                </div>
-
-                <div class="grupo-input">
-                    <label for="precio">Precio de Venta (C$)</label>
-                    <input type="number" id="precio" step="0.01" min="0" placeholder="0.00" required>
-                </div>
-
-                <button type="submit" class="btn-guardar">Guardar Producto</button>
-            </form>
-        </section>
-
-        <section class="seccion-lista">
-            <h2>Productos Registrados e Inventario</h2>
-            <div class="tabla-responsiva">
-                <table id="tablaProductos">
-                    <thead>
-                        <tr>
-                            <th>Nombre</th>
-                            <th>Descripción</th>
-                            <th>Precio Venta</th>
-                            <th>Stock Actual</th>
-                        </tr>
-                    </thead>
-                    <tbody id="cuerpoTablaProductos">
-                        <!-- Los productos se cargarán aquí mediante producto.js -->
-                        <tr>
-                            <td colspan="4" style="text-align: center;">Cargando productos...</td>
-                        </tr>
-                    </tbody>
-                </table>
             </div>
-        </section>
 
+            <!-- Sección del Formulario -->
+            <div class="form-seccion">
+                <h3>Registrar Nuevo Producto</h3>
+                <form id="formProducto" class="grid-form">
+                    <div class="input-group">
+                        <label for="nombre">Nombre del Producto</label>
+                        <input type="text" id="nombre" placeholder="Ej. Uniforme Dobok" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="descripcion">Descripción</label>
+                        <input type="text" id="descripcion" placeholder="Ej. Talla M, algodón 100%">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="precio">Precio de Venta (C$)</label>
+                        <input type="number" id="precio" step="0.01" min="0" placeholder="0.00" required>
+                    </div>
+
+                    <div class="input-group" style="display: flex; align-items: flex-end;">
+                        <button type="submit" class="btn-nuevo" style="width: 100%; justify-content: center;">
+                            Guardar en Catálogo
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Listado de Productos -->
+            <div class="tabla-contenedor">
+                <div class="tabla-header" style="grid-template-columns: 2fr 2fr 1fr 1fr;">
+                    <span>Producto</span>
+                    <span>Descripción</span>
+                    <span>Precio</span>
+                    <span>Stock Actual</span>
+                </div>
+                
+                <div id="cuerpoTablaProductos">
+                    <!-- Las filas se cargarán dinámicamente -->
+                    <div class="sin-resultados">Cargando catálogo de productos...</div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <!-- Scripts en el orden correcto -->
-    <script src="js/main.js"></script>   <!-- Lógica general de la interfaz -->
-    <script src="js/producto.js"></script> <!-- Lógica específica de productos -->
-
+    <!-- Scripts -->
+    <script src="js/main.js"></script>
+    <script src="js/producto.js"></script>
 </body>
 </html>

@@ -227,7 +227,9 @@ async function renderizarProfesores(profesores) {
         const iniciales = nombreCompleto.split(' ').filter(n => n.length > 0).map(n => n[0]).join('').substring(0, 2).toUpperCase();
         
         // Obtener turnos del profesor
-        const turnosProfesor = asignaciones.filter(a => a.ProfesorID === p.ProfesorID);
+        const turnosProfesor = asignaciones.filter(a => 
+            (a.ProfesorID == p.ProfesorID) || (a.profesorid == p.ProfesorID)
+        );
         let turnosHtml = '';
         
         if (turnosProfesor.length === 0) {
@@ -326,9 +328,11 @@ async function renderizarProfesores(profesores) {
 
 async function obtenerAsignacionesProfesores() {
     try {
-        const res = await fetch(`${URL_BASE}/imparte`);
+        const res = await fetch(`${URL_BASE}/imparte`); // <-- VERIFICA ESTA RUTA
         if (res.ok) {
-            return await res.json();
+            const data = await res.json();
+            console.log("Asignaciones detectadas:", data); // Para ver qué trae
+            return data;
         }
     } catch (error) {
         console.error("Error al obtener asignaciones:", error);

@@ -14,19 +14,30 @@ async function listarProductos() {
         const res = await fetch(`${URL}/productos`);
         const productos = await res.json();
 
-        const tabla = document.getElementById("cuerpoTablaProductos");
-        if (!tabla) return; // Seguridad por si el ID no existe en el HTML
+        const contenedor = document.getElementById("cuerpoTablaProductos");
+        if (!contenedor) return; 
 
-        tabla.innerHTML = ""; 
+        contenedor.innerHTML = ""; 
 
         productos.forEach(p => {
-            tabla.innerHTML += `
-                <tr>
-                    <td>${p.Nombre}</td>
-                    <td>${p.Descripcion || '<span class="text-muted">Sin descripción</span>'}</td>
-                    <td>C$ ${parseFloat(p.PrecioVenta).toFixed(2)}</td>
-                    <td class="stock-valor">${p.StockActual || 0}</td>
-                </tr>
+            const stockClase = p.StockActual <= 5 ? 'rojo' : 'verde';
+            const precioFormatted = parseFloat(p.PrecioVenta).toFixed(2);
+
+            // Usamos la clase 'fila-producto' que definimos en el CSS
+            contenedor.innerHTML += `
+                <div class="fila-producto">
+                    <span style="font-weight: bold; color: #1e293b;">${p.Nombre}</span>
+                    
+                    <span style="color: #64748b; font-size: 0.9rem;">
+                        ${p.Descripcion || '<i>Sin descripción</i>'}
+                    </span>
+                    
+                    <span style="color: #1e293b; font-weight: 600;">C$ ${precioFormatted}</span>
+                    
+                    <span class="${stockClase}" style="font-weight: bold; display: flex; align-items: center; gap: 5px;">
+                        ${p.StockActual || 0} unidades
+                    </span>
+                </div>
             `;
         });
     } catch (error) {

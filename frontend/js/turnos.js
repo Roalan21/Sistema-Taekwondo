@@ -147,8 +147,12 @@ async function cargarModalidadesPorTurno() {
     }
 }
 
+// 1. LIMPIEZA Y RENDERIZADO
 function renderizarTurnos(turnos) {
     if (!contenedorTurnos) return;
+
+    // CRUCIAL: Limpiar el contenedor antes de renderizar para que los borrados desaparezcan
+    contenedorTurnos.innerHTML = ""; 
 
     if (turnos.length === 0) {
         contenedorTurnos.innerHTML = `<div class="sin-resultados">No hay turnos registrados.</div>`;
@@ -168,14 +172,11 @@ function renderizarTurnos(turnos) {
         const horarioMostrar = `${formatearHora(turno.HoraInicio)} - ${formatearHora(turno.HoraFin)}`;
         const diasModalidad = modalidadesPorTurno[turno.TurnoID] || [];
         
-        let diasHtml = '';
-        if (diasModalidad.length === 0) {
-            diasHtml = '<span style="color: #999; font-style: italic;">Sin días asignados</span>';
-        } else {
-            diasHtml = `<div style="display: flex; flex-wrap: wrap; gap: 5px;">
+        let diasHtml = diasModalidad.length === 0 
+            ? '<span style="color: #999; font-style: italic;">Sin días asignados</span>'
+            : `<div style="display: flex; flex-wrap: wrap; gap: 5px;">
                 ${diasModalidad.map(dia => `<span style="background: #e0e7ff; padding: 2px 8px; border-radius: 12px; font-size: 0.75rem;">${dia}</span>`).join('')}
-            </div>`;
-        }
+               </div>`;
 
         html += `
             <div class="fila-estudiante" style="grid-template-columns: 2fr 1fr 1.5fr; display: grid; align-items: center;">
@@ -183,19 +184,11 @@ function renderizarTurnos(turnos) {
                     <div class="avatar-estudiante">⏰</div>
                     <span class="nombre-estudiante">${horarioMostrar}</span>
                 </div>
-                <div>
-                    ${diasHtml}
-                </div>
+                <div>${diasHtml}</div>
                 <div class="acciones">
-                    <button class="btn-agregar-modalidad" data-id="${turno.TurnoID}" data-horario="${horarioMostrar}">
-                        📅 + Modalidad
-                    </button>
-                    <button class="btn-editar-turno" data-id="${turno.TurnoID}" data-inicio="${turno.HoraInicio}" data-fin="${turno.HoraFin}">
-                        ✏️ Editar
-                    </button>
-                    <button class="btn-eliminar-turno" data-id="${turno.TurnoID}">
-                        🗑️ Eliminar
-                    </button>
+                    <button class="btn-agregar-modalidad" data-id="${turno.TurnoID}" data-horario="${horarioMostrar}">📅 + Modalidad</button>
+                    <button class="btn-editar-turno" data-id="${turno.TurnoID}" data-inicio="${turno.HoraInicio}" data-fin="${turno.HoraFin}">✏️ Editar</button>
+                    <button class="btn-eliminar-turno" data-id="${turno.TurnoID}">🗑️ Eliminar</button>
                 </div>
             </div>
         `;
@@ -204,30 +197,31 @@ function renderizarTurnos(turnos) {
     html += `</div>`;
     contenedorTurnos.innerHTML = html;
 
-    // Eventos para botones dinámicos
-    document.querySelectorAll('.btn-agregar-modalidad').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const id = parseInt(btn.dataset.id);
-            const horario = btn.dataset.horario;
-            abrirModalAgregarModalidad(id, horario);
-        });
-    });
+    // Volver a asignar los eventos a los nuevos botones creados
+    asignarEventosBotones(); 
+}
 
-    document.querySelectorAll('.btn-editar-turno').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const id = parseInt(btn.dataset.id);
-            const inicio = btn.dataset.inicio;
-            const fin = btn.dataset.fin;
-            editarTurno(id, inicio, fin);
-        });
-    });
-
-    document.querySelectorAll('.btn-eliminar-turno').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const id = parseInt(btn.dataset.id);
-            eliminarTurno(id);
-        });
-    });
+// 2. ELIMINACIÓN ATÓMICA
+async function eliminarTurno(id) {
+    if (!confirm("¿Estás seguro de eliminar este turno? Esta acción limpiará todas las modalidades y registros asociados.")) return;
+    
+    try {
+        // Enviamos la petición al backend. El controlador se encarga de borrar 
+        // en Corresponde, Imparte y Modalidad mediante la transacción SQL.
+        const res = await fetch(`${URL_TURNOS}/${id}`, { method: "DELETE" });
+        
+        if (res.ok) {
+            alert("✅ Turno eliminado de la base de datos");
+            // Forzamos la recarga de la lista para actualizar el frontend
+            await listarTurnos(); 
+        } else {
+            const error = await res.json();
+            alert("❌ Error: " + (error.error || "No se pudo eliminar"));
+        }
+    } catch (error) {
+        console.error("Error al eliminar:", error);
+        alert("❌ Error de conexión con el servidor");
+    }
 }
 
 function editarTurno(id, horaInicio, horaFin) {
@@ -239,44 +233,7 @@ function editarTurno(id, horaInicio, horaFin) {
     modalTurno.style.display = "flex";
 }
 
-async function eliminarTurno(id) {
-    // Verificar si tiene modalidades asociadas
-    const tieneModalidades = modalidadesPorTurno[id] && modalidadesPorTurno[id].length > 0;
-    
-    let mensaje = "¿Eliminar este turno permanentemente?";
-    if (tieneModalidades) {
-        mensaje = "⚠️ Este turno tiene días asignados. Si lo eliminas, también se eliminarán sus modalidades asociadas. ¿Continuar?";
-    }
-    
-    if (!confirm(mensaje)) return;
-    
-    try {
-        // Primero eliminar modalidades asociadas si existen
-        if (tieneModalidades) {
-            const resModalidades = await fetch(URL_MODALIDAD);
-            const todasModalidades = await resModalidades.json();
-            const modalidadesAEliminar = todasModalidades.filter(m => m.TurnoID === id);
-            
-            for (let m of modalidadesAEliminar) {
-                await fetch(`${URL_MODALIDAD}/${m.ModalidadID}`, { method: "DELETE" });
-            }
-        }
-        
-        // Luego eliminar el turno
-        const res = await fetch(`${URL_TURNOS}/${id}`, { method: "DELETE" });
-        
-        if (res.ok) {
-            alert("✅ Turno eliminado");
-            await listarTurnos();
-        } else {
-            const error = await res.json();
-            alert("❌ Error al eliminar el turno: " + (error.error || "Error desconocido"));
-        }
-    } catch (error) {
-        console.error("Error al eliminar:", error);
-        alert("❌ Error al eliminar el turno");
-    }
-}
+
 
 function filtrarTurnos() {
     const texto = buscadorTurno.value.toLowerCase();
@@ -364,6 +321,35 @@ async function guardarModalidad() {
         console.error("Error:", error);
         alert("Error al conectar con el servidor");
     }
+}
+
+function asignarEventosBotones() {
+    // Botones de Agregar Modalidad
+    document.querySelectorAll('.btn-agregar-modalidad').forEach(btn => {
+        btn.onclick = () => {
+            const id = parseInt(btn.dataset.id);
+            const horario = btn.dataset.horario;
+            abrirModalAgregarModalidad(id, horario);
+        };
+    });
+
+    // Botones de Editar
+    document.querySelectorAll('.btn-editar-turno').forEach(btn => {
+        btn.onclick = () => {
+            const id = parseInt(btn.dataset.id);
+            const inicio = btn.dataset.inicio;
+            const fin = btn.dataset.fin;
+            editarTurno(id, inicio, fin);
+        };
+    });
+
+    // Botones de Eliminar (El que te interesa corregir)
+    document.querySelectorAll('.btn-eliminar-turno').forEach(btn => {
+        btn.onclick = () => {
+            const id = parseInt(btn.dataset.id);
+            eliminarTurno(id);
+        };
+    });
 }
 
 function formatearHora(hora) {
