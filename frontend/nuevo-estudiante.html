@@ -17,10 +17,8 @@
                     <div class="form-seccion">
                         <h3>Información Personal</h3>
                         <div class="grid-form">
-                            <input type="text" name="PrimerNombre" placeholder="Primer Nombre" required>
-                            <input type="text" name="SegundoNombre" placeholder="Segundo Nombre" required>
-                            <input type="text" name="PrimerApellido" placeholder="Primer Apellido" required>
-                            <input type="text" name="SegundoApellido" placeholder="Segundo Apellido" required>
+                            <input type="text" name="Nombres" placeholder="Nombres" required>
+                            <input type="text" name="Apellidos" placeholder="Apellidos" required>
                         </div>
                         <div class="grid-form" style="margin-top: 15px;">
                             <label>Nacimiento: <input type="date" name="FechaDeNacimiento" required></label>
@@ -65,6 +63,11 @@
                                     <option value="">Cargando categorías...</option>
                                 </select>
                             </label>
+                            <label>Turno:
+                                <select id="TurnoID" name="TurnoID" required>
+                                    <option value="">Seleccione Turno...</option>
+                                </select>
+                            </label>
                             <input type="text" name="CintaActual" placeholder="Cinta Actual (Ej: Blanca)" required>
                             <label>Fecha Ingreso: <input type="date" name="FechaDeIngreso" required></label>
                           <label class="label">¿Permite tomar fotos?</label>
@@ -96,6 +99,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             if (typeof cargarCategorias === 'function') {
                 cargarCategorias();
+                cargarTurnos();
             }
         });
     </script>

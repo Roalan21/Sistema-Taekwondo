@@ -14,6 +14,18 @@ function formatearFecha(fechaISO) {
 
     return `${day}/${month}/${year}`;
 }
+/*fromatear hora*/
+function formatearHora(hora) {
+    if (!hora) return "";
+    if (hora.includes("T")) hora = hora.split("T")[1];
+    hora = hora.split('.')[0];
+    let [h, m] = hora.split(':');
+    h = parseInt(h);
+    let ampm = h >= 12 ? 'PM' : 'AM';
+    h = h % 12;
+    if (h === 0) h = 12;
+    return `${h}:${m} ${ampm}`;
+}
 
 /* =========================
    CARGAR CATEGORÍAS
@@ -36,6 +48,42 @@ async function cargarCategorias() {
 
     } catch (error) {
         console.error("Error cargando categorías:", error);
+    }
+}
+/*cargar turnos*/
+async function cargarTurnos() {
+
+    const select =
+    document.getElementById("TurnoID");
+
+    if (!select) return;
+
+    try {
+
+        const res =
+        await fetch(`${URL_BASE}/turnos`);
+
+        const data =
+        await res.json();
+
+        select.innerHTML = `
+            <option value="">
+                Seleccione Turno...
+            </option>
+
+            ${data.map(t => `
+                <option value="${t.TurnoID}">
+                    ${formatearHora(t.HoraInicio)} - ${formatearHora(t.HoraFin)}
+                </option>
+            `).join("")}
+        `;
+
+    } catch (error) {
+
+        console.error(
+            "Error cargando turnos:",
+            error
+        );
     }
 }
 
@@ -96,10 +144,10 @@ async function cargarEstudiantes() {
         }
 
         contenedor.innerHTML = data.map(e => {
-            const iniciales = `${(e.PrimerNombre || '').charAt(0)}${(e.PrimerApellido || '').charAt(0)}`.toUpperCase();
+            const iniciales = `${(e.Nombres || '').charAt(0)}${(e.Apellidos || '').charAt(0)}`.toUpperCase();
             
             // Mostrar el estado para depuración
-            console.log(`Estudiante ${e.PrimerNombre} - Estado: ${e.Estado} (tipo: ${typeof e.Estado})`);
+            console.log(`Estudiante ${e.Nombres} - Estado: ${e.Estado} (tipo: ${typeof e.Estado})`);
             
             const botonEstado = e.Estado == 1
                 ? `<button class="btn-baja" onclick="cambiarEstadoEstudiante(${e.EstudianteID}, 0)">🗑 Dar de Baja</button>`
@@ -109,7 +157,7 @@ async function cargarEstudiantes() {
                 <div class="fila-estudiante">
                     <div class="info-izquierda">
                         <div class="avatar-estudiante">${iniciales}</div>
-                        <span class="nombre-estudiante">${e.PrimerNombre} ${e.PrimerApellido}</span>
+                        <span class="nombre-estudiante">${e.Nombres} ${e.Apellidos}</span>
                     </div>
                     <div class="acciones">
                         <button onclick='verEstudiante(${JSON.stringify(e).replace(/'/g, "&#39;")})'>👁 Visualizar</button>
@@ -159,8 +207,7 @@ function verEstudiante(e) {
             <h2>Expediente del Estudiante</h2>
 
             <h3>
-                ${e.PrimerNombre} ${e.SegundoNombre || ""}
-                ${e.PrimerApellido} ${e.SegundoApellido || ""}
+                ${e.Nombres} ${e.Apellidos}
             </h3>
 
             <span class="badge-cinta">
@@ -220,6 +267,15 @@ function verEstudiante(e) {
         <div class="mini-card">
             <span>Fecha Ingreso</span>
             <strong>${formatearFecha(e.FechaDeIngreso)}</strong>
+        </div>
+
+        <div class="mini-card">
+            <span>Turno</span>
+
+            <strong>
+                ${formatearHora(e.HoraInicio) || "N/A"} -
+                ${formatearHora(e.HoraFin) || "N/A"}
+            </strong>
         </div>
 
         <div class="mini-card">

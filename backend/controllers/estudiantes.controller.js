@@ -12,10 +12,25 @@ const obtenerTodos = async (req, res) => {
         const result = await pool.request()
             .input('estado', sql.Bit, estado)
             .query(`
-                SELECT E.*, C.Nombre AS NombreCategoria
+                SELECT E.*, C.Nombre AS NombreCategoria,T.HoraInicio, T.HoraFin,
+                ISNULL(
+                (
+                    SELECT STRING_AGG(Pais, ', ')
+                    FROM Nacionalidad
+                    WHERE EstudianteID = E.EstudianteID
+                ), '') AS TodasLasNacionalidades,
+
+                ISNULL(
+                (
+                    SELECT STRING_AGG(Numero, ', ')
+                    FROM Telefono
+                    WHERE EstudianteID = E.EstudianteID
+                ), '') AS TodosLosTelefonos
                 FROM Estudiante E
                 LEFT JOIN Categoria C 
                     ON E.CategoriaID = C.CategoriaID
+                LEFT JOIN Turno T
+                    ON E.TurnoID = T.TurnoID    
                 WHERE E.Estado = @estado
                 ORDER BY E.FechaDeIngreso DESC
             `);
@@ -77,10 +92,9 @@ const crearEstudiante = async (req, res) => {
         await transaction.begin();
         const resultEst = await transaction.request()
             .input('CategoriaID', sql.Int, d.CategoriaID)
-            .input('PrimerNombre', sql.VarChar, d.PrimerNombre)
-            .input('SegundoNombre', sql.VarChar, d.SegundoNombre)
-            .input('PrimerApellido', sql.VarChar, d.PrimerApellido)
-            .input('SegundoApellido', sql.VarChar, d.SegundoApellido)
+            .input('Nombres', sql.VarChar, d.Nombres)
+            .input('Apellidos', sql.VarChar, d.Apellidos)
+            .input('TurnoID', sql.Int, d.TurnoID)
             .input('FechaDeNacimiento', sql.Date, d.FechaDeNacimiento)
             .input('ComoSupo', sql.VarChar, d.ComoSupo || 'No especificado')
             .input('NomMadreOPadre', sql.VarChar, d.NomMadreOPadre)
@@ -97,10 +111,10 @@ const crearEstudiante = async (req, res) => {
             .input('FacebookPadreOMadre', sql.VarChar, d.FacebookPadreOMadre || '')
             .input('Peso', sql.Float, d.Peso || 0)
             .query(`INSERT INTO Estudiante 
-                (CategoriaID, PrimerNombre, SegundoNombre, PrimerApellido, SegundoApellido, FechaDeNacimiento, ComoSupo, NomMadreOPadre, ApellMadreOPadre, Ciudad, Barrio, Distrito, FechaDeIngreso, EnfermedadoAlergia, PermiteFoto, Estado, CintaActual, TelefonoDeEmergencia, FacebookPadreOMadre, Peso)
+                (CategoriaID, Nombres, Apellidos, TurnoID, FechaDeNacimiento, ComoSupo, NomMadreOPadre, ApellMadreOPadre, Ciudad, Barrio, Distrito, FechaDeIngreso, EnfermedadoAlergia, PermiteFoto, Estado, CintaActual, TelefonoDeEmergencia, FacebookPadreOMadre, Peso)
                 OUTPUT INSERTED.EstudianteID
                 VALUES 
-                (@CategoriaID, @PrimerNombre, @SegundoNombre, @PrimerApellido, @SegundoApellido, @FechaDeNacimiento, @ComoSupo, @NomMadreOPadre, @ApellMadreOPadre, @Ciudad, @Barrio, @Distrito, @FechaDeIngreso, @EnfermedadoAlergia, @PermiteFoto, @Estado, @CintaActual, @TelefonoDeEmergencia, @FacebookPadreOMadre, @Peso)`);
+                (@CategoriaID, @Nombres, @Apellidos, @TurnoID, @FechaDeNacimiento, @ComoSupo, @NomMadreOPadre, @ApellMadreOPadre, @Ciudad, @Barrio, @Distrito, @FechaDeIngreso, @EnfermedadoAlergia, @PermiteFoto, @Estado, @CintaActual, @TelefonoDeEmergencia, @FacebookPadreOMadre, @Peso)`);
 
         const nuevoID = resultEst.recordset[0].EstudianteID;
 
@@ -133,10 +147,9 @@ const actualizarEstudiante = async (req, res) => {
         await transaction.request()
             .input('id', sql.Int, id)
             .input('CategoriaID', sql.Int, d.CategoriaID)
-            .input('PrimerNombre', sql.VarChar, d.PrimerNombre)
-            .input('SegundoNombre', sql.VarChar, d.SegundoNombre)
-            .input('PrimerApellido', sql.VarChar, d.PrimerApellido)
-            .input('SegundoApellido', sql.VarChar, d.SegundoApellido)
+            .input('Nombres', sql.VarChar, d.Nombres)
+            .input('Apellidos', sql.VarChar, d.Apellidos)
+            .input('TurnoID', sql.Int, d.TurnoID)
             .input('FechaDeNacimiento', sql.Date, d.FechaDeNacimiento)
             .input('Peso', sql.Float, d.Peso || 0)
             .input('CintaActual', sql.VarChar, d.CintaActual)
@@ -151,8 +164,8 @@ const actualizarEstudiante = async (req, res) => {
             .input('FacebookPadreOMadre', sql.VarChar, d.FacebookPadreOMadre || '')
             .input('EnfermedadoAlergia', sql.VarChar, d.EnfermedadoAlergia || 'Ninguna')
             .query(`UPDATE Estudiante SET 
-                    CategoriaID=@CategoriaID, PrimerNombre=@PrimerNombre, SegundoNombre=@SegundoNombre, 
-                    PrimerApellido=@PrimerApellido, SegundoApellido=@SegundoApellido,
+                    CategoriaID=@CategoriaID, Nombres=@Nombres, Apellidos=@Apellidos, 
+                    TurnoID=@TurnoID,
                     FechaDeNacimiento=@FechaDeNacimiento, Peso=@Peso, CintaActual=@CintaActual, 
                     PermiteFoto=@PermiteFoto, Ciudad=@Ciudad, Barrio=@Barrio, Distrito=@Distrito, 
                     ComoSupo=@ComoSupo, NomMadreOPadre=@NomMadreOPadre, ApellMadreOPadre=@ApellMadreOPadre, 
