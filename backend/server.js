@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const { conectar } = require('./db/conexion');
+const { conectar, sql } = require('./db/conexion');
 const estudiantesRoutes = require('./routes/estudiantes.routes');
 const categoriasRoutes = require('./routes/categorias.routes');
 const profesoresRoutes =  require('./routes/profesor.routes');
@@ -19,7 +19,8 @@ const tusahRoutes = require('./routes/tusah.routes');
 const productoRoutes = require('./routes/producto.routes');
 const salidasRoutes = require('./routes/salidas.routes');
 const inventarioRoutes = require('./routes/inventario.routes');
-
+const realizaRoutes = require('./routes/realiza.routes');
+const dashboardRoutes = require('./routes/dashboard.routes');
 const app = express();
 
 // Middlewares
@@ -45,14 +46,41 @@ app.use('/tusah', tusahRoutes);
 app.use('/productos', productoRoutes);
 app.use('/salidas', salidasRoutes);
 app.use('/inventario', inventarioRoutes);
-
+app.use('/realiza', realizaRoutes);
+app.use('/dashboard', dashboardRoutes);
+app.use("/reportes", require("./routes/reporte.routes"));
 // Ruta de prueba rápida
 app.get('/', (req, res) => res.send("Servidor Activo 🥋"));
+
+async function actualizarMensualidades() {
+
+    try {
+
+        const pool = await sql.connect();
+
+        await pool.request()
+            .execute("sp_ActualizarMensualidadesVencidas");
+
+        console.log(
+            "✅ Mensualidades vencidas actualizadas"
+        );
+
+    } catch (error) {
+
+        console.error(
+            "Error actualizando mensualidades:",
+            error
+        );
+    }
+}
+
+
 
 // Función de inicio sincronizada
 async function iniciarServidor() {
     try {
         await conectar(); // Primero conectamos a la DB
+        await actualizarMensualidades();
         app.listen(3000, () => {
             console.log('---------------------------------------');
             console.log(' SISTEMA TAEKWONDO - UNI 2026');

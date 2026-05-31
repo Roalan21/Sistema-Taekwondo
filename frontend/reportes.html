@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Reportes</title>
+    <link rel="stylesheet" href="css/estilos.css">
+    <link rel="stylesheet" href="css/sidebar.css">
+</head>
+<body>
+
+<div class="contenido-pagina">
+    <div class="card-principal">
+
+        <div class="header-estudiantes">
+            <div class="header-texto">
+                <h1>📊 Reportes</h1>
+                <p>Consulta ingresos, mensualidades, morosos y productos vendidos.</p>
+            </div>
+        </div>
+
+        <div class="form-seccion">
+            <div class="grid-form">
+                <div class="input-group">
+                    <label>Desde</label>
+                    <input type="date" id="desde">
+                </div>
+
+                <div class="input-group">
+                    <label>Hasta</label>
+                    <input type="date" id="hasta">
+                </div>
+
+                <div class="input-group">
+                    <label>&nbsp;</label>
+                    <button class="btn-nuevo" onclick="cargarReportes()">
+                        Generar Reportes
+                    </button>
+                </div>
+            </div>
+        </div>
+        <button class="btn-nuevo" onclick="exportarPDF()">
+            📄 Exportar PDF
+        </button>
+
+        <div id="areaReportePDF">
+
+            <h2>Reporte General</h2>
+
+            <div class="tabla-contenedor">
+                <h3>Ingresos por tipo</h3>
+                <div id="reporteIngresos"></div>
+            </div>
+
+            <br>
+
+            <div class="tabla-contenedor">
+                <h3>Mensualidades</h3>
+                <div id="reporteMensualidades"></div>
+            </div>
+
+            <br>
+
+            <div class="tabla-contenedor">
+                <h3>Estudiantes morosos</h3>
+                <div id="reporteMorosos"></div>
+            </div>
+
+            <br>
+
+            <div class="tabla-contenedor">
+                <h3>Productos más vendidos</h3>
+                <div id="reporteProductos"></div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script src="js/reportes.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

@@ -1,7 +1,7 @@
 const URL = "http://localhost:3000";
 
 let listaProductos = []; 
-
+let listaProductosBD = [];
 document.addEventListener("DOMContentLoaded", () => {
     cargarProductos();
     cargarMetodos();
@@ -10,6 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("agregarProducto").addEventListener("click", agregarProducto);
     document.getElementById("guardarVenta").addEventListener("click", guardarVenta);
     document.getElementById("productoVenta").addEventListener("change", calcularTotal);
+    document.getElementById("productoVenta").addEventListener("change", () => {calcularTotal();mostrarPromocion();});
     document.getElementById("cantidadVenta").addEventListener("input", calcularTotal);
     document.getElementById("descuentoVenta").addEventListener("input", calcularTotal);
 });
@@ -29,7 +30,8 @@ function cambiarVista() {
 async function cargarProductos() {
     const res = await fetch(`${URL}/productos`);
     const data = await res.json();
-
+    console.log(data);
+    listaProductosBD = data;
     ["productoVenta", "productoRegalia", "productoPromocion"].forEach(id => {
         const select = document.getElementById(id);
         if (!select) return;
@@ -66,11 +68,28 @@ function agregarProducto() {
     const descuento = parseFloat(document.getElementById("descuentoVenta").value) || 0;
 
     if (!select.value || cantidad <= 0) {
-        alert("Seleccione producto y cantidad válida");
+        alertaAdvertencia("Seleccione producto y cantidad válida");
         return;
     }
+    const productoBD =
+        listaProductosBD.find(
+            p => p.ProductoID == select.value
+        );
 
-    const precio = parseFloat(select.selectedOptions[0].dataset.precio);
+    if (cantidad > productoBD.StockActual) {
+
+        alertaError("Stock insuficiente ❌");
+        return;
+
+    }
+
+    let precio = productoBD.PrecioVenta;
+
+    if (productoBD.TienePromocion == 1) {
+
+        precio = productoBD.PrecioPromocion;
+
+    }
     const total = precio * cantidad * (1 - descuento / 100);
 
     const producto = {
@@ -79,7 +98,10 @@ function agregarProducto() {
         cantidad,
         precio,
         descuento,
-        total
+        total,
+
+        promocion:
+            productoBD.TienePromocion == 1
     };
 
     listaProductos.push(producto);
@@ -101,7 +123,12 @@ function renderLista() {
     listaProductos.forEach((p, index) => {
         ul.innerHTML += `
             <li>
-                ${p.nombre} - Cant: ${p.cantidad} - Desc: ${p.descuento}% - Total: C$${p.total.toFixed(2)}
+                ${p.nombre}
+                - Cant: ${p.cantidad}
+                - Desc: ${p.descuento}%
+                - Total: C$${p.total.toFixed(2)}
+
+                ${p.promocion ? "🔥 PROMO" : ""}
                 <button onclick="eliminarProducto(${index})">X</button>
             </li>
         `;
@@ -120,7 +147,7 @@ function eliminarProducto(index) {
 
 async function guardarVenta() {
     if (listaProductos.length === 0) {
-        alert("Agregue al menos un producto");
+        alertaAdvertencia("Agregue al menos un producto");
         return;
     }
 
@@ -144,15 +171,20 @@ async function guardarVenta() {
 
         if (!res.ok) throw new Error(result.error);
 
-        alert(result.message);
+        Swal.fire({
+            icon: "success",
+            title: "Venta registrada",
+            text: result.message
+        }).then(() => {
 
-        listaProductos = [];
-        renderLista();
-        document.getElementById("totalCalculado").value = "";
+            window.location.href =
+                `recibo.html?id=${result.ReciboID}`;
+
+        });
 
     } catch (error) {
         console.error(error);
-        alert("Error en venta ❌");
+        alertaError("Error en venta ❌");
     }
 }
 
@@ -161,13 +193,75 @@ function calcularTotal() {
 
     if (!select.value) return;
 
-    const precio = parseFloat(select.selectedOptions[0].dataset.precio);
+    const productoBD =
+        listaProductosBD.find(
+            p => p.ProductoID == select.value
+        );
+
+    let precio = productoBD.PrecioVenta;
+
+    if (productoBD.TienePromocion == 1) {
+
+        precio = productoBD.PrecioPromocion;
+
+    }
     const cantidad = parseInt(document.getElementById("cantidadVenta").value) || 0;
     const descuento = parseFloat(document.getElementById("descuentoVenta").value) || 0;
 
     const total = precio * cantidad * (1 - descuento / 100);
 
     document.getElementById("totalCalculado").value = `C$ ${total.toFixed(2)}`;
+}
+
+function mostrarPromocion() {
+
+    const select =
+        document.getElementById("productoVenta");
+
+    const info =
+        document.getElementById("infoPromocion");
+
+    if (!select.value) {
+
+        info.style.display = "none";
+        return;
+
+    }
+
+    const producto =
+        listaProductosBD.find(
+            p => p.ProductoID == select.value
+        );
+
+    if (!producto) return;
+
+    if (producto.TienePromocion == 1) {
+
+        info.style.display = "block";
+
+        const ahorro =
+            producto.PrecioVenta -
+            producto.PrecioPromocion;
+
+        info.innerHTML = `
+            🔥 PROMOCIÓN ACTIVA<br><br>
+
+            Precio normal:
+            <strong>C$ ${producto.PrecioVenta}</strong><br>
+
+            Precio promoción:
+            <strong>C$ ${producto.PrecioPromocion}</strong><br>
+
+            Ahorras:
+            <strong>C$ ${ahorro}</strong>
+        `;
+
+    } else {
+
+        info.style.display = "none";
+
+    }
+
 }
 
 document.getElementById("guardarRegalia").addEventListener("click", async () => {
@@ -192,7 +286,7 @@ document.getElementById("guardarRegalia").addEventListener("click", async () => 
 
     } catch (error) {
         console.error(error);
-        alert("Error en regalía ❌");
+        alertaError("Error en regalía ❌");
     }
 });
 
@@ -204,7 +298,6 @@ document.getElementById("guardarPromocion").addEventListener("click", async () =
         fechaFin: document.getElementById("fechaFin").value,
         productoID: document.getElementById("productoPromocion").value,
         precioPromocion: parseFloat(document.getElementById("PrecioPromocion").value),
-        cantidad: parseInt(document.getElementById("precioPromo").value)
     };
 
     try {
@@ -215,11 +308,18 @@ document.getElementById("guardarPromocion").addEventListener("click", async () =
         });
 
         const result = await res.json();
+        console.log(result);
+        if (!res.ok) {
+
+            alertaError(result.error || "Error al crear promoción ❌");
+            return;
+
+        }
 
         alert(result.message);
 
     } catch (error) {
         console.error(error);
-        alert("Error en promoción ❌");
+        alertaError("Error en promoción ❌");
     }
 });

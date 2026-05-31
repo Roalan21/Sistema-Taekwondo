@@ -47,17 +47,28 @@ const crearImparte = async (req, res) => {
 
 // 🔹 ELIMINAR
 const eliminarImparte = async (req, res) => {
-    const { id } = req.params;
+    const { profesorId, turnoId } = req.params;
 
     try {
         const pool = await sql.connect();
-        await pool.request()
-            .input('id', sql.Int, id)
-            .query("DELETE FROM Imparte WHERE ImparteID = @id");
 
-        res.json({ message: "Eliminado" });
+        await pool.request()
+            .input('ProfesorID', sql.Int, profesorId)
+            .input('TurnoID', sql.Int, turnoId)
+            .query(`
+                DELETE FROM Imparte
+                WHERE ProfesorID = @ProfesorID
+                AND TurnoID = @TurnoID
+            `);
+
+        res.json({
+            message: "Asignación eliminada"
+        });
+
     } catch (err) {
-        res.status(500).json({ error: err.message });
+        res.status(500).json({
+            error: err.message
+        });
     }
 };
 

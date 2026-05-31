@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("formModalidad").addEventListener("submit", guardar);
 });
 
-// 🔥 CARGAR TURNOS
+//  CARGAR TURNOS
 async function cargarTurnos() {
     const res = await fetch(URL_TURNOS);
     const data = await res.json();
@@ -26,7 +26,7 @@ async function cargarTurnos() {
     });
 }
 
-// 🔥 GUARDAR MULTIPLE
+//  GUARDAR MULTIPLE
 async function guardar(e) {
     e.preventDefault();
 
@@ -37,12 +37,12 @@ async function guardar(e) {
     ).map(d => d.value);
 
     if (!turnoID) {
-        alert("Seleccione un turno");
+        alertaAdvertencia("Seleccione un turno");
         return;
     }
 
     if (dias.length === 0) {
-        alert("Seleccione al menos un día");
+        alertaAdvertencia("Seleccione al menos un día");
         return;
     }
 
@@ -56,14 +56,14 @@ async function guardar(e) {
     });
 
     if (res.ok) {
-        alert("Modalidades guardadas 🔥");
+        alertaExito("Modalidades guardadas ");
 
         document.getElementById("formModalidad").reset();
         listar();
     }
 }
 
-// 🔥 LISTAR
+//  LISTAR
 async function listar() {
     const res = await fetch(URL_MODALIDAD);
     const data = await res.json();
@@ -84,16 +84,20 @@ async function listar() {
     });
 }
 
-// 🔥 ELIMINAR
+//  ELIMINAR
 async function eliminar(id) {
-    if (!confirm("¿Eliminar modalidad?")) return;
+    const result =
+        await alertaConfirmacion(
+            "¿Eliminar modalidad?"
+        );
+    if (!result.isConfirmed) return;
 
     const res = await fetch(`${URL_MODALIDAD}/${id}`, {
         method: "DELETE"
     });
 
     if (res.ok) {
-        alert("Eliminado");
+        alertaError("Eliminado");
         listar();
     }
 }
@@ -101,12 +105,11 @@ async function eliminar(id) {
 function formatearHora(hora) {
     if (!hora) return "";
 
-    // 🔥 Si viene como Date completo (con T)
+ 
     if (hora.includes("T")) {
         hora = hora.split("T")[1];
     }
 
-    // 🔥 quitar milisegundos
     hora = hora.split('.')[0];
 
     let [h, m] = hora.split(':');

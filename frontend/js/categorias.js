@@ -15,9 +15,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
-// =========================
+
 // LISTAR
-// =========================
+
 async function listar() {
     try {
         const res = await fetch(URL);
@@ -66,9 +66,9 @@ async function listar() {
     }
 }
 
-// =========================
+
 // MODAL
-// =========================
+
 function abrirModal() {
     document.getElementById("modalCategoria").style.display = "flex";
     document.getElementById("tituloModal").innerText = "Nueva Categoría";
@@ -86,9 +86,9 @@ function cerrarModal() {
     idEditar = null;
 }
 
-// =========================
+
 // GUARDAR / EDITAR
-// =========================
+
 async function guardarCategoria() {
     const nombreInput = document.getElementById("nombre");
     const precioInput = document.getElementById("precio");
@@ -98,13 +98,13 @@ async function guardarCategoria() {
     
     // Validaciones
     if (!nombre) {
-        alert("Por favor, ingrese el nombre de la categoría");
+        alertaAdvertencia("Por favor, ingrese el nombre de la categoría");
         nombreInput.focus();
         return;
     }
     
     if (isNaN(precio) || precio <= 0) {
-        alert("Por favor, ingrese un precio válido mayor a 0");
+        alertaAdvertencia("Por favor, ingrese un precio válido mayor a 0");
         precioInput.focus();
         return;
     }
@@ -130,22 +130,22 @@ async function guardarCategoria() {
         });
 
         if (res.ok) {
-            alert(editando ? "Categoría actualizada correctamente" : "Categoría creada correctamente");
+            alertaExito(editando ? "Categoría actualizada correctamente" : "Categoría creada correctamente");
             cerrarModal();
             listar();
         } else {
             const error = await res.json();
-            alert(`Error: ${error.error || "No se pudo guardar la categoría"}`);
+            alertaError(`Error: ${error.error || "No se pudo guardar la categoría"}`);
         }
     } catch (error) {
         console.error("Error al guardar:", error);
-        alert("Error de conexión. Verifica que el servidor esté corriendo en http://localhost:3000");
+        alertaError("Error de conexión. Verifica que el servidor esté corriendo en http://localhost:3000");
     }
 }
 
-// =========================
+
 // EDITAR
-// =========================
+
 function editar(id, nombre, precio) {
     editando = true;
     idEditar = id;
@@ -158,9 +158,9 @@ function editar(id, nombre, precio) {
     abrirModal();
 }
 
-// =========================
+
 // ELIMINAR
-// =========================
+
 async function eliminar(id) {
     if (!confirm("¿Estás seguro de eliminar esta categoría?")) return;
 
@@ -170,21 +170,21 @@ async function eliminar(id) {
         });
 
         if (res.ok) {
-            alert("Categoría eliminada correctamente");
+            alertaExito("Categoría eliminada correctamente");
             listar();
         } else {
             const error = await res.json();
-            alert(`Error: ${error.error || "No se pudo eliminar la categoría"}`);
+            alertaError(`Error: ${error.error || "No se pudo eliminar la categoría"}`);
         }
     } catch (error) {
         console.error("Error al eliminar:", error);
-        alert("Error de conexión. Verifica que el servidor esté corriendo");
+        alertaError("Error de conexión. Verifica que el servidor esté corriendo");
     }
 }
 
-// =========================
+
 // BUSCAR
-// =========================
+
 function filtrarCategorias() {
     const input = document.getElementById("buscarCategoria").value.toLowerCase();
     const filas = document.querySelectorAll(".fila-estudiante");
@@ -198,9 +198,9 @@ function filtrarCategorias() {
     });
 }
 
-// =========================
+
 // FUNCIÓN AUXILIAR PARA ESCAPAR HTML
-// =========================
+
 function escapeHtml(text) {
     const div = document.createElement('div');
     div.textContent = text;

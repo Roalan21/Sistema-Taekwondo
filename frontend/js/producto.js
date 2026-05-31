@@ -1,5 +1,5 @@
-const URL = "http://localhost:3000";
 
+const URL = "http://localhost:3000/productos";
 document.addEventListener("DOMContentLoaded", () => {
     // 1. Listar los productos existentes nada más cargar la página
     listarProductos();
@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
 // --- FUNCIÓN PARA MOSTRAR LOS PRODUCTOS EN LA TABLA ---
 async function listarProductos() {
     try {
-        const res = await fetch(`${URL}/productos`);
+        const res = await fetch(`${URL}`);
         const productos = await res.json();
 
         const contenedor = document.getElementById("cuerpoTablaProductos");
@@ -37,6 +37,16 @@ async function listarProductos() {
                     <span class="${stockClase}" style="font-weight: bold; display: flex; align-items: center; gap: 5px;">
                         ${p.StockActual || 0} unidades
                     </span>
+                    <button
+                        onclick="abrirModalEditar(
+                            ${p.ProductoID},
+                            '${p.Nombre}',
+                            '${p.Descripcion}',
+                            ${p.PrecioVenta}
+                        )"
+                    >
+                        ✏️ Editar
+                    </button>
                 </div>
             `;
         });
@@ -53,14 +63,14 @@ async function crearProducto(e) {
     const descripcion = document.getElementById("descripcion").value.trim();
     const precio = parseFloat(document.getElementById("precio").value);
 
-    // 🔥 VALIDACIONES
+    //  VALIDACIONES
     if (!nombre) {
-        alert("El nombre es obligatorio");
+        alertaAdvertencia("El nombre es obligatorio");
         return;
     }
 
     if (isNaN(precio) || precio <= 0) {
-        alert("Ingrese un precio válido");
+        alertaAdvertencia("Ingrese un precio válido");
         return;
     }
 
@@ -85,16 +95,118 @@ async function crearProducto(e) {
             throw new Error(result.error || "Error al guardar producto");
         }
 
-        alert(result.message || "Producto guardado 📦");
+        alertaExito(result.message || "Producto guardado 📦");
 
         // Limpiar el formulario
         document.getElementById("formProducto").reset();
         
-        // 🔥 ACTUALIZAR LA TABLA para ver el nuevo producto sin recargar la página
+        //  ACTUALIZAR LA TABLA para ver el nuevo producto sin recargar la página
         listarProductos();
 
     } catch (error) {
         console.error("ERROR FRONT:", error);
-        alert("Error al guardar producto ❌");
+        alertaError("Error al guardar producto ❌");
+    }
+}
+
+function abrirModalEditar(
+    id,
+    nombre,
+    descripcion,
+    precio
+) {
+
+    document.getElementById(
+        "modalEditar"
+    ).style.display = "flex";
+
+    document.getElementById(
+        "editarProductoID"
+    ).value = id;
+
+    document.getElementById(
+        "editarNombre"
+    ).value = nombre;
+
+    document.getElementById(
+        "editarDescripcion"
+    ).value = descripcion;
+
+    document.getElementById(
+        "editarPrecio"
+    ).value = precio;
+}
+
+function cerrarModal() {
+
+    document.getElementById(
+        "modalEditar"
+    ).style.display = "none";
+}
+async function guardarEdicion() {
+
+    try {
+
+        const id =
+            document.getElementById(
+                "editarProductoID"
+            ).value;
+
+        const data = {
+
+            Nombre:
+                document.getElementById(
+                    "editarNombre"
+                ).value,
+
+            Descripcion:
+                document.getElementById(
+                    "editarDescripcion"
+                ).value,
+
+            PrecioVenta:
+                document.getElementById(
+                    "editarPrecio"
+                ).value
+        };
+
+        const res = await fetch(
+
+            `${URL}/${id}`,
+
+            {
+
+                method: "PUT",
+
+                headers: {
+                    "Content-Type":
+                    "application/json"
+                },
+
+                body: JSON.stringify(data)
+            }
+        );
+
+        const result =
+            await res.json();
+
+        if (!res.ok) {
+
+            throw new Error(
+                result.error
+            );
+        }
+
+        alertaExito(
+            "Producto actualizado"
+        );
+
+        cerrarModal();
+
+        listarProductos()
+
+    } catch (error) {
+
+        alertaError(error.message);
     }
 }

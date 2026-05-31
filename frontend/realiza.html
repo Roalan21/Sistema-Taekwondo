@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Realizar Examen
+    </title>
+
+    <link rel="stylesheet" href="css/estilos.css">
+    <link rel="stylesheet" href="css/sidebar.css">
+
+</head>
+
+<body>
+
+    <div class="contenido-pagina">
+
+        <!-- HEADER -->
+        <div class="header-estudiantes">
+
+            <div class="header-texto">
+
+                <h1>
+                    🥋 Exámenes de Cinta
+                </h1>
+
+                <p id="infoExamen">
+                    Selecciona un examen
+                </p>
+
+            </div>
+
+            <button
+                id="btnVolver"
+                class="btn-nuevo"
+            >
+                ⬅ Volver
+            </button>
+
+        </div>
+
+        <!-- FORM -->
+        <div class="card-form">
+
+            <form
+                id="formRealiza"
+                class="grid-form"
+            >
+
+                <div class="input-group">
+
+                    <label>
+                        Estudiante
+                    </label>
+
+                    <select
+                        id="estudiante"
+                        required
+                    >
+
+                        <option value="">
+                            Cargando...
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <div class="input-group">
+
+                    <label>
+                        Examen
+                    </label>
+
+                    <select
+                        id="examen"
+                        required
+                    >
+
+                        <option value="">
+                            Cargando...
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <div
+                    style="
+                        display:flex;
+                        align-items:end;
+                    "
+                >
+
+                    <button
+                        type="submit"
+                        class="btn-guardar"
+                    >
+                        💳 Ir a pagar
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+        <!-- TABLA -->
+        <div class="tabla-header"
+            style="
+                grid-template-columns:
+                2fr 1fr 1fr 1fr 1fr 1fr;
+            "
+        >
+
+            <span>Estudiante</span>
+            <span>Cinta Actual</span>
+            <span>Asistencia</span>
+            <span>Nota</span>
+            <span>Resultado</span>
+            <span>Acciones</span>
+
+        </div>
+
+        <div id="listaParticipantes"></div>
+
+    </div>
+    <script src="js/alertas.js"></script>
+    <script src="js/realiza.js"></script>
+    <script src="js/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</body>
+</html>

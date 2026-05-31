@@ -7,12 +7,20 @@ let eventoSeleccionado = null;
 document.addEventListener("DOMContentLoaded", async () => {
     // Obtener parámetros de URL (si viene desde eventos.html)
     const urlParams = new URLSearchParams(window.location.search);
+    const modo = urlParams.get("modo");
     const eventoId = urlParams.get('eventoId');
     const eventoTitulo = urlParams.get('eventoTitulo');
-
+    const formulario = document.querySelector(".card-form");
     // Cargar selects
     await cargarEstudiantes();
     await cargarEventos();
+
+    if (modo === "participantes") {
+        formulario.style.display = "none";
+
+        document.getElementById("infoEvento").innerHTML =
+            `🏆 Participantes del evento: <strong>${decodeURIComponent(eventoTitulo || '')}</strong>`;
+    }
 
     // Si viene con evento seleccionado
     if (eventoId) {
@@ -49,10 +57,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         const estudianteId = document.getElementById("estudiante").value;
         const eventoId = document.getElementById("evento").value;
-        const resultado = document.getElementById("resultado").value;
 
         if (!estudianteId || !eventoId) {
-            alert("Seleccione un estudiante y un evento");
+            alertaAdvertencia("Seleccione un estudiante y un evento");
             return;
         }
 
@@ -61,37 +68,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         const existe = await resVerif.json();
 
         if (existe.existe) {
-            alert("⚠️ Este estudiante ya está registrado en este evento");
+            alertaAdvertencia("⚠️ Este estudiante ya está registrado en este evento");
             return;
         }
-
-        const datos = {
-            EstudianteID: parseInt(estudianteId),
-            EventoID: parseInt(eventoId),
-            Resultado: resultado || null
-        };
-
-        try {
-            const res = await fetch(URL_PARTICIPA, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(datos)
-            });
-
-            if (res.ok) {
-                alert("✅ Participación registrada exitosamente");
-                document.getElementById("formParticipa").reset();
-                document.getElementById("evento").value = eventoSeleccionado || "";
-                if (eventoSeleccionado) {
-                    cargarParticipaciones(eventoSeleccionado);
-                }
-            } else {
-                alert("❌ Error al registrar");
-            }
-        } catch (error) {
-            console.error("Error:", error);
-            alert("❌ Error al conectar con el servidor");
-        }
+        // Redirigir a pagos antes de registrar
+        window.location.href =
+            `pagos.html?modo=evento&estudiante=${estudianteId}&evento=${eventoId}`;
     });
 });
 
@@ -105,7 +87,7 @@ async function cargarEstudiantes() {
         select.innerHTML = '<option value="">Seleccione estudiante...</option>';
         
         data.forEach(e => {
-            const nombreCompleto = `${e.PrimerNombre} ${e.PrimerApellido}`;
+            const nombreCompleto = `${e.Nombres} ${e.Apellidos}`;
             select.innerHTML += `<option value="${e.EstudianteID}">${nombreCompleto}</option>`;
         });
     } catch (error) {
@@ -143,66 +125,270 @@ async function cargarEventos() {
 
 // Cargar participaciones de un evento específico
 async function cargarParticipaciones(eventoId) {
+
     try {
+
         const res = await fetch(`${URL_PARTICIPA}/evento/${eventoId}`);
+
         const participaciones = await res.json();
-        
-        const contenedor = document.getElementById("contenedor-participaciones");
-        
-        if (participaciones.length === 0) {
-            contenedor.innerHTML = `<div class="sin-resultados">No hay estudiantes inscritos en este evento</div>`;
-            return;
-        }
-        
-        contenedor.innerHTML = participaciones.map(p => {
-            let resultadoDisplay = '';
-            if (p.Resultado === 'Oro') resultadoDisplay = '🥇 Oro';
-            else if (p.Resultado === 'Plata') resultadoDisplay = '🥈 Plata';
-            else if (p.Resultado === 'Bronce') resultadoDisplay = '🥉 Bronce';
-            else if (p.Resultado === 'Participación') resultadoDisplay = '📋 Participación';
-            else resultadoDisplay = '❌ Sin resultado';
-            
-            return `
-                <div class="fila-estudiante">
-                    <div class="info-izquierda">
-                        <div class="avatar-estudiante">👤</div>
-                        <div>
-                            <div class="nombre-estudiante">${p.Estudiante}</div>
-                            <small style="color: #64748b;">ID: ${p.EstudianteID}</small>
-                        </div>
-                    </div>
-                    <div>${p.Evento}</div>
-                    <div>${formatearFechaLocal(p.FechaRegistro)}</div>
-                    <div>${resultadoDisplay}</div>
-                    <div class="acciones">
-                        <button class="btn-eliminar" data-id="${p.ParticipaID}" data-estudiante="${p.Estudiante}">
-                            🗑️ Eliminar
-                        </button>
-                    </div>
+
+        console.log(participaciones);
+
+        const contenedor =
+            document.getElementById("contenedor-participaciones");
+
+        // VALIDAR ARRAY
+        if (!Array.isArray(participaciones)) {
+
+            contenedor.innerHTML = `
+                <div class="sin-resultados">
+                    Error al cargar participantes
                 </div>
             `;
+
+            return;
+        }
+
+        // SIN PARTICIPANTES
+        if (participaciones.length === 0) {
+
+            contenedor.innerHTML = `
+                <div class="sin-resultados">
+                    No hay estudiantes inscritos en este evento
+                </div>
+            `;
+
+            return;
+        }
+
+        // RENDER
+        contenedor.innerHTML = participaciones.map(p => {
+
+            let resultadoDisplay = '';
+
+            if (p.Resultado === 'Oro')
+                resultadoDisplay = '🥇 Oro';
+
+            else if (p.Resultado === 'Plata')
+                resultadoDisplay = '🥈 Plata';
+
+            else if (p.Resultado === 'Bronce')
+                resultadoDisplay = '🥉 Bronce';
+
+            else if (p.Resultado === 'Participación')
+                resultadoDisplay = '📋 Participación';
+
+            else
+                resultadoDisplay = '❌ Sin resultado';
+
+            const asistenciaDisplay =
+                p.Asistencia
+                    ? '✅ Asistió'
+                    : '❌ No asistió';
+
+            return `
+                <div class="fila-estudiante">
+
+                    <div class="info-izquierda">
+
+                        <div class="avatar-estudiante">
+                            👤
+                        </div>
+
+                        <div>
+
+                            <div class="nombre-estudiante">
+                                ${p.Estudiante}
+                            </div>
+
+                            <small style="color: #64748b;">
+                                ID: ${p.EstudianteID}
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                    <div>${p.Evento}</div>
+
+                    <div>
+                        ${formatearFechaLocal(p.FechaRegistro)}
+                    </div>
+
+                    <div>
+                        <select class="select-asistencia"
+                            data-id="${p.ParticipaID}">
+
+                            <option value="1"
+                                ${p.Asistencia ? "selected" : ""}>
+                                ✅ Asistió
+                            </option>
+
+                            <option value="0"
+                                ${!p.Asistencia ? "selected" : ""}>
+                                ❌ No asistió
+                            </option>
+
+                        </select>
+                    </div>
+
+                    <div>
+                        <select class="select-resultado"
+                            data-id="${p.ParticipaID}">
+
+                            <option value=""
+                                ${!p.Resultado ? "selected" : ""}>
+                                Sin resultado
+                            </option>
+
+                            <option value="Oro"
+                                ${p.Resultado === "Oro" ? "selected" : ""}>
+                                🥇 Oro
+                            </option>
+
+                            <option value="Plata"
+                                ${p.Resultado === "Plata" ? "selected" : ""}>
+                                🥈 Plata
+                            </option>
+
+                            <option value="Bronce"
+                                ${p.Resultado === "Bronce" ? "selected" : ""}>
+                                🥉 Bronce
+                            </option>
+
+                            <option value="Participación"
+                                ${p.Resultado === "Participación" ? "selected" : ""}>
+                                📋 Participación
+                            </option>
+
+                        </select>
+                    </div>
+
+                    <div class="acciones">
+
+                        <button
+                            class="btn-guardar"
+                            onclick="guardarParticipacion(${p.ParticipaID})"
+                        >
+                            💾 Guardar
+                        </button>
+
+                        <button
+                            class="btn-eliminar"
+                            data-id="${p.ParticipaID}"
+                            data-estudiante="${p.Estudiante}"
+                        >
+                            🗑️ Eliminar
+                        </button>
+
+                    </div>
+
+                </div>
+            `;
+
         }).join("");
-        
-        // Agregar event listeners a los botones eliminar
-        document.querySelectorAll(".btn-eliminar").forEach(btn => {
+
+        // BOTONES ELIMINAR
+        document.querySelectorAll(".btn-eliminar")
+            .forEach(btn => {
+
             btn.addEventListener("click", async () => {
+
                 const id = btn.dataset.id;
-                const estudiante = btn.dataset.estudiante;
-                
-                if (confirm(`¿Eliminar la inscripción de ${estudiante}?`)) {
-                    await fetch(`${URL_PARTICIPA}/${id}`, { method: "DELETE" });
-                    alert("Inscripción eliminada");
+
+                const estudiante =
+                    btn.dataset.estudiante;
+                const result =
+                    await alertaConfirmacion(
+                        "¿Eliminar la inscripción de ${estudiante}?"
+                    );
+                if (result.isConfirmed)
+                {
+
+                    await fetch(
+                        `${URL_PARTICIPA}/${id}`,
+                        { method: "DELETE" }
+                    );
+
+                    alertaExito("Inscripción eliminada");
+
                     cargarParticipaciones(eventoSeleccionado);
                 }
             });
         });
+
         
+       
+
     } catch (error) {
-        console.error("Error cargando participaciones:", error);
-        document.getElementById("contenedor-participaciones").innerHTML = 
-            `<div class="sin-resultados">Error al cargar participantes</div>`;
+
+        console.error(
+            "Error cargando participaciones:",
+            error
+        );
+
+        document.getElementById(
+            "contenedor-participaciones"
+        ).innerHTML = `
+            <div class="sin-resultados">
+                Error al cargar participantes
+            </div>
+        `;
     }
 }
+
+async function guardarParticipacion(id) {
+
+    try {
+
+        const fila =
+            document.querySelector(
+                `.select-asistencia[data-id="${id}"]`
+            ).closest(".fila-estudiante");
+
+        const asistencia =
+            fila.querySelector(".select-asistencia").value;
+
+        const resultado =
+            fila.querySelector(".select-resultado").value;
+
+        const res = await fetch(
+            `${URL_PARTICIPA}/${id}`,
+            {
+                method: "PUT",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+
+                    Asistencia: parseInt(asistencia),
+
+                    Resultado: resultado
+                })
+            }
+        );
+
+        const data = await res.json();
+
+        if (!res.ok) {
+
+            throw new Error(
+                data.error || "Error actualizando"
+            );
+        }
+
+        alertaExito("✅ Participación actualizada");
+
+    } catch (error) {
+
+        console.error(error);
+
+        alertaError("❌ " + error.message);
+    }
+}
+window.guardarParticipacion = guardarParticipacion;
 
 // Función auxiliar para formatear fecha
 function formatearFechaLocal(fechaIso) {

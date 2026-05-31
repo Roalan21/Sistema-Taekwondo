@@ -1,6 +1,6 @@
 const { sql } = require('../db/conexion');
 
-// 🔥 VENTA
+//  VENTA
 const crearVenta = async (req, res) => {
     const { productos, MetodoPagoID, MontoFinal } = req.body;
 
@@ -21,7 +21,7 @@ const crearVenta = async (req, res) => {
 
         let totalFinal = 0;
 
-        // 🔥 recalcular total (SEGURIDAD)
+        //  recalcular total (SEGURIDAD)
         for (let p of productos) {
             const descuento = p.descuento || 0;
             const subtotal = p.precio * p.cantidad * (1 - descuento / 100);
@@ -37,9 +37,9 @@ const crearVenta = async (req, res) => {
         for (let p of productos) {
             await transaction.request()
                 .input("ProductoID", sql.Int, p.id)
-                .input("Cantidad", sql.Int, p.cantidad * -1)
+                .input("Cantidad", sql.Int, p.cantidad)
                 .input("Descripcion", sql.VarChar, "Salida por venta")
-                .input("Tipo", sql.VarChar, "Salida")
+                .input("Tipo", sql.VarChar, "SALIDA")
                 .input("Fecha", sql.Date, new Date())
                 .input("Estado", sql.Bit, 1)
                 .query(`
@@ -48,24 +48,27 @@ const crearVenta = async (req, res) => {
                 `);
         }
 
-        // 🔹 RECIBO
+         detalles = "Venta de productos";
+
+        //  RECIBO
         const recibo = await transaction.request()
             .input("Descripcion", sql.VarChar, "Venta de productos")
-            .input("Tipo", sql.VarChar, "Venta")
+            .input("Tipo", sql.VarChar, "VENTA")
+            .input("Detalles", sql.VarChar, detalles)
             .input("MontoFinal", sql.Decimal(10,2), totalFinal)
             .input("TotalFinal", sql.Decimal(10,2), totalFinal)
             .input("Estado", sql.Bit, 1)
             .input("FechaEmision", sql.Date, new Date())
             .query(`
-                INSERT INTO Recibo (Descripcion, Tipo, MontoFinal, TotalFinal, Estado, FechaEmision)
+                INSERT INTO Recibo (Descripcion, Tipo, Detalles, MontoFinal, TotalFinal, Estado, FechaEmision)
                 OUTPUT INSERTED.ReciboID
-                VALUES (@Descripcion, @Tipo, @MontoFinal, @TotalFinal, @Estado, @FechaEmision)
+                VALUES (@Descripcion, @Tipo, @Detalles, @MontoFinal, @TotalFinal, @Estado, @FechaEmision)
             `);
 
         const reciboID = recibo.recordset[0].ReciboID;
 
 
-        // 🔹 VENTA
+        //  VENTA
         const venta = await transaction.request()
             .input("ReciboID", sql.Int, reciboID)
             .input("Estado", sql.Bit, 1)
@@ -81,7 +84,7 @@ const crearVenta = async (req, res) => {
 
         const ventaID = venta.recordset[0].VentaID;
 
-        // 🔹 DETALLE
+        //  DETALLE
         for (let p of productos) {
             const descuento = p.descuento || 0;
             const subtotal = p.precio * p.cantidad * (1 - descuento / 100);
@@ -90,16 +93,17 @@ const crearVenta = async (req, res) => {
                 .input("VentaID", sql.Int, ventaID)
                 .input("ProductoID", sql.Int, p.id)
                 .input("CantidadProducto", sql.Int, p.cantidad)
+                .input("Descuento", sql.Decimal(10,2), p.descuento || 0)
                 .input("PrecioUnitario", sql.Decimal(10,2), p.precio)
                 .query(`
-                    INSERT INTO Produce (VentaID, ProductoID, CantidadProducto, PrecioUnitario)
-                    VALUES (@VentaID, @ProductoID, @CantidadProducto, @PrecioUnitario)
+                    INSERT INTO Produce (VentaID, ProductoID, CantidadProducto,  Descuento, PrecioUnitario)
+                    VALUES (@VentaID, @ProductoID, @CantidadProducto,  @Descuento, @PrecioUnitario)
                 `);
         }
 
         await transaction.commit();
 
-        res.json({ message: "Venta registrada 💰" });
+        res.json({ message: "Venta registrada 💰", ReciboID: reciboID});
 
     } catch (err) {
         await transaction.rollback();
@@ -114,7 +118,7 @@ const crearVenta = async (req, res) => {
     }
 };
 
-// 🔥 REGALIA
+//  REGALIA
 const crearRegalia = async (req, res) => {
     const { destinatario, descripcion, productoID, cantidad } = req.body;
 
@@ -128,9 +132,9 @@ const crearRegalia = async (req, res) => {
 
         await pool.request()
             .input("ProductoID", sql.Int, productoID)
-            .input("Cantidad", sql.Int, cantidad * -1)
+            .input("Cantidad", sql.Int, cantidad)
             .input("Descripcion", sql.VarChar, "Salida por regalía")
-            .input("Tipo", sql.VarChar, "Salida")
+            .input("Tipo", sql.VarChar, "SALIDA")
             .input("Fecha", sql.Date, new Date())
             .input("Estado", sql.Bit, 1)
             .query(`
@@ -174,7 +178,7 @@ const crearRegalia = async (req, res) => {
     }
 };
 
-// 🔥 PROMOCION
+//  PROMOCION
 const crearPromocion = async (req, res) => {
     const { tipo, fechaInicio, fechaFin, productoID, precioPromocion, cantidad } = req.body;
 
@@ -186,39 +190,70 @@ const crearPromocion = async (req, res) => {
             return res.status(400).json({ error: "Datos incompletos" });
         }
 
-        await pool.request()
-            .input("ProductoID", sql.Int, productoID)
-            .input("Cantidad", sql.Int, cantidad * -1)
-            .input("Descripcion", sql.VarChar, "Salida por promoción")
-            .input("Tipo", sql.VarChar, "Salida")
-            .input("Fecha", sql.Date, new Date())
-            .input("Estado", sql.Bit, 1)
-            .query(`
-                INSERT INTO Inventario (ProductoID, Cantidad, Descripcion, TipoMovimiento, Fecha, Estado)
-                VALUES (@ProductoID, @Cantidad, @Descripcion, @Tipo, @Fecha, @Estado)
-        `);
-
         const promo = await pool.request()
-            .input("TipoPromo", sql.VarChar, tipo)
+            .input("PrecioPromocion", sql.Decimal(10,2), precioPromocion)
             .input("FechaInicio", sql.Date, fechaInicio)
             .input("FechaFin", sql.Date, fechaFin)
-            .input("PrecioPromocion", sql.Decimal(10,2), precioPromocion)
+            .input("TipoPromo", sql.VarChar, tipo)
             .input("Estado", sql.Bit, 1)
+            .input("Descripcion", sql.VarChar, tipo)
             .query(`
-                INSERT INTO Promocion (TipoPromo, FechaInicio, FechaFin, PrecioPromocion, Estado )
+                INSERT INTO Promocion
+                (
+                    PrecioPromocion,
+                    FechaInicio,
+                    FechaFin,
+                    TipoPromo,
+                    Estado,
+                    Descripcion
+                )
                 OUTPUT INSERTED.PromocionID
-                VALUES (@TipoPromo, @FechaInicio, @FechaFin, @PrecioPromocion, @Estado)
+                VALUES
+                (
+                    @PrecioPromocion,
+                    @FechaInicio,
+                    @FechaFin,
+                    @TipoPromo,
+                    @Estado,
+                    @Descripcion
+                )
             `);
 
         const promoID = promo.recordset[0].PromocionID;
 
+        //  buscar precio original del producto
+        const producto = await pool.request()
+            .input("ProductoID", sql.Int, productoID)
+            .query(`
+                SELECT PrecioVenta
+                FROM Producto
+                WHERE ProductoID = @ProductoID
+            `);
+
+        const precioOriginal =
+            producto.recordset[0].PrecioVenta;
+
+        //  guardar detalle promoción
         await pool.request()
             .input("PromocionID", sql.Int, promoID)
             .input("ProductoID", sql.Int, productoID)
-            .input("Cantidad", sql.Int, cantidad)
+            .input("PrecioOriginal", sql.Decimal(10,2), precioOriginal)
+            .input("PrecioPromocionAplicado", sql.Decimal(10,2), precioPromocion)
             .query(`
                 INSERT INTO DetalleDePromocion
-                VALUES (@PromocionID, @ProductoID, @Cantidad)
+                (
+                    PromocionID,
+                    ProductoID,
+                    PrecioOriginal,
+                    PrecioPromocionAplicado
+                )
+                VALUES
+                (
+                    @PromocionID,
+                    @ProductoID,
+                    @PrecioOriginal,
+                    @PrecioPromocionAplicado
+                )
             `);
 
         res.json({ message: "Promoción registrada 🏷️" });
@@ -230,7 +265,10 @@ const crearPromocion = async (req, res) => {
         console.error("Número:", err.number);
         console.error("Línea:", err.lineNumber);
 
-        res.status(500).json({ error: err.message });
+        res.status(500).json({  
+            error: err.message,
+            numero: err.number,
+            linea: err.lineNumber});
     }
 };
 

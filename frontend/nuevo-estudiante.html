@@ -38,6 +38,42 @@
                             <small style="color: #7f8c8d;">Si tiene varias, sepárelas con una coma (,)</small>
                         </div>
                     </div>
+
+                    <div class="form-seccion">
+                        <h3>Datos de Ingreso y Grado</h3>
+                        <div class="grid-form">
+                            <label>Categoría: 
+                                <select id="CategoriaID" name="CategoriaID" required>
+                                    <option value="">Cargando categorías...</option>
+                                </select>
+                            </label>
+                            <label>Turno:
+                                <select id="TurnoID" name="TurnoID" required>
+                                    <option value="">Seleccione Turno...</option>
+                                </select>
+                            </label>
+                            <select name="CintaActual" id="CintaActual" required>
+                                <option value="">Seleccione una cinta...</option>
+                                <option value="Blanca">Blanca</option>
+                                <option value="Blanca Avanzada">Blanca Avanzada</option>
+                                <option value="Amarilla">Amarilla</option>
+                                <option value="Amarilla Avanzada">Amarilla Avanzada</option>
+                                <option value="Verde">Verde</option>
+                                <option value="Verde Avanzada">Verde Avanzada</option>
+                                <option value="Azul">Azul</option>
+                                <option value="Azul Avanzada">Azul Avanzada</option>
+                                <option value="Roja">Roja</option>
+                                <option value="Roja Avanzada">Roja Avanzada</option>
+                                <option value="Negra">Negra</option>
+                            </select>
+                            <label>Fecha Ingreso: <input type="date" name="FechaDeIngreso" required></label>
+                          <label class="label">¿Permite tomar fotos?</label>
+                                <select id="PermiteFoto" name="PermiteFoto" class="input-control">
+                                    <option value="1">Sí, permite fotos</option>
+                                    <option value="0">No permite fotos</option>
+                                </select>
+                        </div>
+                    </div>
         
                     <div class="form-seccion">
                         <h3>Ubicación y Contacto de Emergencia</h3>
@@ -55,28 +91,7 @@
                         </div>
                     </div>
         
-                    <div class="form-seccion">
-                        <h3>Datos de Ingreso y Grado</h3>
-                        <div class="grid-form">
-                            <label>Categoría: 
-                                <select id="CategoriaID" name="CategoriaID" required>
-                                    <option value="">Cargando categorías...</option>
-                                </select>
-                            </label>
-                            <label>Turno:
-                                <select id="TurnoID" name="TurnoID" required>
-                                    <option value="">Seleccione Turno...</option>
-                                </select>
-                            </label>
-                            <input type="text" name="CintaActual" placeholder="Cinta Actual (Ej: Blanca)" required>
-                            <label>Fecha Ingreso: <input type="date" name="FechaDeIngreso" required></label>
-                          <label class="label">¿Permite tomar fotos?</label>
-                                <select id="PermiteFoto" name="PermiteFoto" class="input-control">
-                                    <option value="1">Sí, permite fotos</option>
-                                    <option value="0">No permite fotos</option>
-                                </select>
-                        </div>
-                    </div>
+                    
         
                     <div style="display: flex; gap: 10px;">
                         <button type="submit" class="btn-guardar">Guardar Expediente</button>
@@ -89,7 +104,7 @@
             </div>
         </main>
 
-
+    <script src="js/alertas.js"></script>
     <script src="js/main.js"></script>
     <script src="js/api.js"></script>
     <script src="js/registro.js"></script>
@@ -103,6 +118,6 @@
             }
         });
     </script>
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
 </html>

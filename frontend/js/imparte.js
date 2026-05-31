@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
-// 🔹 CARGAR PROFESORES
+//  CARGAR PROFESORES
 async function cargarProfesores() {
     const res = await fetch("http://localhost:3000/profesores");
     const data = await res.json();
@@ -41,7 +41,7 @@ async function cargarProfesores() {
     });
 }
 
-// 🔹 CARGAR TURNOS
+//  CARGAR TURNOS
 async function cargarTurnos() {
     const res = await fetch("http://localhost:3000/turnos");
     const data = await res.json();
@@ -55,7 +55,7 @@ async function cargarTurnos() {
     });
 }
 
-// 🔹 LISTAR
+//  LISTAR
 async function listar() {
     const res = await fetch(URL);
     const data = await res.json();
@@ -78,9 +78,13 @@ async function listar() {
     });
 }
 
-// 🔹 ELIMINAR
+//  ELIMINAR
 async function eliminar(id) {
-    if (!confirm("¿Eliminar asignación?")) return;
+    const result =
+        await alertaConfirmacion(
+            "¿Eliminar asignacion?"
+        );
+    if (!result.isConfirmed) return;
 
     await fetch(`${URL}/${id}`, { method: "DELETE" });
     listar();
@@ -89,12 +93,12 @@ async function eliminar(id) {
 function formatearHora(hora) {
     if (!hora) return "";
 
-    // 🔥 Si viene como Date completo (con T)
+    
     if (hora.includes("T")) {
         hora = hora.split("T")[1];
     }
 
-    // 🔥 quitar milisegundos
+    
     hora = hora.split('.')[0];
 
     let [h, m] = hora.split(':');

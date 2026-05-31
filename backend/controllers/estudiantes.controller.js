@@ -117,7 +117,40 @@ const crearEstudiante = async (req, res) => {
                 (@CategoriaID, @Nombres, @Apellidos, @TurnoID, @FechaDeNacimiento, @ComoSupo, @NomMadreOPadre, @ApellMadreOPadre, @Ciudad, @Barrio, @Distrito, @FechaDeIngreso, @EnfermedadoAlergia, @PermiteFoto, @Estado, @CintaActual, @TelefonoDeEmergencia, @FacebookPadreOMadre, @Peso)`);
 
         const nuevoID = resultEst.recordset[0].EstudianteID;
+        
+        // BUSCAR PRECIO DE CATEGORÍA
+        const categoria = await transaction.request()
+            .input('CategoriaID', sql.Int, d.CategoriaID)
+            .query(`
+                SELECT Precio
+                FROM Categoria
+                WHERE CategoriaID = @CategoriaID
+            `);
+        const precioMensualidad = categoria.recordset[0].Precio;
+        const resultMensualidad = await transaction.request()
+            .input('EstudianteID', sql.Int, nuevoID)
+            .input('Precio', sql.Decimal(10,2), precioMensualidad)
+            .input('FechaLimite', sql.Date, d.FechaDeIngreso)
+            .input('Estado', sql.VarChar, 'PENDIENTE')
+            .query(`
+                INSERT INTO Mensualidad
+                (
+                    EstudianteID,
+                    Precio,
+                    FechaLimite,
+                    Estado
+                )
+                OUTPUT INSERTED.MensualidadID
+                VALUES
+                (
+                    @EstudianteID,
+                    @Precio,
+                    @FechaLimite,
+                    @Estado
+                )
+            `);
 
+        const mensualidadID = resultMensualidad.recordset[0].MensualidadID;
         // INSERTAR NACIONALIDADES AL CREAR
         if (d.NacionalidadesArr && d.NacionalidadesArr.length > 0) {
             for (let nac of d.NacionalidadesArr) {
@@ -133,7 +166,7 @@ const crearEstudiante = async (req, res) => {
         }
 
         await transaction.commit();
-        res.json({ message: "Atleta registrado con éxito" });
+        res.json({ message: "Atleta registrado con éxito",EstudianteID: nuevoID,MensualidadID: mensualidadID });
     } catch (err) { await transaction.rollback(); res.status(500).json({ error: err.message }); }
 };
 

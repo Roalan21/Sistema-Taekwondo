@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="css/estilos.css">
+    <link rel="stylesheet" href="css/sidebar.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+
+</head>
+
+<body>
+    <main class="contenido-pagina">
+
+        <div class="contenedor">
+
+            <h1>Dashboard General </h1>
+
+            <p id="fechaActual"></p>
+
+            <!-- KPIs -->
+            <div class="cards">
+
+                <div class="card">
+                    <h3>👥 Estudiantes Activos</h3>
+                    <p id="totalEstudiantes">0</p>
+                </div>
+
+                <div class="card">
+                    <h3> Ingresos del Mes</h3>
+                    <p id="totalIngresos">C$0</p>
+                </div>
+
+                <div class="card">
+                    <h3>Mensualidades Pendientes</h3>
+                    <p id="mensualidadesPendientes">0</p>
+                </div>
+
+                <div class="card">
+                    <h3>Mensualidades Vencidas</h3>
+                    <p id="mensualidadesVencidas">0</p>
+                </div>
+
+                <div class="card">
+                    <h3> Bajo Stock</h3>
+                    <p id="productosStock">0</p>
+                </div>
+
+            </div>
+            <!-- ALERTAS -->
+            <div class="grid-alertas">
+
+                <div class="seccion">
+                    <h2> Estudiantes Morosos</h2>
+                    <div id="listaMorosos"></div>
+                </div>
+
+                <div class="seccion">
+                    <h2> Productos con Bajo Stock</h2>
+                    <div id="listaStock"></div>
+                </div>
+
+            </div>
+
+            <!-- AGENDA -->
+            <div class="grid-agenda">
+
+                <div class="seccion">
+                    <h2> Próximos Eventos</h2>
+                    <div id="listaEventos"></div>
+                </div>
+
+                <div class="seccion">
+                    <h2> Próximos Exámenes</h2>
+                    <div id="listaExamenes"></div>
+                </div>
+
+                <div class="seccion">
+                    <h2>🎂 Cumpleaños del Mes</h2>
+                    <div id="listaCumpleanios"></div>
+                </div>
+
+            </div>
+
+            <!-- GRAFICAS -->
+            <div class="grid-graficas">
+
+                <div class="seccion">
+                    <h2> Estado de mensualidades</h2>
+                    <canvas id="graficaMensualidades"></canvas>
+                </div>
+
+                <div class="seccion">
+                    <h2> Ingresos por tipo de pago</h2>
+                    <canvas id="graficaIngresos"></canvas>
+                </div>
+
+            </div>
+
+
+
+            <!-- PRODUCTOS -->
+            <div class="seccion">
+
+                <h2>📈 Productos Más Vendidos</h2>
+
+                <canvas id="graficaProductos"></canvas>
+
+            </div>
+
+        </div>
+
+    </main>
+
+
+    <script src="js/alertas.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</body>
+</html>

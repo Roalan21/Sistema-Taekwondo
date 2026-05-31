@@ -44,16 +44,26 @@ const crearEvento = async (req, res) => {
             .input('Fecha', sql.Date, Fecha)
             .input('Descripcion', sql.VarChar, Descripcion || '')
             .input('Precio', sql.Decimal(10,2), Precio)
-            .input('PagoID', sql.Int, PagoID || 1) // Valor temporal
             .input('Estado', sql.Bit, Estado || 1)
             .query(`
-                INSERT INTO Evento (Nombre, Lugar, Fecha, Descripcion, Precio, PagoID, Estado)
-                VALUES (@Nombre, @Lugar, @Fecha, @Descripcion, @Precio, @PagoID, @Estado)
+                INSERT INTO Evento (Nombre, Lugar, Fecha, Descripcion, Precio, Estado)
+                VALUES (@Nombre, @Lugar, @Fecha, @Descripcion, @Precio, @Estado)
             `);
         res.json({ message: "Evento creado" });
     } catch (error) {
-        console.error(error); // ESTO TE DIRÁ EL ERROR REAL EN LA TERMINAL
-        res.status(500).json({ error: error.message });
+        console.error(error);
+
+        let mensaje = error.message;
+
+        if (mensaje.includes('[SQL Server]')) {
+
+            mensaje =
+                mensaje.split('[SQL Server]')[1];
+        }
+
+        res.status(500).json({
+            error: mensaje
+        });
     }
 };
 // ACTUALIZAR

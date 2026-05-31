@@ -18,7 +18,15 @@
                     <p>Administra los artículos disponibles y controla el stock en tiempo real.</p>
                 </div>
             </div>
+            <div class="buscador">
 
+                <input
+                    type="text"
+                    id="buscarProducto"
+                    placeholder="🔍 Buscar producto..."
+                >
+
+            </div>
             <!-- Sección del Formulario -->
             <div class="form-seccion">
                 <h3>Registrar Nuevo Producto</h3>
@@ -62,9 +70,66 @@
             </div>
         </div>
     </div>
+    <div id="modalEditar" class="modal">
+
+    <div class="modal-contenido">
+
+            <div class="modal-header">
+
+                <h2>
+                    ✏️ Editar producto
+                </h2>
+
+                <button
+                    class="btn-cerrar"
+                    onclick="cerrarModal()"
+                >
+                    ✖
+                </button>
+
+            </div>
+
+            <div class="modal-body">
+
+                <input
+                    type="hidden"
+                    id="editarProductoID"
+                >
+
+                <input
+                    type="text"
+                    id="editarNombre"
+                    placeholder="Nombre"
+                >
+
+                <textarea
+                    id="editarDescripcion"
+                    placeholder="Descripción"
+                ></textarea>
+
+                <input
+                    type="number"
+                    id="editarPrecio"
+                    placeholder="Precio"
+                >
+
+                <button
+                    class="btn-guardar-modal"
+                    onclick="guardarEdicion()"
+                >
+                    💾 Guardar cambios
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
 
     <!-- Scripts -->
+     <script src="js/alertas.js"></script>
     <script src="js/main.js"></script>
     <script src="js/producto.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
 </html>

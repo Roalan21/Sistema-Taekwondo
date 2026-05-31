@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Exámenes</title>
+
+    <link rel="stylesheet" href="css/estilos.css">
+    <link rel="stylesheet" href="css/sidebar.css">
+</head>
+
+<body>
+
+    <div class="contenido-pagina">
+
+        <!-- HEADER -->
+        <div class="header-estudiantes">
+
+            <div class="header-texto">
+
+                <h1>
+                    🥋 Gestión de Exámenes
+                </h1>
+
+                <p>
+                    Administra los exámenes de cinta
+                </p>
+
+            </div>
+
+        </div>
+
+        <!-- FORM -->
+        <div class="card-form">
+
+            <form id="formExamen" class="grid-form">
+
+                <input type="hidden" id="examenId">
+
+                <div class="input-group">
+
+                    <label>
+                        Fecha
+                    </label>
+
+                    <input
+                        type="date"
+                        id="fecha"
+                        required
+                    >
+
+                </div>
+
+                <div class="input-group">
+
+                    <label>
+                        Precio
+                    </label>
+
+                    <input
+                        type="number"
+                        id="precio"
+                        required
+                    >
+
+                </div>
+
+                <div class="input-group">
+
+                    <label>
+                        Cinta evaluada
+                    </label>
+
+                    <select id="cinta">
+
+                        <option>Blanca</option>
+                        <option>Blanca Avanzada</option>
+                        <option>Amarilla</option>
+                        <option>Amarilla Avanzada</option>
+                        <option>Verde</option>
+                        <option>Verde Avanzada</option>
+                        <option>Azul</option>
+                        <option>Azul Avanzada</option>
+                        <option>Roja</option>
+                        <option>Roja Avanzada</option>
+                        <option>Negra</option>
+
+                    </select>
+
+                </div>
+
+                <div
+                    style="
+                        display:flex;
+                        align-items:end;
+                    "
+                >
+
+                    <button
+                        type="submit"
+                        class="btn-guardar"
+                    >
+                        💾 Guardar
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+        <div class="filtros-estado">
+
+            <button
+                class="btn-filtro activo-verde active"
+                data-filtro="vigentes"
+            >
+                <span class="punto"></span>
+                Exámenes Vigentes
+            </button>
+
+            <button
+                class="btn-filtro inactivo-rojo"
+                data-filtro="caducados"
+            >
+                <span class="punto"></span>
+                Exámenes Finalizados
+            </button>
+
+        </div>
+
+        <!-- LISTA -->
+        <div id="listaExamenes"></div>
+
+    </div>
+    <script src="js/alertas.js"></script>
+    <script src="js/examen.js"></script>
+    <script src="js/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</body>
+</html>

@@ -1,62 +1,91 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Gestión de turnos - Taekwondo</title>
+    <title>Mensualidades - Taekwondo</title>
+
     <link rel="stylesheet" href="css/estilos.css">
     <link rel="stylesheet" href="css/sidebar.css">
 </head>
+
 <body>
-    <div class="contenido-pagina">
+
+<div class="contenido-pagina">
+
     <div class="card-principal">
+
+        <!-- HEADER -->
         <div class="header-estudiantes">
+
             <div class="header-texto">
-                <h1>Gestión de Mensualidades</h1>
-                <p>Registra y consulta los pagos mensuales de los estudiantes.</p>
+
+                <h1>
+                    Gestión de Mensualidades
+                </h1>
+
+                <p>
+                    Consulta las mensualidades pendientes y pagadas
+                    de los estudiantes.
+                </p>
+
             </div>
+
+        </div>
+        <div class="filtros-estado">
+
+            <button
+                class="btn-filtro activo-verde active"
+                data-filtro="pendientes">
+
+                📋 Pendientes
+
+            </button>
+
+            <button
+                class="btn-filtro inactivo-rojo"
+                data-filtro="vencidas">
+
+                ⏰ Vencidas
+
+            </button>
+
+            <button
+                class="btn-filtro"
+                data-filtro="pagadas">
+
+                💰 Pagadas
+
+            </button>
+
         </div>
 
-        <!-- Sección del Formulario -->
-        <div class="form-seccion">
-            <h3>Registrar Nuevo Pago</h3>
-            <form id="formMensualidad" class="grid-form">
-                <div class="input-group">
-                    <label>Estudiante</label>
-                    <select id="estudiante" required></select>
-                </div>
-                <div class="input-group">
-                    <label>Monto (C$)</label>
-                    <input type="number" id="precio" placeholder="Ej: 500" required>
-                </div>
-                <div class="input-group">
-                    <label>Fecha Límite</label>
-                    <input type="date" id="fecha" required>
-                </div>
-                <div class="input-group" style="display: flex; align-items: flex-end;">
-                    <button type="submit" class="btn-nuevo" style="width: 100%; justify-content: center;">
-                        Guardar mensualidad
-                    </button>
-                </div>
-            </form>
-        </div>
-
-        <!-- Tabla Estilizada -->
+        <!-- TABLA -->
         <div class="tabla-contenedor">
+
             <div class="tabla-header">
+
                 <span>Estudiante</span>
                 <span>Precio</span>
                 <span>Fecha Límite</span>
-            </div>
-            <div id="tablaMensualidad">
-                 
-            </div>
-        </div>
-    </div>
-</div>
-<script src="js/mensualidad.js"></script>
- <script src="js/main.js"></script>
+                <span>Estado</span>
+                <span>Acciones</span>
 
+            </div>
+
+            <div id="tablaMensualidad">
+
+                <!-- JS -->
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+<script src="js/alertas.js"></script>
+<script src="js/mensualidad.js"></script>
+<script src="js/main.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
 </html>
-

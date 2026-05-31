@@ -26,9 +26,6 @@ const crearProducto = async (req, res) => {
         if (err.message.includes('CHK_Precio')) {
             return res.status(400).json({ error: "El precio debe ser un valor mayor a cero." });
         }
-        if (err.message.includes('CHK_Hora')) {
-            return res.status(400).json({ error: "La hora de fin debe ser posterior a la hora de inicio." });
-        }
         res.status(500).json({ error: "Error interno del servidor." });
     }
 };
@@ -39,20 +36,101 @@ const obtenerProductos = async (req, res) => {
         const pool = await sql.connect();
 
         const result = await pool.request().query(`
-            SELECT 
-                ProductoID, 
-                Nombre, 
-                Descripcion, 
-                PrecioVenta, 
-                StockActual 
-            FROM Producto
-            WHERE Estado = 1 
-        `);
 
+        SELECT
+
+            p.ProductoID,
+            p.Nombre,
+            p.Descripcion,
+            p.PrecioVenta,
+            p.StockActual,
+
+            MAX(promo.PromocionID) AS PromocionID,
+            MAX(promo.TipoPromo) AS TipoPromo,
+            MAX(promo.PrecioPromocion) AS PrecioPromocion,
+
+            CASE
+                WHEN MAX(promo.PromocionID) IS NOT NULL
+                THEN 1
+                ELSE 0
+            END AS TienePromocion
+
+        FROM Producto p
+
+        LEFT JOIN DetalleDePromocion dp
+            ON dp.ProductoID = p.ProductoID
+
+        LEFT JOIN Promocion promo
+            ON promo.PromocionID = dp.PromocionID
+            AND promo.Estado = 1
+            AND CAST(GETDATE() AS DATE)
+                BETWEEN promo.FechaInicio
+                AND promo.FechaFin
+
+        GROUP BY
+            p.ProductoID,
+            p.Nombre,
+            p.Descripcion,
+            p.PrecioVenta,
+            p.StockActual
+        `);
         res.json(result.recordset);
 
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
 };
-module.exports = { crearProducto, obtenerProductos };
+const actualizarProducto = async (req, res) => {
+
+    try {
+
+        const { id } = req.params;
+
+        const {
+            Nombre,
+            Descripcion,
+            PrecioVenta
+        } = req.body;
+
+        const pool =
+            await sql.connect();
+
+        await pool.request()
+
+            .input("ProductoID", sql.Int, id)
+
+            .input("Nombre", sql.VarChar, Nombre)
+
+            .input("Descripcion", sql.VarChar, Descripcion)
+
+            .input(
+                "PrecioVenta",
+                sql.Decimal(10,2),
+                PrecioVenta
+            )
+
+            .query(`
+
+                UPDATE Producto
+
+                SET
+                    Nombre = @Nombre,
+                    Descripcion = @Descripcion,
+                    PrecioVenta = @PrecioVenta
+
+                WHERE ProductoID = @ProductoID
+            `);
+
+        res.json({
+            message:
+                "Producto actualizado"
+        });
+
+    } catch (err) {
+
+        res.status(500).json({
+            error: err.message
+        });
+    }
+};
+module.exports = { crearProducto, obtenerProductos,actualizarProducto };

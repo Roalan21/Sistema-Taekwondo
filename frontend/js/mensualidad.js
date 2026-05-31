@@ -1,56 +1,190 @@
 const URL = "http://localhost:3000/mensualidades";
-
+let mensualidadesGlobal = [];
+let filtroActual = "pendientes";
 document.addEventListener("DOMContentLoaded", () => {
-    cargarEstudiantes();
-    listar();
 
-    document.getElementById("formMensualidad").addEventListener("submit", async (e) => {
-        e.preventDefault();
+    listarMensualidades();
 
-        const datos = {
-            EstudianteID: document.getElementById("estudiante").value,
-            Precio: parseFloat(document.getElementById("precio").value),
-            FechaLimite: document.getElementById("fecha").value
-        };
+    document
+        .querySelectorAll("[data-filtro]")
+        .forEach(btn => {
 
-        await fetch(URL, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(datos)
+            btn.addEventListener("click", () => {
+
+                document
+                    .querySelectorAll("[data-filtro]")
+                    .forEach(b =>
+                        b.classList.remove("active")
+                    );
+
+                btn.classList.add("active");
+
+                filtroActual =
+                    btn.dataset.filtro;
+
+                renderizarMensualidades();
+
+            });
+
         });
 
-        alert("Mensualidad creada");
-        listar();
-    });
 });
 
-async function cargarEstudiantes() {
-    const res = await fetch("http://localhost:3000/estudiantes");
-    const data = await res.json();
+function obtenerEstadoVisual(m) {
 
-    const select = document.getElementById("estudiante");
+    if (m.Estado === "PAGADA") {
+        return "PAGADA";
+    }
 
-    data.forEach(e => {
-        select.innerHTML += `<option value="${e.EstudianteID}">
-            ${e.PrimerNombre} ${e.PrimerApellido}
-        </option>`;
-    });
+    const hoy = new Date();
+    hoy.setHours(0,0,0,0);
+
+    const fechaLimite = new Date(m.FechaLimite);
+    fechaLimite.setHours(0,0,0,0);
+
+    if (fechaLimite < hoy) {
+        return "VENCIDA";
+    }
+
+    return "PENDIENTE";
 }
 
-async function listar() {
-    const res = await fetch(URL);
-    const data = await res.json();
 
-    const contenedor = document.getElementById("tablaMensualidad");
+// LISTAR
+
+async function listarMensualidades() {
+
+    try {
+
+        const res =
+            await fetch(URL);
+
+        mensualidadesGlobal =
+            await res.json();
+
+        renderizarMensualidades();
+
+    } catch (error) {
+
+        console.error(error);
+
+    }
+}
+function renderizarMensualidades() {
+
+    const contenedor =
+        document.getElementById("tablaMensualidad");
+
+    let mensualidadesFiltradas =
+        [...mensualidadesGlobal];
+
+    if (filtroActual === "pendientes") {
+
+        mensualidadesFiltradas =
+            mensualidadesFiltradas.filter(
+                m => obtenerEstadoVisual(m) === "PENDIENTE"
+            );
+    }
+
+    if (filtroActual === "vencidas") {
+
+        mensualidadesFiltradas =
+            mensualidadesFiltradas.filter(
+                m => obtenerEstadoVisual(m) === "VENCIDA"
+            );
+    }
+
+    if (filtroActual === "pagadas") {
+
+        mensualidadesFiltradas =
+            mensualidadesFiltradas.filter(
+                m => obtenerEstadoVisual(m) === "PAGADA"
+            );
+    }
+
     contenedor.innerHTML = "";
 
-    data.forEach(m => {
+    mensualidadesFiltradas.forEach(m => {
+
+        const estadoVisual =
+            obtenerEstadoVisual(m);
+
+        let colorEstado = "";
+        let botonPagar = "";
+
+        if (estadoVisual === "PAGADA") {
+
+            colorEstado = "#16a34a";
+
+            botonPagar = `
+                <span style="
+                    color:#16a34a;
+                    font-weight:bold;
+                ">
+                    Pagada
+                </span>
+            `;
+        }
+
+        if (estadoVisual === "PENDIENTE") {
+
+            colorEstado = "#f59e0b";
+
+            botonPagar = `
+                <a
+                    href="pagos.html?modo=mensualidad&estudiante=${m.EstudianteID}&mensualidad=${m.MensualidadID}"
+                    class="btn-nuevo"
+                >
+                    Pagar 💰
+                </a>
+            `;
+        }
+
+        if (estadoVisual === "VENCIDA") {
+
+            colorEstado = "#dc2626";
+
+            botonPagar = `
+                <a
+                    href="pagos.html?modo=mensualidad&estudiante=${m.EstudianteID}&mensualidad=${m.MensualidadID}"
+                    class="btn-nuevo"
+                >
+                    Pagar 💰
+                </a>
+            `;
+        }
+
         contenedor.innerHTML += `
+
             <div class="fila-pago">
-                <span class="pago-nombre">${m.Estudiante}</span>
-                <span class="pago-monto">C$ ${m.Precio}</span>
-                <span class="pago-fecha">${new Date(m.FechaLimite).toLocaleDateString()}</span>
+
+                <span class="pago-nombre">
+                    ${m.Estudiante}
+                </span>
+
+                <span class="pago-monto">
+                    C$ ${m.Precio}
+                </span>
+
+                <span class="pago-fecha">
+                    ${new Date(m.FechaLimite)
+                        .toLocaleDateString()}
+                </span>
+
+                <span style="
+                    color:${colorEstado};
+                    font-weight:bold;
+                ">
+                    ${estadoVisual}
+                </span>
+
+                <span>
+                    ${botonPagar}
+                </span>
+
             </div>
+
         `;
     });
+
 }

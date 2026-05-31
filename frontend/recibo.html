@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Recibo de Pago</title>
+
+    <link rel="stylesheet" href="css/estilos.css">
+    <link rel="stylesheet" href="css/sidebar.css">
+</head>
+<body>
+
+<div class="contenido-pagina">
+
+    <div class="card-principal card-recibo">
+
+        <div id="areaRecibo">
+
+            <h1>Recibo de Pago</h1>
+
+            <div id="reciboContenido"></div>
+
+        </div>
+
+        <br>
+
+        <div class="acciones-recibo no-print">
+            <button onclick="window.print()" class="btn-nuevo">
+                Imprimir Recibo 🖨️
+            </button>
+
+            <button onclick="window.location.href='estudiantes.html'" class="btn-nuevo">
+                Finalizar ✅
+            </button>
+        </div>
+
+    </div>
+
+</div>
+<script src="js/alertas.js"></script>
+<script src="js/recibo.js"></script>
+<script src="js/main.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</body>
+</html>

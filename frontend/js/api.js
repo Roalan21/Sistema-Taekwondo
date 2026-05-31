@@ -177,14 +177,18 @@ async function cargarEstudiantes() {
 
 async function cambiarEstadoEstudiante(id, nuevoEstado) {
     const accion = nuevoEstado === 1 ? "activar" : "inactivar";
-    if (confirm(`¿Estás seguro de ${accion} este expediente?`)) {
+    const result =
+        await alertaConfirmacion(
+            "¿Estás seguro de ${accion} este expediente?"
+        );
+    if (result.isConfirmed) {
         const res = await fetch(`${URL_BASE}/estudiantes/estado/${id}`, {
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ Estado: nuevoEstado })
         });
         if (res.ok) {
-            alert(`Estudiante ${accion}do con éxito`);
+            alertaExito(`Estudiante ${accion}do con éxito`);
             cargarEstudiantes();
         }
     }

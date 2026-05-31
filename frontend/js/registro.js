@@ -13,12 +13,51 @@ document.addEventListener('DOMContentLoaded', async () => {
         await cargarTurnos();
     }
 
+    document.getElementById('CategoriaID')
+    .addEventListener('change', async function () {
+
+        const categoriaId = this.value;
+
+        const selectTurno =
+            document.getElementById('TurnoID');
+
+        if (!categoriaId) {
+            selectTurno.innerHTML =
+                '<option value="">Seleccione turno</option>';
+            return;
+        }
+
+        try {
+
+            const res = await fetch(
+                `http://localhost:3000/turnos/categoria/${categoriaId}`
+            );
+
+            const data = await res.json();
+
+            selectTurno.innerHTML =
+                '<option value="">Seleccione turno</option>';
+
+            data.forEach(t => {
+
+                selectTurno.innerHTML += `
+                    <option value="${t.TurnoID}">
+                        ${formatearHora(t.HoraInicio)} - ${formatearHora(t.HoraFin)}
+                    </option>
+                `;
+            });
+
+        } catch (err) {
+            console.error(err);
+        }
+    });
+
     const urlParams = new URLSearchParams(window.location.search);
     const idEdicion = urlParams.get('id');
 
-    /* =========================================
-       MODO EDICIÓN
-    ========================================= */
+  
+       //MODO EDICIÓN
+    
     if (idEdicion) {
 
         try {
@@ -104,13 +143,13 @@ document.addEventListener('DOMContentLoaded', async () => {
                 err
             );
 
-            alert("Error cargando datos del estudiante");
+            alertaError("Error cargando datos del estudiante");
         }
     }
 
-    /* =========================================
+    /* 
        GUARDAR / ACTUALIZAR
-    ========================================= */
+     */
     form.onsubmit = async (e) => {
 
         e.preventDefault();
@@ -119,9 +158,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const datos = Object.fromEntries(formData);
 
-        /* =========================
-           NACIONALIDADES
-        ========================= */
+        //NACIONALIDADES
+       
         datos.NacionalidadesArr =
             document.getElementById('nacionalidadInput')
                 .value
@@ -129,9 +167,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                 .map(n => n.trim())
                 .filter(n => n !== "");
 
-        /* =========================
+        /* 
            TELÉFONOS
-        ========================= */
+         */
         datos.TelefonosArr =
             document.getElementById('telefonosInput')
                 .value
@@ -139,9 +177,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                 .map(t => t.trim())
                 .filter(t => t !== "");
 
-        /* =========================
+        /* 
            CONVERSIONES
-        ========================= */
+         */
         datos.PermiteFoto =
             parseInt(datos.PermiteFoto);
 
@@ -154,9 +192,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         datos.TurnoID =
             parseInt(datos.TurnoID);
 
-        /* =========================
+        /* 
            URL Y MÉTODO
-        ========================= */
+         */
         const url = idEdicion
             ? `http://localhost:3000/estudiantes/${idEdicion}`
             : `http://localhost:3000/estudiantes`;
@@ -187,8 +225,15 @@ document.addEventListener('DOMContentLoaded', async () => {
                         : "✅ Estudiante registrado correctamente"
                 );
 
-                window.location.href =
-                    'estudiantes.html';
+                if (idEdicion) {
+
+                    window.location.href = 'estudiantes.html';
+
+                } else {
+
+                    window.location.href =
+                        `pagos.html?modo=mensualidad&estudiante=${respuesta.EstudianteID}&mensualidad=${respuesta.MensualidadID}`;
+                }
 
             } else {
 

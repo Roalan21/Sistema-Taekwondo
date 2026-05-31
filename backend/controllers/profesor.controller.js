@@ -11,7 +11,7 @@ const obtenerProfesores = async (req, res) => {
     }
 };
 
-// 🔥 NUEVO: TODOS los profesores (activos e inactivos)
+//  NUEVO: TODOS los profesores (activos e inactivos)
 const obtenerTodosProfesores = async (req, res) => {
     try {
         const pool = await sql.connect();
@@ -25,7 +25,7 @@ const obtenerTodosProfesores = async (req, res) => {
     }
 };
 
-// 🔥 NUEVO: Solo profesores INACTIVOS (Estado = 0)
+//  NUEVO: Solo profesores INACTIVOS (Estado = 0)
 const obtenerProfesoresInactivos = async (req, res) => {
     try {
         const pool = await sql.connect();

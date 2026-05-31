@@ -1,6 +1,6 @@
 const { sql } = require('../db/conexion');
 
-// ✔ LISTAR
+//  LISTAR
 const getCategorias = async (req, res) => {
     try {
         const pool = await sql.connect();
@@ -11,7 +11,7 @@ const getCategorias = async (req, res) => {
     }
 };
 
-// ✔ CREAR
+//  CREAR
 const crearCategoria = async (req, res) => {
     const { Nombre, Precio } = req.body;
 
@@ -29,7 +29,7 @@ const crearCategoria = async (req, res) => {
     }
 };
 
-// ✔ ACTUALIZAR
+//  ACTUALIZAR
 const actualizarCategoria = async (req, res) => {
     const { id } = req.params;
     const { Nombre, Precio } = req.body;
@@ -52,7 +52,7 @@ const actualizarCategoria = async (req, res) => {
     }
 };
 
-// ✔ ELIMINAR (OPCIONAL)
+//  ELIMINAR 
 const eliminarCategoria = async (req, res) => {
     const { id } = req.params;
 

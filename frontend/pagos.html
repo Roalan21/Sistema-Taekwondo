@@ -12,8 +12,29 @@
             <div class="header-estudiantes">
                 <div class="header-texto">
                     <h1>Registrar Pago</h1>
-                    <p>Procesa pagos de mensualidades, exámenes o eventos especiales.</p>
+                    <p>
+                        Procesa pagos de mensualidades,
+                        exámenes o eventos especiales.
+                    </p>
                 </div>
+            </div>
+
+            <div id="infoPagoAutomatico"
+                style="
+                    display:none;
+                    margin-bottom:20px;
+                    padding:15px;
+                    background:#ecfdf5;
+                    border:1px solid #10b981;
+                    border-radius:10px;
+                ">
+
+                <h3 id="tituloPagoAutomatico" style="margin-bottom:10px;">
+                    Información del pago
+                </h3>
+
+                <p id="textoPagoAutomatico"></p>
+
             </div>
 
             <form id="formPago" class="form-seccion">
@@ -27,9 +48,9 @@
                     <div class="input-group">
                         <label for="tipoPago">Tipo de Pago</label>
                         <select id="tipoPago">
-                            <option value="Mensualidad" selected>Mensualidad</option>
-                            <option value="Examen">Examen</option>
-                            <option value="Evento">Evento</option>
+                            <option value="MENSUALIDAD" selected>Mensualidad</option>
+                            <option value="EXAMEN">Examen</option>
+                            <option value="EVENTO">Evento</option>
                         </select>
                     </div>
 
@@ -79,8 +100,9 @@
             </form>
         </div>
     </div>
-
+    <script src="js/alertas.js"></script>
     <script src="js/pagos.js"></script>
     <script src="js/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
 </html>

@@ -47,33 +47,42 @@ document.addEventListener("DOMContentLoaded", () => {
 
         try {
             if (id) {
-                // Editar
+
                 const res = await fetch(`${URL_EVENTOS}/${id}`, {
                     method: "PUT",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(datos)
                 });
+
+                const result = await res.json();
+
                 if (res.ok) {
-                    alert("✅ Evento actualizado");
+                    alertaExito(result.message);
                 } else {
-                    alert("❌ Error al actualizar");
+                    alertaError(result.error);
+                    return;
                 }
+
             } else {
-                // Crear
+
                 const res = await fetch(URL_EVENTOS, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(datos)
                 });
+
+                const result = await res.json();
+
                 if (res.ok) {
-                    alert("✅ Evento creado");
+                    alertaExito(result.message);
                 } else {
-                    alert("❌ Error al crear");
+                    alertaError(result.error);
+                    return;
                 }
             }
         } catch (error) {
             console.error("Error:", error);
-            alert("❌ Error al conectar con el servidor");
+            alertaError("❌ Error al conectar con el servidor");
         }
 
         modal.style.display = "none";
@@ -178,9 +187,33 @@ function renderizarEventos() {
                 <div>${fechaFormateada}</div>
                 <div>$${evento.Precio ? evento.Precio.toFixed(2) : "0.00"}</div>
                 <div class="acciones">
-                    <button class="btn-editar-evento" data-id="${evento.EventoID}">✏️ Editar</button>
-                    <button class="btn-inscribir" data-id="${evento.EventoID}" data-nombre="${evento.Nombre}">👥 Inscribir</button>
-                    <button class="btn-eliminar-evento" data-id="${evento.EventoID}">🗑️ Eliminar</button>
+
+                    ${estado ? `
+                    <button class="btn-editar-evento"
+                        data-id="${evento.EventoID}">
+                        ✏️ Editar
+                    </button>
+                    ` : ''}
+
+                    ${estado ? `
+                    <button class="btn-inscribir"
+                        data-id="${evento.EventoID}"
+                        data-nombre="${evento.Nombre}">
+                        👥 Inscribir
+                    </button>
+                    ` : ''}
+
+                    <button class="btn-participantes"
+                        data-id="${evento.EventoID}"
+                        data-nombre="${evento.Nombre}">
+                        🏆 Participantes
+                    </button>
+                    ${estado ? `
+                    <button class="btn-eliminar-evento"
+                        data-id="${evento.EventoID}">
+                        🗑️ Eliminar
+                    </button>
+                    ` : ''}
                 </div>
             </div>
         `;
@@ -199,7 +232,18 @@ function renderizarEventos() {
         btn.addEventListener("click", () => {
             const eventoId = btn.dataset.id;
             const eventoTitulo = encodeURIComponent(btn.dataset.nombre);
-            window.location.href = `participa.html?eventoId=${eventoId}&eventoTitulo=${eventoTitulo}`;
+            window.location.href = `participa.html?eventoId=${eventoId}&eventoTitulo=${eventoTitulo}&modo=inscribir`;
+        });
+    });
+    document.querySelectorAll(".btn-participantes").forEach(btn => {
+
+        btn.addEventListener("click", () => {
+
+            const eventoId = btn.dataset.id;
+            const eventoTitulo = encodeURIComponent(btn.dataset.nombre);
+
+            window.location.href =
+                `participa.html?eventoId=${eventoId}&eventoTitulo=${eventoTitulo}&modo=participantes`;
         });
     });
 }
@@ -221,23 +265,27 @@ async function editarEvento(id) {
         document.getElementById("modalEvento").style.display = "flex";
     } catch (error) {
         console.error("Error al editar:", error);
-        alert("❌ Error al cargar los datos del evento");
+        alertaError("❌ Error al cargar los datos del evento");
     }
 }
 
 async function eliminarEvento(id) {
-    if (confirm("⚠️ ¿Estás seguro de eliminar este evento?\nEsta acción eliminará también todas las participaciones asociadas.")) {
+    const result =
+        await alertaConfirmacion(
+            "¿Estás seguro de eliminar este evento?\nEsta acción eliminará también todas las participaciones asociadas."
+        );
+    if (result.isConfirmed) {
         try {
             const res = await fetch(`${URL_EVENTOS}/${id}`, { method: "DELETE" });
             if (res.ok) {
-                alert("✅ Evento eliminado");
+                alertaExito("✅ Evento eliminado");
                 listarEventos();
             } else {
-                alert("❌ Error al eliminar");
+                alertaError("❌ Error al eliminar");
             }
         } catch (error) {
             console.error("Error al eliminar:", error);
-            alert("❌ Error al conectar con el servidor");
+            alertaError("❌ Error al conectar con el servidor");
         }
     }
 }

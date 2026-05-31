@@ -2,32 +2,59 @@ const { sql } = require('../db/conexion');
 
 // LISTAR
 const obtenerMensualidades = async (req, res) => {
+
     const pool = await sql.connect();
+
     const result = await pool.request().query(`
-        SELECT M.*, 
-               E.PrimerNombre + ' ' + E.PrimerApellido AS Estudiante
+        SELECT
+            M.*,
+            E.Nombres + ' ' + E.Apellidos AS Estudiante
         FROM Mensualidad M
-        INNER JOIN Estudiante E ON M.EstudianteID = E.EstudianteID
+        INNER JOIN Estudiante E
+            ON M.EstudianteID = E.EstudianteID
+        Where E.Estado=1
     `);
 
     res.json(result.recordset);
 };
 
-// CREAR
-const crearMensualidad = async (req, res) => {
-    const { EstudianteID, Precio, FechaLimite } = req.body;
+// OBTENER POR ID
+const obtenerPorId = async (req, res) => {
 
-    const pool = await sql.connect();
-    await pool.request()
-        .input('EstudianteID', sql.Int, EstudianteID)
-        .input('Precio', sql.Decimal(10,2), Precio)
-        .input('FechaLimite', sql.Date, FechaLimite)
-        .query(`
-            INSERT INTO Mensualidad (EstudianteID, Precio, FechaLimite)
-            VALUES (@EstudianteID, @Precio, @FechaLimite)
-        `);
+    try {
 
-    res.json({ message: "Mensualidad creada" });
+        const { id } = req.params;
+
+        const pool = await sql.connect();
+
+        const result = await pool.request()
+            .input('id', sql.Int, id)
+            .query(`
+                SELECT *
+                FROM Mensualidad
+                WHERE MensualidadID = @id
+            `);
+
+        if (result.recordset.length === 0) {
+
+            return res.status(404).json({
+                error: 'Mensualidad no encontrada'
+            });
+        }
+
+        res.json(result.recordset[0]);
+
+    } catch (err) {
+
+        res.status(500).json({
+            error: err.message
+        });
+    }
 };
 
-module.exports = { obtenerMensualidades, crearMensualidad };
+
+
+module.exports = {
+    obtenerMensualidades,
+    obtenerPorId
+};

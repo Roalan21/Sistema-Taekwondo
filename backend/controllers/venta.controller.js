@@ -9,7 +9,7 @@ const registrarVenta = async (req, res) => {
     try {
         await transaction.begin();
 
-        // 🔹 RECIBO
+        //  RECIBO
         const recibo = await transaction.request()
             .input("Descripcion", sql.VarChar, "Venta de productos")
             .input("Tipo", sql.VarChar, "Venta")
@@ -25,7 +25,7 @@ const registrarVenta = async (req, res) => {
 
         const reciboID = recibo.recordset[0].ReciboID;
 
-        // 🔹 VENTA
+        //  VENTA
         const venta = await transaction.request()
             .input("ReciboID", sql.Int, reciboID)
             .input("Fecha", sql.Date, new Date())
@@ -43,7 +43,7 @@ const registrarVenta = async (req, res) => {
             const subtotal = p.Cantidad * p.PrecioUnitario;
             total += subtotal;
 
-            // 🔹 detalle
+            //  detalle
             await transaction.request()
                 .input("VentaID", sql.Int, ventaID)
                 .input("ProductoID", sql.Int, p.ProductoID)
@@ -54,7 +54,18 @@ const registrarVenta = async (req, res) => {
                     VALUES (@VentaID, @ProductoID, @Cantidad, @PrecioUnitario)
                 `);
 
-            // 🔹 inventario
+            //  inventario
+            const stock = await transaction.request()
+                .input("ProductoID", sql.Int, p.id)
+                .query(`
+                    SELECT StockActual
+                    FROM Producto
+                    WHERE ProductoID = @ProductoID
+                `);
+
+            if(stock.recordset[0].StockActual < p.cantidad){
+                throw new Error(`Stock insuficiente`);
+            }
             await transaction.request()
                 .input("Cantidad", sql.Int, p.Cantidad)
                 .input("ProductoID", sql.Int, p.ProductoID)
@@ -65,7 +76,7 @@ const registrarVenta = async (req, res) => {
                 `);
         }
 
-        // 🔹 actualizar recibo
+        //  actualizar recibo
         await transaction.request()
             .input("Total", sql.Decimal(10,2), total)
             .input("ReciboID", sql.Int, reciboID)

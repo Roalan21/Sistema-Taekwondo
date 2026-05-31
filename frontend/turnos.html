@@ -57,6 +57,43 @@
                     <option value="21:00:00">9:00 PM</option>
                 </select>
 
+                <!-- DÍAS -->
+                <div style="margin-bottom: 20px;">
+                    <label><strong>Días del turno</strong></label>
+
+                    <div id="diasTurno"
+                        style="
+                            display:grid;
+                            grid-template-columns: repeat(2,1fr);
+                            gap:10px;
+                            margin-top:10px;
+                        ">
+
+                        <label><input type="checkbox" value="Lunes"> Lunes</label>
+                        <label><input type="checkbox" value="Martes"> Martes</label>
+                        <label><input type="checkbox" value="Miércoles"> Miércoles</label>
+                        <label><input type="checkbox" value="Jueves"> Jueves</label>
+                        <label><input type="checkbox" value="Viernes"> Viernes</label>
+                        <label><input type="checkbox" value="Sábado"> Sábado</label>
+                    </div>
+                </div>
+
+                <!-- CATEGORÍAS -->
+                <div style="margin-bottom:20px;">
+
+                    <label><strong>Categorías</strong></label>
+
+                    <div id="contenedorCategorias"
+                        style="
+                            display:grid;
+                            grid-template-columns: repeat(2,1fr);
+                            gap:10px;
+                            margin-top:10px;
+                        ">
+
+                    </div>
+                </div>
+
                 <button type="submit" class="btn-guardar">Guardar Turno</button>
             </form>
         </div>
@@ -85,8 +122,9 @@
             <button id="btnGuardarModalidad" class="btn-guardar">Guardar Modalidad</button>
         </div>
     </div>
-
+    <script src="js/alertas.js"></script>
     <script src="js/main.js"></script>
     <script src="js/turnos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
 </html>

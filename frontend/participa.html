@@ -21,7 +21,7 @@
 
         <!-- Formulario de inscripción -->
         <div class="card-form" style="margin-bottom: 30px;">
-            <form id="formParticipa" class="grid-form" style="display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 15px; align-items: end;">
+            <form id="formParticipa" class="grid-form" style="display: grid; grid-template-columns: 1fr 1fr auto; gap: 15px; align-items: end;">
                 <div>
                     <label>Estudiante</label>
                     <select id="estudiante" required>
@@ -34,16 +34,6 @@
                         <option value="">Seleccione evento...</option>
                     </select>
                 </div>
-                <div>
-                    <label>Resultado</label>
-                    <select id="resultado">
-                        <option value="">Sin resultado</option>
-                        <option value="Oro">🥇 Oro</option>
-                        <option value="Plata">🥈 Plata</option>
-                        <option value="Bronce">🥉 Bronce</option>
-                        <option value="Participación">📋 Participación</option>
-                    </select>
-                </div>
                 <button type="submit" class="btn-guardar" style="margin: 0; padding: 12px;">Registrar</button>
             </form>
         </div>
@@ -53,14 +43,16 @@
             <span>Estudiante</span>
             <span>Evento</span>
             <span>Fecha Registro</span>
+            <span>Asistencia</span>
             <span>Resultado</span>
             <span>Acciones</span>
         </div>
         
         <div id="contenedor-participaciones"></div>
     </div>
-
+    <script src="js/alertas.js"></script>
     <script src="js/participa.js"></script>
     <script src="js/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
 </html>

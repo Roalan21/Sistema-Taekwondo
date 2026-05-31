@@ -103,7 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
 
                 if (res.ok) {
-                    alert(editando ? "✅ Profesor actualizado" : "✅ Profesor registrado");
+                    alertaExito(editando ? "✅ Profesor actualizado" : "✅ Profesor registrado");
                     document.getElementById('modalProfesor').style.display = "none";
                     editando = false;
                     profesorIdEditar = null;
@@ -111,11 +111,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     await listarProfesores();
                 } else {
                     const error = await res.json();
-                    alert("❌ Error: " + (error.error || "Error desconocido"));
+                    alertaError("❌ Error: " + (error.error || "Error desconocido"));
                 }
             } catch (error) {
                 console.error("Error:", error);
-                alert("❌ Error de conexión");
+                alertaError("❌ Error de conexión");
             }
         });
     }
@@ -267,9 +267,14 @@ async function renderizarProfesores(profesores) {
                     <button class="btn-ver-expediente" data-id='${JSON.stringify(p)}' style="background: #8b5cf6; color: white; border: none; padding: 8px 12px; border-radius: 8px; cursor: pointer;">
                         📋 Ver Expediente
                     </button>
-                    <button class="btn-asignar-turno" data-id="${p.ProfesorID}" data-nombre="${nombreCompleto.replace(/'/g, "\\'")}" style="background: #27ae60; color: white; border: none; padding: 8px 12px; border-radius: 8px; cursor: pointer;">
+                    ${estadoActivo ? `
+                    <button class="btn-asignar-turno"
+                        data-id="${p.ProfesorID}"
+                        data-nombre="${nombreCompleto.replace(/'/g, "\\'")}"
+                        style="background: #27ae60; color: white; border: none; padding: 8px 12px; border-radius: 8px; cursor: pointer;">
                         📅 Asignar Turno
                     </button>
+                    ` : ''}
                     <button class="btn-editar-profesor" data-id='${JSON.stringify(p)}' style="background: #3498db; color: white; border: none; padding: 8px 12px; border-radius: 8px; cursor: pointer;">
                         ✏️ Editar
                     </button>
@@ -345,7 +350,9 @@ async function obtenerAsignacionesProfesores() {
 async function mostrarExpediente(profesor) {
     // Obtener asignaciones del profesor
     const asignaciones = await obtenerAsignacionesProfesores();
-    const turnosProfesor = asignaciones.filter(a => a.ProfesorID === profesor.ProfesorID);
+    const turnosProfesor = asignaciones.filter(a =>
+        Number(a.ProfesorID) === Number(profesor.ProfesorID)
+    );
     
     const nombreCompleto = `${profesor.PrimerNombre || ''} ${profesor.SegundoNombre || ''} ${profesor.PrimerApellido || ''} ${profesor.SegundoApellido || ''}`.trim();
     const iniciales = nombreCompleto.split(' ').filter(n => n.length > 0).map(n => n[0]).join('').substring(0, 2).toUpperCase();
@@ -393,11 +400,32 @@ async function mostrarExpediente(profesor) {
                 <div style="background: #f0fdf4; padding: 8px 12px; border-radius: 8px;">
                     <strong>⏰ ${formatearHora(t.HoraInicio)} - ${formatearHora(t.HoraFin)}</strong><br>
                     📋 ${t.TipoDeClase || 'No especificado'}
+                    <br><br>
+
+                    <button
+                        onclick="eliminarAsignacion(
+                            ${t.ProfesorID},
+                            ${t.TurnoID}
+                        )"
+                        style="
+                            background:#ef4444;
+                            color:white;
+                            border:none;
+                            padding:5px 10px;
+                            border-radius:5px;
+                            cursor:pointer;
+                        "
+                    >
+                        🗑️ Quitar
+                    </button>
                 </div>
+
             `;
         });
         turnosHtml += '</div>';
     }
+
+    
     
     // Expediente con diseño HORIZONTAL (usando grid de 2 columnas)
     const expedienteHtml = `
@@ -445,6 +473,49 @@ async function mostrarExpediente(profesor) {
     document.getElementById('contenidoExpediente').innerHTML = expedienteHtml;
     document.getElementById('modalExpediente').style.display = "flex";
 }
+async function eliminarAsignacion(
+    profesorId,
+    turnoId
+) {
+
+    const result = await alertaConfirmacion(
+        "¿Desea quitar este turno?"
+    );
+
+    if (!result.isConfirmed) return;
+
+    const res = await fetch(
+        `${URL_BASE}/imparte/${profesorId}/${turnoId}`,
+        {
+            method: "DELETE"
+        }
+    );
+
+    if (res.ok) {
+
+        alertaExito(
+            "✅ Asignación eliminada"
+        );
+
+        // Recargar lista
+        await listarProfesores();
+
+        // Buscar nuevamente el profesor
+        const profesor = profesoresOriginales.find(
+            p => Number(p.ProfesorID) === Number(profesorId)
+        );
+
+        if (profesor) {
+            await mostrarExpediente(profesor);
+        }
+
+    } else {
+
+        alertaError(
+            "❌ No se pudo eliminar"
+        );
+    }
+}
 
 function cargarParaEditar(p) {
     editando = true;
@@ -467,7 +538,11 @@ function cargarParaEditar(p) {
 }
 
 async function inactivarProfesor(id) {
-    if (!confirm("¿Seguro que desea inactivar este profesor?")) return;
+    const result =
+        await alertaConfirmacion(
+            "¿Seguro que desea inactivar este profesor?"
+        );
+    if (!result.isConfirmed) return;
     
     try {
         const res = await fetch(`${URL_BASE}/profesores/estado/${id}`, {
@@ -475,19 +550,23 @@ async function inactivarProfesor(id) {
         });
         
         if (res.ok) {
-            alert("🛑 Profesor inactivado");
+            alertaExito("🛑 Profesor inactivado");
             await listarProfesores();
         } else {
-            alert("❌ Error al inactivar");
+            alertaError("❌ Error al inactivar");
         }
     } catch (error) {
         console.error("Error:", error);
-        alert("❌ Error al inactivar");
+        alertaError("❌ Error al inactivar");
     }
 }
 
 async function reactivarProfesor(id) {
-    if (!confirm("¿Seguro que desea reactivar este profesor?")) return;
+    const result =
+        await alertaConfirmacion(
+            "¿Seguro que desea reactivar al profesor?"
+        );
+    if (!result.isConfirmed) return;
     
     try {
         const res = await fetch(`${URL_BASE}/profesores/reactivar/${id}`, {
@@ -495,14 +574,14 @@ async function reactivarProfesor(id) {
         });
         
         if (res.ok) {
-            alert("✅ Profesor reactivado");
+            alertaExito("✅ Profesor reactivado");
             await listarProfesores();
         } else {
-            alert("❌ Error al reactivar");
+            alertaError("❌ Error al reactivar");
         }
     } catch (error) {
         console.error("Error:", error);
-        alert("❌ Error al reactivar");
+        alertaError("❌ Error al reactivar");
     }
 }
 
@@ -553,12 +632,12 @@ async function guardarAsignacionTurno() {
     const tipoClase = document.getElementById('tipoClase')?.value;
     
     if (!turnoId) {
-        alert("Debe seleccionar un turno");
+        alertaAdvertencia("Debe seleccionar un turno");
         return;
     }
     
     if (!tipoClase || !tipoClase.trim()) {
-        alert("Debe especificar el tipo de clase");
+        alertaAdvertencia("Debe especificar el tipo de clase");
         return;
     }
     
@@ -574,17 +653,17 @@ async function guardarAsignacionTurno() {
         });
         
         if (res.ok) {
-            alert(`✅ Turno asignado correctamente al profesor ${profesorSeleccionadoNombre}`);
+            alertaExito(`✅ Turno asignado correctamente al profesor ${profesorSeleccionadoNombre}`);
             const modal = document.getElementById('modalAsignarTurno');
             if (modal) modal.style.display = "none";
             await listarProfesores();
         } else {
             const error = await res.json();
-            alert("❌ Error al asignar turno: " + (error.error || "Error desconocido"));
+            alertaError("❌ Error al asignar turno: " + (error.error || "Error desconocido"));
         }
     } catch (error) {
         console.error("Error:", error);
-        alert("❌ Error al asignar turno");
+        alertaError("❌ Error al asignar turno");
     }
 }
 

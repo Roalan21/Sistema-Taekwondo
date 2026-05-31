@@ -51,17 +51,29 @@
             </section>
 
             <!-- Opcional: Historial rápido de entradas -->
-            <div class="tabla-contenedor" style="margin-top: 30px;">
-                <h3 style="margin-bottom: 15px; color: #1e293b;">Resumen de Movimientos Recientes</h3>
-                <div id="cuerpoTablaInventario">
-                    <div class="sin-resultados">Los registros de entrada aparecerán aquí.</div>
+           <div class="tabla-header tabla-inventario">
+
+                <span>Producto</span>
+                <span>Movimiento</span>
+                <span>Cantidad</span>
+                <span>Fecha</span>
+                <span>Descripción</span>
+
+            </div>
+
+            <div id="cuerpoTablaInventario">
+
+                <div class="sin-resultados">
+                    Los registros de entrada aparecerán aquí.
                 </div>
+
             </div>
 
         </div>
     </div>
-
+    <script src="js/alertas.js"></script>
     <script src="js/inventario.js"></script>
     <script src="js/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>    
 </html>
