@@ -66,7 +66,34 @@ const crearVenta = async (req, res) => {
             `);
 
         const reciboID = recibo.recordset[0].ReciboID;
-
+        
+        await transaction.request()
+            .input("ReciboID", sql.Int, reciboID)
+            .input("MetodoPagoID", sql.Int, MetodoPagoID)
+            .input("FechaPago", sql.Date, new Date())
+            .input("Monto", sql.Decimal(10,2), totalFinal)
+            .input("TipoPago", sql.VarChar, "VENTA")
+            .input("Estado", sql.Bit, 1)
+            .query(`
+                INSERT INTO Pago
+                (
+                    ReciboID,
+                    MetodoPagoID,
+                    FechaPago,
+                    Monto,
+                    TipoPago,
+                    Estado
+                )
+                VALUES
+                (
+                    @ReciboID,
+                    @MetodoPagoID,
+                    @FechaPago,
+                    @Monto,
+                    @TipoPago,
+                    @Estado
+                )
+            `);
 
         //  VENTA
         const venta = await transaction.request()
@@ -81,6 +108,8 @@ const crearVenta = async (req, res) => {
                 OUTPUT INSERTED.VentaID
                 VALUES (@ReciboID, @Estado, @Fecha, @Monto, @Descripcion, @MetodoPagoID)
             `);
+
+        
 
         const ventaID = venta.recordset[0].VentaID;
 

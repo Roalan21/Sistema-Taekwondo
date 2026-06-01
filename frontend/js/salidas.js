@@ -113,7 +113,7 @@ function agregarProducto() {
     document.getElementById("cantidadVenta").value = "";
     document.getElementById("descuentoVenta").value = "";
     document.getElementById("totalCalculado").value = "";
-    document.getElementById("MontoFinal").value = "";
+   
 }
 
 function renderLista() {
@@ -151,12 +151,17 @@ async function guardarVenta() {
         return;
     }
 
+    if (!document.getElementById("metodoPago").value) {
+        alertaAdvertencia("Seleccione un método de pago");
+        return;
+    }
+
     const totalFinal = listaProductos.reduce((acc, p) => acc + p.total, 0);
 
     const data = {
         productos: listaProductos,
         TotalFinal: totalFinal,
-        MontoFinal: totalFinal, // aquí puedes luego validar si quieres pagos parciales
+        MontoFinal: totalFinal,
         MetodoPagoID: document.getElementById("metodoPago").value
     };
 
@@ -176,15 +181,13 @@ async function guardarVenta() {
             title: "Venta registrada",
             text: result.message
         }).then(() => {
-
             window.location.href =
                 `recibo.html?id=${result.ReciboID}`;
-
         });
 
     } catch (error) {
         console.error(error);
-        alertaError("Error en venta ❌");
+        alertaError("❌ " + error.message);
     }
 }
 
