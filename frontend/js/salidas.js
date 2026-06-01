@@ -247,7 +247,7 @@ function mostrarPromocion() {
             producto.PrecioPromocion;
 
         info.innerHTML = `
-            🔥 PROMOCIÓN ACTIVA<br><br>
+             PROMOCIÓN ACTIVA<br><br>
 
             Precio normal:
             <strong>C$ ${producto.PrecioVenta}</strong><br>

@@ -48,7 +48,7 @@ const crearVenta = async (req, res) => {
                 `);
         }
 
-         detalles = "Venta de productos";
+        let detalles = "Venta de productos";
 
         //  RECIBO
         const recibo = await transaction.request()
@@ -209,14 +209,26 @@ const crearRegalia = async (req, res) => {
 
 //  PROMOCION
 const crearPromocion = async (req, res) => {
-    const { tipo, fechaInicio, fechaFin, productoID, precioPromocion, cantidad } = req.body;
+    const { tipo, fechaInicio, fechaFin, productoID, precioPromocion } = req.body;
 
     const pool = await sql.connect();
 
     try {
 
-        if (!productoID || !cantidad) {
+        if (!productoID ||!tipo ||!fechaInicio ||!fechaFin ||!precioPromocion) {
             return res.status(400).json({ error: "Datos incompletos" });
+        }
+
+        const hoy = new Date();
+        hoy.setHours(0, 0, 0, 0);
+
+        const fechaFinPromo = new Date(fechaFin);
+        fechaFinPromo.setHours(0, 0, 0, 0);
+
+        if (fechaFinPromo < hoy) {
+            return res.status(400).json({
+                error: "No puede crear promociones vencidas"
+            });
         }
 
         const promo = await pool.request()
