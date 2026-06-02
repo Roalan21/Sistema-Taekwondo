@@ -39,7 +39,7 @@ async function listar() {
             <div class="fila-estudiante">
 
                 <div class="info-izquierda">
-                    <div class="avatar-estudiante">🏷</div>
+                    <div class="avatar-estudiante"><i class="fa-solid fa-tag"></i></div>
                     <span class="nombre-estudiante">${escapeHtml(c.Nombre)}</span>
                 </div>
 
@@ -47,11 +47,11 @@ async function listar() {
 
                 <div class="acciones_categoria">
                     <button onclick="editar(${c.CategoriaID}, '${escapeHtml(c.Nombre)}', ${c.Precio})">
-                        ✏️ Editar
+                        <i class="fa-solid fa-pencil"></i> Editar
                     </button>
 
                     <button onclick="eliminar(${c.CategoriaID})">
-                        🗑 Eliminar
+                        <i class="fa-solid fa-trash"></i> Eliminar
                     </button>
                 </div>
 

@@ -1487,3 +1487,163 @@ textarea:focus {
     color: #64748b;
     font-style: italic;
 }
+
+
+/* =====================================
+   BOTÓN EDITAR EN PRODUCTOS
+===================================== */
+
+/* Ajuste de la grid para productos */
+.fila-producto {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr 1fr 0.8fr !important;
+    gap: 10px !important;
+    padding: 12px 15px !important;
+    align-items: center !important;
+}
+
+/* Botón Editar - más estrecho */
+.fila-producto button {
+    background: #2563eb !important;
+    color: white !important;
+    border: none !important;
+    padding: 20px 50px !important;
+    border-radius: 5px !important;
+    cursor: pointer !important;
+    font-weight: 500 !important;
+    font-size: 0.7rem !important;
+    transition: all 0.2s ease !important;
+    width: 65px !important;
+    min-width: 65px !important;
+    max-width: 65px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 4px !important;
+    white-space: nowrap !important;
+}
+
+.fila-producto button i {
+    font-size: 0.65rem !important;
+}
+
+.fila-producto button:hover {
+    background: #1d4ed8 !important;
+    transform: translateY(-1px) !important;
+}
+
+/* Ajustar el header para que coincida */
+.tabla-header {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr 1fr 0.8fr !important;
+    gap: 10px !important;
+    padding: 12px 15px !important;
+}
+
+/* =====================================
+   BOTÓN PAGAR EN MENSUALIDADES
+===================================== */
+
+/* Ajuste de la grid para filas de mensualidades */
+#tablaMensualidad .fila-pago {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1.2fr 1fr 0.8fr !important;
+    gap: 10px !important;
+    padding: 12px 15px !important;
+    align-items: center !important;
+    background: white;
+    border-bottom: 1px solid var(--borde);
+    transition: all 0.2s ease;
+}
+
+#tablaMensualidad .fila-pago:hover {
+    background: var(--fondo);
+}
+
+/* Botón Pagar de Mensualidad - mismo estilo que el botón Editar de productos */
+#tablaMensualidad .btn-pagar {
+    background: #2563eb !important;
+    color: white !important;
+    border: none !important;
+    padding: 6px 12px !important;
+    border-radius: 6px !important;
+    cursor: pointer !important;
+    font-weight: 600 !important;
+    font-size: 0.7rem !important;
+    transition: all 0.2s ease !important;
+    width: 75px !important;
+    min-width: 75px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 6px !important;
+    text-decoration: none !important;
+    white-space: nowrap !important;
+}
+
+#tablaMensualidad .btn-pagar i {
+    font-size: 0.65rem !important;
+}
+
+#tablaMensualidad .btn-pagar:hover {
+    background: #1d4ed8 !important;
+    transform: translateY(-1px) !important;
+}
+
+/* Estado PAGADA - texto en verde */
+.estado-pagada {
+    color: #16a34a !important;
+    font-weight: 600 !important;
+    background: #dcfce7 !important;
+    padding: 4px 10px !important;
+    border-radius: 20px !important;
+    display: inline-block !important;
+    font-size: 0.7rem !important;
+    text-align: center !important;
+}
+
+/* Estado PENDIENTE */
+.estado-pendiente {
+    color: #f59e0b !important;
+    font-weight: 600 !important;
+    background: #fef3c7 !important;
+    padding: 4px 10px !important;
+    border-radius: 20px !important;
+    display: inline-block !important;
+    font-size: 0.7rem !important;
+    text-align: center !important;
+}
+
+/* Estado VENCIDA */
+.estado-vencida {
+    color: #dc2626 !important;
+    font-weight: 600 !important;
+    background: #fee2e2 !important;
+    padding: 4px 10px !important;
+    border-radius: 20px !important;
+    display: inline-block !important;
+    font-size: 0.7rem !important;
+    text-align: center !important;
+}
+
+/* Ajustar el header de la tabla */
+.tabla-header {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1.2fr 1fr 0.8fr !important;
+    gap: 10px !important;
+    padding: 12px 15px !important;
+    background: #1e293b;
+    color: white;
+    border-radius: 12px 12px 0 0;
+}
+
+/* Precio y fecha */
+.pago-monto {
+    font-weight: 700 !important;
+    color: #1e293b !important;
+}
+
+.pago-fecha {
+    color: #64748b !important;
+    font-size: 0.85rem !important;
+}

@@ -250,46 +250,50 @@ async function renderizarProfesores(profesores) {
         const estadoActivo = (p.Estado === 1 || p.Estado === true);
         
         html += `
-            <div class="fila-estudiante" style="grid-template-columns: 2fr 1.5fr 1.5fr; display: grid; align-items: start;">
-                <div class="info-izquierda">
-                    <div class="avatar-estudiante">${iniciales || '??'}</div>
-                    <div>
-                        <span class="nombre-estudiante">${nombreCompleto || 'Nombre no disponible'}</span>
-                        <div style="font-size: 0.7rem; color: ${estadoActivo ? '#22c55e' : '#ef4444'}; margin-top: 4px;">
-                            ${estadoActivo ? '🟢 Activo' : '🔴 Inactivo'}
-                        </div>
-                    </div>
-                </div>
-                <div>
-                    ${turnosHtml}
-                </div>
-                <div class="acciones" style="display: flex; flex-wrap: wrap; gap: 8px;">
-                    <button class="btn-ver-expediente" data-id='${JSON.stringify(p)}' style="background: #8b5cf6; color: white; border: none; padding: 8px 12px; border-radius: 8px; cursor: pointer;">
-                        📋 Ver Expediente
-                    </button>
-                    ${estadoActivo ? `
-                    <button class="btn-asignar-turno"
-                        data-id="${p.ProfesorID}"
-                        data-nombre="${nombreCompleto.replace(/'/g, "\\'")}"
-                        style="background: #27ae60; color: white; border: none; padding: 8px 12px; border-radius: 8px; cursor: pointer;">
-                        📅 Asignar Turno
-                    </button>
-                    ` : ''}
-                    <button class="btn-editar-profesor" data-id='${JSON.stringify(p)}' style="background: #3498db; color: white; border: none; padding: 8px 12px; border-radius: 8px; cursor: pointer;">
-                        ✏️ Editar
-                    </button>
-        `;
-        
-        if (estadoActivo) {
-            html += `<button class="btn-inactivar" data-id="${p.ProfesorID}" style="background: #e74c3c; color: white; border: none; padding: 8px 12px; border-radius: 8px; cursor: pointer;">🔴 Inactivar</button>`;
-        } else {
-            html += `<button class="btn-reactivar" data-id="${p.ProfesorID}" style="background: #22c55e; color: white; border: none; padding: 8px 12px; border-radius: 8px; cursor: pointer;">🟢 Reactivar</button>`;
-        }
-        
-        html += `
+    <div class="fila-estudiante" style="grid-template-columns: 2fr 1.5fr 1.5fr; display: grid; align-items: start;">
+        <div class="info-izquierda">
+            <div class="avatar-estudiante">${iniciales || '??'}</div>
+            <div>
+                <span class="nombre-estudiante">${nombreCompleto || 'Nombre no disponible'}</span>
+                <div style="font-size: 0.7rem; color: ${estadoActivo ? '#22c55e' : '#ef4444'}; margin-top: 4px;">
+                    ${estadoActivo ? '<i class="fa-solid fa-circle"></i> Activo' : '<i class="fa-solid fa-circle"></i> Inactivo'}
                 </div>
             </div>
-        `;
+        </div>
+        <div>
+            ${turnosHtml}
+        </div>
+        <div class="acciones" style="display: flex; flex-wrap: wrap; gap: 8px;">
+            <button class="btn-ver-expediente" data-id='${JSON.stringify(p)}'>
+                <i class="fa-solid fa-eye"></i> Visualizar
+            </button>
+            ${estadoActivo ? `
+            <button class="btn-asignar-turno"
+                data-id="${p.ProfesorID}"
+                data-nombre="${nombreCompleto.replace(/'/g, "\\'")}">
+                <i class="fa-solid fa-calendar-plus"></i> Asignar Turno
+            </button>
+            ` : ''}
+            <button class="btn-editar-profesor" data-id='${JSON.stringify(p)}'>
+                <i class="fa-solid fa-pencil"></i> Editar
+            </button>
+`;
+
+// Para los botones de inactivar/reactivar más abajo:
+if (estadoActivo) {
+    html += `<button class="btn-inactivar" data-id="${p.ProfesorID}" style="background: #e74c3c; color: white; border: none; padding: 8px 12px; border-radius: 8px; cursor: pointer;">
+        <i class="fa-solid fa-user-slash"></i> Inactivar
+    </button>`;
+} else {
+    html += `<button class="btn-reactivar" data-id="${p.ProfesorID}" style="background: #22c55e; color: white; border: none; padding: 8px 12px; border-radius: 8px; cursor: pointer;">
+        <i class="fa-solid fa-user-check"></i> Reactivar
+    </button>`;
+}
+
+html += `
+        </div>
+    </div>
+`;
     }
     
     html += `</div>`;

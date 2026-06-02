@@ -1,110 +1,247 @@
-body{
-    font-family: Arial, Helvetica, sans-serif;
-    background:#f8fafc;
-    margin:0;
+/* =====================================
+   DASHBOARD MODERNO
+===================================== */
+
+body {
+    font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+    background: linear-gradient(135deg, #f0f4f8 0%, #e2e8f0 100%);
+    margin: 0;
+    min-height: 100vh;
 }
 
-.contenedor{
-    max-width:1400px;
-    margin:auto;
-    padding:20px;
+.contenedor {
+    max-width: 1400px;
+    margin: auto;
+    padding: 25px;
 }
 
-h1{
-    margin-bottom:5px;
+/* Título principal */
+h1 {
+    margin-bottom: 5px;
+    font-size: 2rem;
+    background: linear-gradient(135deg, #1e293b 0%, #2563eb 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    display: inline-block;
 }
 
-#fechaActual{
-    color:#64748b;
-    margin-bottom:20px;
+#fechaActual {
+    color: #64748b;
+    margin-bottom: 25px;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
-.cards{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-    gap:20px;
-    margin-bottom:25px;
+#fechaActual::before {
+    content: "📅";
+    font-size: 1rem;
 }
 
-.card{
-    background:white;
-    border:1px solid #e2e8f0;
-    border-radius:12px;
-    padding:20px;
+/* Tarjetas KPI */
+.cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
 }
 
-.card h3{
-    margin:0;
-    font-size:16px;
-    color:#475569;
+.card {
+    background: white;
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    border: 1px solid rgba(37, 99, 235, 0.1);
+    position: relative;
+    overflow: hidden;
 }
 
-.card p{
-    font-size:32px;
-    font-weight:bold;
-    margin-top:10px;
-    color:#0f172a;
+.card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
 }
 
-.seccion{
-    background:white;
-    border:1px solid #e2e8f0;
-    border-radius:12px;
-    padding:20px;
-    margin-bottom:20px;
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
 }
 
-.seccion h2{
-    margin-top:0;
-    color:#1e293b;
+.card h3 {
+    margin: 0;
+    font-size: 0.85rem;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
-.grid-graficas{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:20px;
-    margin-bottom:20px;
+.card p {
+    font-size: 32px;
+    font-weight: bold;
+    margin: 10px 0 0 0;
+    color: #0f172a;
 }
 
-.grid-alertas{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:20px;
-    margin-bottom:20px;
+/* Secciones generales */
+.seccion {
+    background: white;
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 25px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e2e8f0;
+    transition: all 0.3s ease;
 }
 
-.grid-agenda{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:20px;
-    margin-bottom:20px;
+.seccion:hover {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 }
 
-.item{
-    padding:10px;
-    border-bottom:1px solid #e2e8f0;
+.seccion h2 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+    color: #1e293b;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e2e8f0;
 }
 
-.item:last-child{
-    border-bottom:none;
+/* Grids */
+.grid-graficas {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+    margin-bottom: 25px;
 }
 
-.stock-bajo{
-    color:#dc2626;
-    font-weight:bold;
+.grid-alertas {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+    margin-bottom: 25px;
 }
 
-canvas{
-    max-height:300px;
+.grid-agenda {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+    margin-bottom: 25px;
 }
 
-@media(max-width:900px){
+/* Items de listas */
+.item {
+    padding: 12px 0;
+    border-bottom: 1px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.2s ease;
+}
 
+.item:last-child {
+    border-bottom: none;
+}
+
+.item:hover {
+    transform: translateX(5px);
+    background: #f8fafc;
+    padding-left: 10px;
+    border-radius: 8px;
+}
+
+.stock-bajo {
+    color: #dc2626;
+    font-weight: 600;
+    background: #fef2f2;
+    padding: 8px 12px;
+    border-radius: 10px;
+    margin: 5px 0;
+}
+
+.stock-bajo::before {
+    content: "⚠️";
+    margin-right: 8px;
+}
+
+/* Gráficas */
+canvas {
+    max-height: 300px;
+    width: 100% !important;
+}
+
+/* Badges y etiquetas */
+.badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 600;
+}
+
+.badge-pagado {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.badge-pendiente {
+    background: #fef9c3;
+    color: #854d0e;
+}
+
+.badge-vencido {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
     .grid-graficas,
     .grid-alertas,
-    .grid-agenda{
-
-        grid-template-columns:1fr;
+    .grid-agenda {
+        grid-template-columns: 1fr;
+        gap: 20px;
     }
-
+    
+    .contenedor {
+        padding: 15px;
+    }
+    
+    .card p {
+        font-size: 24px;
+    }
 }
+
+/* Animación de carga */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.card, .seccion {
+    animation: fadeInUp 0.4s ease forwards;
+}
+
+.card:nth-child(1) { animation-delay: 0s; }
+.card:nth-child(2) { animation-delay: 0.1s; }
+.card:nth-child(3) { animation-delay: 0.2s; }
+.card:nth-child(4) { animation-delay: 0.3s; }
+.card:nth-child(5) { animation-delay: 0.4s; }

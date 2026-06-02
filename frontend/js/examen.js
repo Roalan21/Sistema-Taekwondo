@@ -332,23 +332,23 @@ function renderizarExamenes() {
 
                         ${vigente ? `
                             <button onclick="editarExamen(${e.ExamenID})">
-                                ✏️ Editar
+                                <i class="fas fa-edit"></i> Editar
                             </button>
                         ` : ''}
 
                         ${vigente ? `
                             <button onclick="eliminarExamen(${e.ExamenID})">
-                                🗑️ Eliminar
+                                <i class="fas fa-trash-alt"></i> Eliminar
                             </button>
                         ` : ''}
 
                         <button onclick="verParticipantes(${e.ExamenID})">
-                            👥 Participantes
+                            <i class="fas fa-users"></i> Participantes
                         </button>
 
                         ${vigente ? `
                             <button onclick="inscribir(${e.ExamenID})">
-                                💳 Inscribir
+                                <i class="fas fa-credit-card"></i> Inscribir
                             </button>
                         ` : ''}
 

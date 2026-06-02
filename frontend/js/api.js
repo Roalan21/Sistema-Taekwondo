@@ -151,7 +151,7 @@ async function cargarEstudiantes() {
             
             const botonEstado = e.Estado == 1
                 ? `<button class="btn-baja" onclick="cambiarEstadoEstudiante(${e.EstudianteID}, 0)">🗑 Dar de Baja</button>`
-                : `<button class="btn-reactivar" onclick="cambiarEstadoEstudiante(${e.EstudianteID}, 1)">✅ Activar</button>`;
+                : `<button class="btn-reactivar" onclick="cambiarEstadoEstudiante(${e.EstudianteID}, 1)"><i class="fa-solid fa-check"></i> Activar</button>`;
 
             return `
                 <div class="fila-estudiante">
@@ -161,7 +161,7 @@ async function cargarEstudiantes() {
                     </div>
                     <div class="acciones">
                         <button onclick='verEstudiante(${JSON.stringify(e).replace(/'/g, "&#39;")})'>👁 Visualizar</button>
-                        <button onclick="window.location.href='nuevo-estudiante.html?id=${e.EstudianteID}'">✏️ Editar</button>
+                        <button onclick="window.location.href='nuevo-estudiante.html?id=${e.EstudianteID}'"><i class="fa-solid fa-pencil"></i> Editar</button>
                         ${botonEstado}
                     </div>
                 </div>

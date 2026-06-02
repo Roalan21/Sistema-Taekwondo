@@ -276,8 +276,11 @@ function renderizarTurnos(turnos) {
                 </div>
                 <div>${diasHtml}</div>
                 <div class="acciones">
-                    <button class="btn-editar-turno" data-id="${turno.TurnoID}" data-inicio="${turno.HoraInicio}" data-fin="${turno.HoraFin}">✏️ Editar</button>
-                    <button class="btn-eliminar-turno" data-id="${turno.TurnoID}">🗑️ Eliminar</button>
+                    <button class="btn-editar-turno" data-id="${turno.TurnoID}" data-inicio="${turno.HoraInicio}" data-fin="${turno.HoraFin}">
+                    <i class="fa-solid fa-pencil"></i> Editar
+                    </button>
+                    <button class="btn-eliminar-turno" data-id="${turno.TurnoID}">
+                    <i class="fa-solid fa-trash"></i> Eliminar</button>
                 </div>
             </div>
         `;

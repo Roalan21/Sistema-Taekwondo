@@ -17,41 +17,39 @@ async function listarProductos() {
         const contenedor = document.getElementById("cuerpoTablaProductos");
         if (!contenedor) return; 
 
+        if (productos.length === 0) {
+            contenedor.innerHTML = `<div class="sin-resultados">No hay productos registrados</div>`;
+            return;
+        }
+
         contenedor.innerHTML = ""; 
 
         productos.forEach(p => {
             const stockClase = p.StockActual <= 5 ? 'rojo' : 'verde';
             const precioFormatted = parseFloat(p.PrecioVenta).toFixed(2);
+            
+            // Escapar comillas simples para evitar errores
+            const nombreEscapado = p.Nombre.replace(/'/g, "\\'");
+            const descripcionEscapada = (p.Descripcion || '').replace(/'/g, "\\'");
 
-            // Usamos la clase 'fila-producto' que definimos en el CSS
             contenedor.innerHTML += `
                 <div class="fila-producto">
                     <span style="font-weight: bold; color: #1e293b;">${p.Nombre}</span>
-                    
-                    <span style="color: #64748b; font-size: 0.9rem;">
-                        ${p.Descripcion || '<i>Sin descripción</i>'}
-                    </span>
-                    
+                    <span style="color: #64748b; font-size: 0.9rem;">${p.Descripcion || 'Sin descripción'}</span>
                     <span style="color: #1e293b; font-weight: 600;">C$ ${precioFormatted}</span>
-                    
-                    <span class="${stockClase}" style="font-weight: bold; display: flex; align-items: center; gap: 5px;">
-                        ${p.StockActual || 0} unidades
-                    </span>
-                    <button
-                        onclick="abrirModalEditar(
-                            ${p.ProductoID},
-                            '${p.Nombre}',
-                            '${p.Descripcion}',
-                            ${p.PrecioVenta}
-                        )"
-                    >
-                        ✏️ Editar
+                    <span class="${stockClase}" style="font-weight: bold;">${p.StockActual || 0} unidades</span>
+                    <button onclick="abrirModalEditar(${p.ProductoID}, '${nombreEscapado}', '${descripcionEscapada}', ${p.PrecioVenta})">
+                        <i class="fa-solid fa-pencil"></i> Editar
                     </button>
                 </div>
             `;
         });
     } catch (error) {
         console.error("Error al listar productos:", error);
+        const contenedor = document.getElementById("cuerpoTablaProductos");
+        if (contenedor) {
+            contenedor.innerHTML = `<div class="sin-resultados" style="color: red;">Error al cargar productos</div>`;
+        }
     }
 }
 

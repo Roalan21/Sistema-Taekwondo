@@ -191,7 +191,7 @@ function renderizarEventos() {
                     ${estado ? `
                     <button class="btn-editar-evento"
                         data-id="${evento.EventoID}">
-                        ✏️ Editar
+                        <i class="fa-solid fa-pencil"></i> Editar
                     </button>
                     ` : ''}
 
@@ -199,19 +199,19 @@ function renderizarEventos() {
                     <button class="btn-inscribir"
                         data-id="${evento.EventoID}"
                         data-nombre="${evento.Nombre}">
-                        👥 Inscribir
+                        <i class="fa-solid fa-user-plus"></i> Inscribir
                     </button>
                     ` : ''}
 
                     <button class="btn-participantes"
                         data-id="${evento.EventoID}"
                         data-nombre="${evento.Nombre}">
-                        🏆 Participantes
+                        <i class="fa-solid fa-users"></i> Participantes
                     </button>
                     ${estado ? `
                     <button class="btn-eliminar-evento"
                         data-id="${evento.EventoID}">
-                        🗑️ Eliminar
+                        <i class="fa-solid fa-trash"></i> Eliminar
                     </button>
                     ` : ''}
                 </div>
