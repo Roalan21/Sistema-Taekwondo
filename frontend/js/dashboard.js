@@ -78,7 +78,7 @@ async function cargarDashboard() {
                     <i class="fa-solid fa-user"></i>
                     <strong>${m.Nombres} ${m.Apellidos}</strong>
                     <span style="margin-left: auto; background: #dc2626; color: white; padding: 2px 8px; border-radius: 20px; font-size: 0.7rem;">
-                        Pendiente: C$${m.TotalPendientes}
+                        Pendiente: ${m.TotalPendientes}
                     </span>
                 </div>
             `).join("");

@@ -42,7 +42,7 @@ function obtenerEstadoVisual(m) {
     const fechaLimite = new Date(m.FechaLimite);
     fechaLimite.setHours(0,0,0,0);
 
-    if (fechaLimite < hoy) {
+    if (fechaLimite == hoy) {
         return "VENCIDA";
     }
 

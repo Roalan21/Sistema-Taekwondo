@@ -110,9 +110,14 @@ const obtenerDashboard = async (req, res) => {
 
                 SELECT COUNT(*) AS Total
 
-                FROM Mensualidad
+                FROM Mensualidad M
 
-                WHERE Estado = 'PENDIENTE'
+                INNER JOIN Estudiante E
+                    ON E.EstudianteID = M.EstudianteID
+
+                WHERE
+                    M.Estado = 'PENDIENTE'
+                    AND E.Estado = 1
 
             `);
 
@@ -125,9 +130,14 @@ const obtenerDashboard = async (req, res) => {
 
                 SELECT COUNT(*) AS Total
 
-                FROM Mensualidad
+                FROM Mensualidad M
 
-                WHERE Estado = 'VENCIDA'
+                INNER JOIN Estudiante E
+                    ON E.EstudianteID = M.EstudianteID
+
+                WHERE
+                    M.Estado = 'VENCIDA'
+                    AND E.Estado = 1
 
             `);
 
@@ -139,12 +149,19 @@ const obtenerDashboard = async (req, res) => {
             await pool.request().query(`
 
                 SELECT
-                    Estado,
+                    M.Estado,
                     COUNT(*) AS Total
 
-                FROM Mensualidad
+                FROM Mensualidad M
 
-                GROUP BY Estado
+                INNER JOIN Estudiante E
+                    ON E.EstudianteID = M.EstudianteID
+
+                WHERE
+                    E.Estado = 1
+
+                GROUP BY
+                    M.Estado
 
             `);
         
@@ -175,6 +192,7 @@ const obtenerDashboard = async (req, res) => {
                     (
                         'VENCIDA'
                     )
+                    AND E.Estado=1
 
                 GROUP BY
 

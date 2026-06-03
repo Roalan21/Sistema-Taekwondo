@@ -232,7 +232,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 } else {
 
                     window.location.href =
-                        `pagos.html?modo=mensualidad&estudiante=${respuesta.EstudianteID}&mensualidad=${respuesta.MensualidadID}`;
+                        `pagos.html?modo=mensualidad&estudiante=${respuesta.EstudianteID}&mensualidad=${respuesta.MensualidadID}&origen=registro`;
                 }
 
             } else {
