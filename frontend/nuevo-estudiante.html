@@ -22,7 +22,7 @@
                             <input type="text" name="Apellidos" placeholder="Apellidos" required>
                         </div>
                         <div class="grid-form" style="margin-top: 15px;">
-                            <label>Nacimiento: <input type="date" name="FechaDeNacimiento" required></label>
+                            <label>Nacimiento: <input type="date" name="FechaDeNacimiento" required max="2023-12-31"></label>
                             <input type="number" step="0.1" name="Peso" placeholder="Peso (Lb)">
                             <input type="text" name="EnfermedadoAlergia" placeholder="Alergias o Enfermedades">
                         </div>
@@ -67,7 +67,7 @@
                                 <option value="Roja Avanzada">Roja Avanzada</option>
                                 <option value="Negra">Negra</option>
                             </select>
-                            <label>Fecha Ingreso: <input type="date" name="FechaDeIngreso" required max="2023-12-31"></label>
+                            <label>Fecha Ingreso: <input type="date" name="FechaDeIngreso" required></label>
                           <label class="label">¿Permite tomar fotos?</label>
                                 <select id="PermiteFoto" name="PermiteFoto" class="input-control">
                                     <option value="1">Sí, permite fotos</option>

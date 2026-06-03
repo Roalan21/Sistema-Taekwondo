@@ -118,6 +118,8 @@ const obtenerDashboard = async (req, res) => {
                 WHERE
                     M.Estado = 'PENDIENTE'
                     AND E.Estado = 1
+                    AND M.FechaLimite >= CAST(GETDATE() AS DATE)
+                    AND M.FechaLimite <= DATEADD(DAY, 5, CAST(GETDATE() AS DATE))
 
             `);
 
@@ -136,11 +138,11 @@ const obtenerDashboard = async (req, res) => {
                     ON E.EstudianteID = M.EstudianteID
 
                 WHERE
-                    M.Estado = 'VENCIDA'
+                    M.Estado <> 'PAGADA'
                     AND E.Estado = 1
+                    AND M.FechaLimite < CAST(GETDATE() AS DATE)
 
             `);
-
         
         // ESTADO DE MENSUALIDADES
         
@@ -149,7 +151,20 @@ const obtenerDashboard = async (req, res) => {
             await pool.request().query(`
 
                 SELECT
-                    M.Estado,
+                    CASE
+                        WHEN M.Estado = 'PAGADA'
+                            THEN 'PAGADA'
+
+                        WHEN M.FechaLimite < CAST(GETDATE() AS DATE)
+                            THEN 'VENCIDA'
+
+                        WHEN M.FechaLimite >= CAST(GETDATE() AS DATE)
+                            AND M.FechaLimite <= DATEADD(DAY, 5, CAST(GETDATE() AS DATE))
+                            THEN 'PENDIENTE'
+
+                        ELSE 'NO_MOSTRAR'
+                    END AS Estado,
+
                     COUNT(*) AS Total
 
                 FROM Mensualidad M
@@ -161,7 +176,34 @@ const obtenerDashboard = async (req, res) => {
                     E.Estado = 1
 
                 GROUP BY
-                    M.Estado
+                    CASE
+                        WHEN M.Estado = 'PAGADA'
+                            THEN 'PAGADA'
+
+                        WHEN M.FechaLimite < CAST(GETDATE() AS DATE)
+                            THEN 'VENCIDA'
+
+                        WHEN M.FechaLimite >= CAST(GETDATE() AS DATE)
+                            AND M.FechaLimite <= DATEADD(DAY, 5, CAST(GETDATE() AS DATE))
+                            THEN 'PENDIENTE'
+
+                        ELSE 'NO_MOSTRAR'
+                    END
+
+                HAVING
+                    CASE
+                        WHEN M.Estado = 'PAGADA'
+                            THEN 'PAGADA'
+
+                        WHEN M.FechaLimite < CAST(GETDATE() AS DATE)
+                            THEN 'VENCIDA'
+
+                        WHEN M.FechaLimite >= CAST(GETDATE() AS DATE)
+                            AND M.FechaLimite <= DATEADD(DAY, 5, CAST(GETDATE() AS DATE))
+                            THEN 'PENDIENTE'
+
+                        ELSE 'NO_MOSTRAR'
+                    END <> 'NO_MOSTRAR'
 
             `);
         
@@ -172,30 +214,22 @@ const obtenerDashboard = async (req, res) => {
             await pool.request().query(`
 
                 SELECT TOP 5
-
                     E.EstudianteID,
-
                     E.Nombres,
-
                     E.Apellidos,
-
                     COUNT(*) AS TotalPendientes
 
                 FROM Mensualidad M
 
                 INNER JOIN Estudiante E
-                    ON E.EstudianteID =
-                    M.EstudianteID
+                    ON E.EstudianteID = M.EstudianteID
 
                 WHERE
-                    M.Estado IN
-                    (
-                        'VENCIDA'
-                    )
-                    AND E.Estado=1
+                    M.Estado <> 'PAGADA'
+                    AND M.FechaLimite < CAST(GETDATE() AS DATE)
+                    AND E.Estado = 1
 
                 GROUP BY
-
                     E.EstudianteID,
                     E.Nombres,
                     E.Apellidos
