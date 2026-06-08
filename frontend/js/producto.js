@@ -81,7 +81,7 @@ async function crearProducto(e) {
     };
 
     try {
-        const res = await fetch(`${URL}/productos`, {
+        const res = await fetch(`${URL}`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data)

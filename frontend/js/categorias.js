@@ -70,12 +70,13 @@ async function listar() {
 // MODAL
 
 function abrirModal() {
+    editando = false;
+    idEditar = null;
+
     document.getElementById("modalCategoria").style.display = "flex";
     document.getElementById("tituloModal").innerText = "Nueva Categoría";
     document.getElementById("nombre").value = "";
     document.getElementById("precio").value = "";
-    editando = false;
-    idEditar = null;
 }
 
 function cerrarModal() {
@@ -150,12 +151,11 @@ function editar(id, nombre, precio) {
     editando = true;
     idEditar = id;
 
-    document.getElementById("nombre").value = nombre;
-    document.getElementById("precio").value = precio;
-
+    document.getElementById("modalCategoria").style.display = "flex";
     document.getElementById("tituloModal").innerText = "Editar Categoría";
 
-    abrirModal();
+    document.getElementById("nombre").value = nombre;
+    document.getElementById("precio").value = precio;
 }
 
 

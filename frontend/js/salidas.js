@@ -128,7 +128,7 @@ function renderLista() {
                 - Desc: ${p.descuento}%
                 - Total: C$${p.total.toFixed(2)}
 
-                ${p.promocion ? "🔥 PROMO" : ""}
+                ${p.promocion ? " PROMO" : ""}
                 <button onclick="eliminarProducto(${index})">X</button>
             </li>
         `;

@@ -222,6 +222,30 @@ const actualizarEstudiante = async (req, res) => {
             }
         }
 
+        const categoria = await transaction.request()
+            .input('CategoriaID', sql.Int, d.CategoriaID)
+            .query(`
+                SELECT Precio
+                FROM Categoria
+                WHERE CategoriaID = @CategoriaID
+            `);
+        
+        if (categoria.recordset.length === 0) {
+            throw new Error("La categoría seleccionada no existe");
+        }
+
+        const precioCategoria = categoria.recordset[0].Precio;
+
+        await transaction.request()
+            .input('EstudianteID', sql.Int, id)
+            .input('Precio', sql.Decimal(10,2), precioCategoria)
+            .query(`
+                UPDATE Mensualidad
+                SET Precio = @Precio
+                WHERE EstudianteID = @EstudianteID
+                AND Estado IN ('PENDIENTE', 'VENCIDA')
+            `);
+
         await transaction.commit();
         res.json({ message: "Actualizado correctamente" });
     } catch (err) { await transaction.rollback(); res.status(500).json({ error: err.message }); }

@@ -133,7 +133,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             <div class="pie-recibo">
 
-                Gracias por su pago 🙏
+                Gracias por su pago 
 
             </div>
 

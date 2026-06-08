@@ -13,11 +13,12 @@ const crearProducto = async (req, res) => {
             .input("Descripcion", sql.VarChar, Descripcion)
             .input("PrecioVenta", sql.Decimal(10,2), PrecioVenta)
             .input("ProveedorID", sql.Int, 1)
+            .input("StockActual", sql.Int,0)
             .input("Estado", sql.Bit, 1)
             .query(`
-                INSERT INTO Producto (ProveedorID, PrecioVenta, Descripcion, Nombre, Estado)
+                INSERT INTO Producto (ProveedorID, PrecioVenta, Descripcion, Nombre,StockActual, Estado)
                 OUTPUT INSERTED.ProductoID
-                VALUES (@ProveedorID, @PrecioVenta, @Descripcion, @Nombre, @Estado)
+                VALUES (@ProveedorID, @PrecioVenta, @Descripcion, @Nombre,@StockActual, @Estado)
             `);
 
         res.json({ message: "Producto guardado 📦" });
