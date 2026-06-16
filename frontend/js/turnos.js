@@ -250,7 +250,7 @@ function renderizarTurnos(turnos) {
     }
 
     let html = `
-        <div class="tabla-header" style="grid-template-columns: 2fr 1fr 1.5fr;">
+        <div class="tabla-header-turnos" style="grid-template-columns: 2fr 1fr 1.5fr;">
             <span>Horario</span>
             <span>Días / Modalidad</span>
             <span>Acciones</span>

@@ -213,7 +213,7 @@ async function renderizarProfesores(profesores) {
     const asignaciones = await obtenerAsignacionesProfesores();
     
     let html = `
-        <div class="tabla-header" style="grid-template-columns: 2fr 1.5fr 1.5fr;">
+        <div class="tabla-header-profesores" style="grid-template-columns: 2fr 1.5fr 1.5fr;">
             <span>Profesor</span>
             <span>Turnos Asignados</span>
             <span>Acciones</span>

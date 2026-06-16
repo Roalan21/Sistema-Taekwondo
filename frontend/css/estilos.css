@@ -111,7 +111,7 @@ h1 {
 .btn-filtro:hover { transform: translateY(-2px); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
 
 /* Botón de Reactivar */
-.btn-reactivar {
+/* .btn-reactivar {
     background: #22c55e;
     color: white;
     border: none;
@@ -119,7 +119,18 @@ h1 {
     border-radius: 6px;
     cursor: pointer;
     font-size: 0.85rem;
+} */
+
+button.btn-reactivar {
+    background: #22c55e !important;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.85rem;
 }
+
 
 /*fin*/
 
@@ -241,18 +252,32 @@ h1 {
     color:#162d72;
 }
 
-.acciones{
-    display:flex;
-    gap:10px;
+/* Ajuste para mover el botón Asignar Turno a la derecha */
+.acciones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: flex-end; /* Esto mueve todos los botones a la derecha */
 }
 
-.acciones button{
+/* Si solo quieres mover específicamente el botón Asignar Turno */
+.btn-asignar-turno {
+    margin-left: auto; /* Empuja este botón hacia la derecha */
+    order: 1; /* Opcional: controla el orden */
+}
+
+/* O si prefieres un margen específico */
+.btn-asignar-turno {
+    margin-left: 20px; /* Mueve solo este botón 20px a la derecha */
+}
+
+/* .acciones button{
     border:none;
     padding:10px 14px;
     border-radius:8px;
     cursor:pointer;
     font-weight:bold;
-}
+} */
 
 
 
@@ -534,14 +559,22 @@ to{transform:translateY(0);opacity:1;}
     align-items: center;
 }
 
-.tabla-header {
+.tabla-header-estudiantes {
     display: grid;
-    grid-template-columns: 2fr 1fr 1fr;
+    grid-template-columns: 2fr 1fr;
     background: #1e293b;
     color: white;
     padding: 12px 20px;
     border-radius: 8px 8px 0 0;
     font-weight: 600;
+    margin-top: 20px;
+}
+
+/* Alinear el texto de Acciones al centro */
+.tabla-header-estudiantes .col-acciones {
+    text-align: center;
+    margin-left: -100px;   /* ← Ajusta este número (0-100px) */
+    margin-right: -100px;  /* ← Ajusta este número (0-100px) */
 }
 
 /* Botón eliminar rojo */
@@ -582,6 +615,37 @@ to{transform:translateY(0);opacity:1;}
 .acciones_categoria button:nth-child(2):hover{
     background:#dc2626;
 }
+
+/*Apartado de profesores*/
+
+.tabla-header-profesores {
+    display: grid;
+    grid-template-columns: 2fr 1.5fr 1.5fr;
+    background: #1e293b;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 8px 8px 0 0;
+    font-weight: 600;
+    margin-top: 20px;
+}
+
+/* Agrega esta nueva regla para alinear el texto de las columnas */
+.tabla-header-profesores span:first-child {
+    text-align: left;
+}
+
+.tabla-header-profesores span:nth-child(2) {
+    margin-right: 0px; /* Ajusta este valor para moverlo un poco a la izquierda */
+    margin-left: 50px; /* Ajusta este valor para moverlo un poco a la derecha */
+}
+
+.tabla-header-profesores span:nth-child(3) {
+    margin-right: 0;
+    margin-left: 100px; /* Ajusta este valor para moverlo un poco a la izquierda */
+}
+
+
+
 
 /* --- Ajustes para el Modal de Categorías --- */
 
@@ -1190,13 +1254,91 @@ button,
     box-shadow: var(--sombra);
 }
 
-.tabla-header {
-    background: var(--azul);
+/* =====================================
+   AJUSTES TABLA DE TURNOS
+   Mover columnas a la derecha
+===================================== */
+
+/* Contenedor principal de la tabla de turnos */
+#contenedor-turnos {
+    margin-top: 20px;
+}
+
+/* Header de la tabla de turnos */
+.tabla-header-turnos {
+    background: #1e293b;
     color: white;
-    padding: 14px 18px;
-    font-size: .85rem;
+    padding: 14px 20px;
     font-weight: 700;
-    border-radius: 0;
+    border-radius: 12px 12px 0 0;
+    display: grid;
+    grid-template-columns: 2fr 1.5fr 1.5fr;
+    align-items: center;
+}
+
+/* Mover "Días / Modalidad" a la derecha */
+.tabla-header-turnos span:nth-child(2) {
+    text-align: right;
+    margin-right: 90px; /* Ajusta según necesites */
+}
+
+/* Mover "Acciones" más a la derecha */
+.tabla-header-turnos span:nth-child(3) {
+    text-align: right;
+    margin-right: 90px; /* Ajusta según necesites */
+}
+
+/* Filas de la tabla de turnos */
+#contenedor-turnos .fila-estudiante {
+    display: grid;
+    grid-template-columns: 2fr 1.5fr 1.5fr;
+    align-items: center;
+    padding: 15px 20px;
+    background: white;
+    border-bottom: 1px solid var(--borde);
+    transition: background 0.2s ease;
+}
+
+#contenedor-turnos .fila-estudiante:hover {
+    background: var(--fondo);
+}
+
+/* Alinear el contenido de "Días / Modalidad" en las filas */
+#contenedor-turnos .fila-estudiante > div:nth-child(2) {
+    text-align: right;
+    margin-right: 50px; /* Mismo valor que el header */
+}
+
+/* Alinear el contenedor de botones de acciones */
+#contenedor-turnos .fila-estudiante .acciones {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-right: 30px; /* Ajusta según necesites */
+}
+
+/* Ajuste para el avatar y horario en la primera columna */
+#contenedor-turnos .fila-estudiante .info-izquierda {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+#contenedor-turnos .fila-estudiante .avatar-estudiante {
+    width: 40px;
+    height: 40px;
+    background: #dbeafe;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+}
+
+#contenedor-turnos .fila-estudiante .nombre-estudiante {
+    font-weight: 600;
+    color: #1e293b;
 }
 
 .fila-estudiante,
@@ -1544,6 +1686,398 @@ textarea:focus {
    BOTÓN PAGAR EN MENSUALIDADES
 ===================================== */
 
+
+
+/* =====================================
+   TABLA DE MENSUALIDADES
+   Header azul como los demás apartados
+===================================== */
+
+/* Header de la tabla de mensualidades */
+.tabla-header-mensualidad {
+    background: #1e293b !important;
+    color: white !important;
+    padding: 14px 20px !important;
+    font-weight: 700 !important;
+    border-radius: 12px 12px 0 0 !important;
+    display: grid !important;
+    grid-template-columns: 2fr 1fr 1.2fr 1fr 0.8fr !important;
+    align-items: center !important;
+    gap: 10px !important;
+}
+
+/* Centrar todas las columnas del header EXCEPTO la primera */
+.tabla-header-mensualidad span:first-child {
+    text-align: left !important; /* Nombre del Estudiante a la izquierda */
+}
+
+.tabla-header-mensualidad span:nth-child(2),
+.tabla-header-mensualidad span:nth-child(3)
+{
+    text-align: center !important; /* Precio y Fecha centrados */
+    margin-right: 10px !important; /* Ajusta este valor para moverlo un poco a la izquierda */
+}
+/* Mover la columna "Estado" un poco a la izquierda */
+.tabla-header-mensualidad span:nth-child(4) {
+    text-align: center !important;
+    margin-right: 70px !important; /* Ajusta este valor para mover más o menos a la izquierda */
+}
+.tabla-header-mensualidad span:nth-child(5) {
+    text-align: center !important; /* Precio, Fecha, Estado, Acciones centrados */
+}
+
+/* Filas de mensualidades */
+#tablaMensualidad .fila-pago {
+    display: grid !important;
+    grid-template-columns: 2fr 1fr 1.2fr 1fr 0.8fr !important;
+    gap: 10px !important;
+    padding: 12px 15px !important;
+    align-items: center !important;
+    background: white;
+    border-bottom: 1px solid var(--borde);
+    transition: all 0.2s ease;
+}
+
+/* El nombre del estudiante a la izquierda */
+#tablaMensualidad .fila-pago > div:first-child {
+    text-align: left !important;
+}
+
+/* Precio, Fecha, Estado, Acciones centrados */
+#tablaMensualidad .fila-pago > div:nth-child(2),
+#tablaMensualidad .fila-pago > div:nth-child(3),
+#tablaMensualidad .fila-pago > div:nth-child(4),
+#tablaMensualidad .fila-pago > div:nth-child(5) {
+    text-align: center !important;
+}
+
+/* El nombre del estudiante */
+#tablaMensualidad .pago-nombre {
+    font-weight: bold;
+    color: #1e293b;
+    text-align: left !important;
+}
+
+/* Precio centrado */
+#tablaMensualidad .pago-monto {
+    color: #16a34a;
+    font-weight: 600;
+    text-align: center !important;
+}
+
+/* Fecha centrada */
+#tablaMensualidad .pago-fecha {
+    color: #64748b;
+    font-size: 0.9rem;
+    text-align: center !important;
+}
+
+/* Estado centrado */
+#tablaMensualidad .estado-pendiente,
+#tablaMensualidad .estado-pagada,
+#tablaMensualidad .estado-vencida {
+    text-align: center !important;
+    display: inline-block !important;
+    margin: 0 auto !important;
+}
+
+/* Contenedor de acciones centrado */
+#tablaMensualidad .acciones {
+    display: flex !important;
+    justify-content: center !important;
+    gap: 8px !important;
+}
+
+/* Botón Pagar centrado */
+#tablaMensualidad .btn-pagar {
+    background: #2563eb !important;
+    color: white !important;
+    border: none !important;
+    padding: 6px 12px !important;
+    border-radius: 6px !important;
+    cursor: pointer !important;
+    font-weight: 600 !important;
+    font-size: 0.7rem !important;
+    width: 75px !important;
+    min-width: 75px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 6px !important;
+    text-decoration: none !important;
+    white-space: nowrap !important;
+}
+
+/* Estados */
+.estado-pagada {
+    color: #16a34a !important;
+    font-weight: 600 !important;
+    background: #dcfce7 !important;
+    padding: 4px 10px !important;
+    border-radius: 20px !important;
+    display: inline-block !important;
+    font-size: 0.7rem !important;
+    text-align: center !important;
+}
+
+.estado-pendiente {
+    color: #f59e0b !important;
+    font-weight: 600 !important;
+    background: #fef3c7 !important;
+    padding: 4px 10px !important;
+    border-radius: 20px !important;
+    display: inline-block !important;
+    font-size: 0.7rem !important;
+    text-align: center !important;
+}
+
+.estado-vencida {
+    color: #dc2626 !important;
+    font-weight: 600 !important;
+    background: #fee2e2 !important;
+    padding: 4px 10px !important;
+    border-radius: 20px !important;
+    display: inline-block !important;
+    font-size: 0.7rem !important;
+    text-align: center !important;
+}
+
+
+/* =====================================
+   TABLA DE PRODUCTOS
+===================================== */
+
+/* Header de la tabla de productos */
+.tabla-header-producto {
+    background: #1e293b !important;
+    color: white !important;
+    padding: 14px 20px !important;
+    font-weight: 700 !important;
+    border-radius: 12px 12px 0 0 !important;
+    display: grid !important;
+    grid-template-columns: 1.5fr 2fr 0.8fr 0.8fr 0.8fr !important;
+    align-items: center !important;
+    gap: 5px !important;
+}
+
+/* Centrar todas las columnas del header EXCEPTO las primeras */
+.tabla-header-producto span:first-child {
+    text-align: left !important; /* Producto a la izquierda */
+}
+
+.tabla-header-producto span:nth-child(2) {
+    text-align: center !important; /* Descripción a la izquierda */
+    margin-right: 180px !important; /* Ajusta este valor para moverlo un poco a la izquierda */
+}
+
+.tabla-header-producto span:nth-child(3) {
+    text-align: center !important; /* Precio centrado */
+    margin-right: 35px !important; /* Ajusta este valor para moverlo un poco a la izquierda */
+}
+
+.tabla-header-producto span:nth-child(4) {
+    text-align: center !important; /* Stock Actual centrado */
+}
+
+.tabla-header-producto span:nth-child(5) {
+    text-align: center !important; /* Acciones centrado */
+}
+
+/* Filas de productos */
+.fila-producto {
+    display: grid !important;
+    grid-template-columns: 1.5fr 2fr 0.8fr 0.8fr 0.8fr !important;
+    gap: 5px !important;
+    padding: 12px 15px !important;
+    align-items: center !important;
+    background: white;
+    border-bottom: 1px solid var(--borde);
+    transition: all 0.2s ease;
+}
+
+.fila-producto:hover {
+    background: var(--fondo);
+}
+
+/* Alinear el contenido de las celdas */
+.fila-producto > div:first-child {
+    text-align: left !important;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.fila-producto > div:nth-child(2) {
+    text-align: left !important;
+    color: #475569;
+}
+
+.fila-producto > div:nth-child(3) {
+    text-align: center !important;
+    font-weight: 600;
+    color: #16a34a;
+}
+
+.fila-producto > div:nth-child(4) {
+    text-align: center !important;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.fila-producto > div:nth-child(5) {
+    text-align: center !important;
+}
+
+/* Botón Editar en productos */
+.fila-producto .btn-editar {
+    background: #2563eb !important;
+    color: white !important;
+    border: none !important;
+    padding: 6px 12px !important;
+    border-radius: 6px !important;
+    cursor: pointer !important;
+    font-weight: 600 !important;
+    font-size: 0.7rem !important;
+    width: 75px !important;
+    min-width: 75px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 6px !important;
+    transition: all 0.2s ease !important;
+}
+
+.fila-producto .btn-editar i {
+    font-size: 0.65rem !important;
+}
+
+.fila-producto .btn-editar:hover {
+    background: #1d4ed8 !important;
+    transform: translateY(-1px) !important;
+}
+
+/* =====================================
+   TABLA DE INVENTARIO - CORREGIDO
+   Header azul y contenido centrado
+===================================== */
+
+/* Contenedor de la tabla */
+.tabla-contenedor-inventario {
+    background: white;
+    border: 1px solid var(--borde);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: var(--sombra);
+    margin-top: 20px;
+}
+
+/* Header de la tabla de inventario */
+.tabla-inventario {
+    display: grid !important;
+    grid-template-columns: 2fr 1fr 1fr 1fr 2fr !important;
+    background: #1e293b !important;
+    color: white !important;
+    padding: 14px 20px !important;
+    border-radius: 12px 12px 0 0 !important;
+    font-weight: 700 !important;
+    gap: 10px !important;
+    margin: 0 !important;
+}
+
+/* Alineación del header */
+.tabla-inventario span:first-child {
+    text-align: left !important; /* Producto a la izquierda */
+}
+
+.tabla-inventario span:nth-child(2),
+.tabla-inventario span:nth-child(3),
+.tabla-inventario span:nth-child(4) {
+    text-align: center !important; /* Movimiento, Cantidad, Fecha centrados */
+}
+
+.tabla-inventario span:nth-child(5) {
+    text-align: left !important; /* Descripción a la izquierda */
+}
+
+/* Filas de inventario */
+.fila-inventario {
+    display: grid !important;
+    grid-template-columns: 2fr 1fr 1fr 1fr 2fr !important;
+    align-items: center !important;
+    background: white !important;
+    padding: 15px 20px !important;
+    border-bottom: 1px solid var(--borde) !important;
+    transition: all 0.2s ease !important;
+    gap: 10px !important;
+}
+
+.fila-inventario:hover {
+    background: var(--fondo) !important;
+}
+
+/* Alinear el contenido de las celdas */
+.fila-inventario > div:first-child {
+    text-align: left !important;
+    font-weight: 600 !important;
+    color: #1e293b !important;
+}
+
+.fila-inventario > div:nth-child(2) {
+    text-align: center !important;
+    font-weight: 600 !important;
+}
+
+/* Movimiento ENTRADA en verde */
+.fila-inventario .movimiento-entrada {
+    color: #16a34a !important;
+    font-weight: 600 !important;
+    text-align: center !important;
+}
+
+/* Movimiento SALIDA en rojo */
+.fila-inventario .movimiento-salida {
+    color: #dc2626 !important;
+    font-weight: 600 !important;
+    text-align: center !important;
+}
+
+.fila-inventario > div:nth-child(3) {
+    text-align: center !important;
+    font-weight: 600 !important;
+    color: #1e293b !important;
+}
+
+.fila-inventario > div:nth-child(4) {
+    text-align: center !important;
+    color: #64748b !important;
+}
+
+.fila-inventario > div:nth-child(5) {
+    text-align: left !important;
+    color: #475569 !important;
+}
+
+/* Clases específicas */
+.producto-inventario {
+    font-weight: 600 !important;
+    color: #1e293b !important;
+    text-align: left !important;
+}
+
+.cantidad-inventario {
+    font-weight: 600 !important;
+    text-align: center !important;
+}
+
+.fecha-inventario {
+    color: #64748b !important;
+    text-align: center !important;
+}
+
+.descripcion-inventario {
+    color: #475569 !important;
+    text-align: left !important;
+}
+
 /* Ajuste de la grid para filas de mensualidades */
 #tablaMensualidad .fila-pago {
     display: grid;
@@ -1627,7 +2161,7 @@ textarea:focus {
 }
 
 /* Ajustar el header de la tabla */
-.tabla-header {
+.tabla-header-categorias {
     display: grid;
     grid-template-columns: 2fr 1fr 1.2fr 1fr 0.8fr !important;
     gap: 10px !important;
@@ -1635,6 +2169,196 @@ textarea:focus {
     background: #1e293b;
     color: white;
     border-radius: 12px 12px 0 0;
+}
+
+/* Ajustes para el header de categorías */
+.tabla-header-categorias {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr; /* Mantener estructura de 3 columnas */
+    background: #1e293b;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 8px 8px 0 0;
+    font-weight: 600;
+    margin-top: 20px;
+}
+
+/* Mover "Precio" a la derecha */
+.tabla-header-categorias span:nth-child(2) {
+    text-align: right;
+    margin-right: -55px; /* Ajusta este valor según necesites */
+}
+
+/* Mover "Acciones" más a la derecha */
+.tabla-header-categorias span:nth-child(3) {
+    text-align: right;
+    margin-right: -230px; /* Ajusta este valor según necesites */
+}
+
+/* Ajustar las filas para que coincidan con el header */
+#contenedor-categorias .fila-estudiante {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    align-items: center;
+    padding: 12px 20px;
+}
+
+/* Alinear el precio en las filas */
+#contenedor-categorias .fila-estudiante span:nth-child(2) {
+    text-align: right;
+    margin-right: 60px; /* Mismo valor que el header */
+}
+
+/* Alinear el contenedor de acciones */
+#contenedor-categorias .fila-estudiante .acciones_categoria {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-right: 30px; /* Ajusta según necesites */
+}
+
+
+/* =====================================
+   TABLA DE EVENTOS - VERSIÓN CORREGIDA
+   Header azul como los demás apartados
+===================================== */
+
+/* Header de la tabla de eventos */
+.tabla-header-eventos {
+    background: #1e293b;
+    color: white;
+    padding: 14px 20px;
+    font-weight: 700;
+    border-radius: 12px 12px 0 0;
+    display: grid;
+    grid-template-columns: 2fr 1.5fr 1fr 1fr 2fr; /* Ancho fijo para acciones */
+    align-items: center;
+    margin-top: 20px;
+}
+
+/* Ajustar posiciones de las columnas */
+.tabla-header-eventos span:first-child {
+    text-align: left;
+}
+
+.tabla-header-eventos span:nth-child(2) {
+    margin-left: 60px; /* Mueve "Lugar" a la derecha */
+}
+
+.tabla-header-eventos span:nth-child(3) {
+    margin-left: 80px; /* Mueve "Fecha" a la derecha */
+}
+
+.tabla-header-eventos span:nth-child(4) {
+    margin-left: 90px; /* Mueve "Precio" a la derecha */
+}
+
+.tabla-header-eventos span:nth-child(5) {
+    text-align: right;
+    margin-right: 40px; /* Mueve "Acciones" a la derecha */
+}
+
+/* Filas de eventos - misma estructura que el header */
+.fila-evento {
+    display: grid;
+    grid-template-columns: 2fr 1.5fr 1fr 1fr 2fr; /* Mismo que el header */
+    align-items: center;
+    padding: 15px 20px;
+    background: white;
+    border-bottom: 1px solid var(--borde);
+    transition: background 0.2s ease;
+}
+
+.fila-evento:hover {
+    background: var(--fondo);
+}
+
+/* Alinear el contenido de las celdas */
+.fila-evento > div:first-child {
+    text-align: left;
+}
+
+.fila-evento > div:nth-child(2) {
+    margin-left: 60px;
+}
+
+.fila-evento > div:nth-child(3) {
+    margin-left: 80px;
+}
+
+.fila-evento > div:nth-child(4) {
+    margin-left: 90px;
+}
+
+/* Contenedor de acciones - ancho fijo y alineado a la derecha */
+.fila-evento .acciones {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+    margin-right: 20px;
+    flex-wrap: wrap;
+    min-width: 280px; /* Ancho mínimo para que quepan todos los botones */
+}
+
+/* Estilos uniformes para todos los botones de eventos */
+.btn-editar-evento,
+.btn-inscribir,
+.btn-participantes,
+.btn-eliminar-evento {
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.72rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.btn-editar-evento {
+    background: #2563eb;
+    color: white;
+    border: none;
+}
+
+.btn-editar-evento:hover {
+    background: #1d4ed8;
+    transform: translateY(-1px);
+}
+
+.btn-inscribir {
+    background: #8b5cf6;
+    color: white;
+    border: none;
+}
+
+.btn-inscribir:hover {
+    background: #433757;
+    transform: translateY(-1px);
+}
+
+.btn-participantes {
+    background: #16a34a;
+    color: white;
+    border: none;
+}
+
+.btn-participantes:hover {
+    background: #15803d;
+    transform: translateY(-1px);
+}
+
+.btn-eliminar-evento {
+    background: #ebeaea;
+    color: rgb(0, 0, 0);
+    border: none;
+}
+
+.btn-eliminar-evento:hover {
+    background: #220303;
+    transform: translateY(-1px);
 }
 
 /* Precio y fecha */
@@ -1647,3 +2371,4 @@ textarea:focus {
     color: #64748b !important;
     font-size: 0.85rem !important;
 }
+

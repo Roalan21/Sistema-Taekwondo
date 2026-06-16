@@ -175,7 +175,7 @@ function renderizarEventos() {
         const estadoTexto = estado ? "Vigente" : "Caducado";
         
         return `
-            <div class="fila-estudiante" data-id="${evento.EventoID}">
+            <div class="fila-evento" data-id="${evento.EventoID}">
                 <div class="info-izquierda">
                     <div class="avatar-estudiante">${iniciales}</div>
                     <div>
@@ -187,22 +187,17 @@ function renderizarEventos() {
                 <div>${fechaFormateada}</div>
                 <div>$${evento.Precio ? evento.Precio.toFixed(2) : "0.00"}</div>
                 <div class="acciones">
-
                     ${estado ? `
                     <button class="btn-editar-evento"
                         data-id="${evento.EventoID}">
                         <i class="fa-solid fa-pencil"></i> Editar
                     </button>
-                    ` : ''}
-
-                    ${estado ? `
                     <button class="btn-inscribir"
                         data-id="${evento.EventoID}"
                         data-nombre="${evento.Nombre}">
                         <i class="fa-solid fa-user-plus"></i> Inscribir
                     </button>
                     ` : ''}
-
                     <button class="btn-participantes"
                         data-id="${evento.EventoID}"
                         data-nombre="${evento.Nombre}">
@@ -235,15 +230,12 @@ function renderizarEventos() {
             window.location.href = `participa.html?eventoId=${eventoId}&eventoTitulo=${eventoTitulo}&modo=inscribir`;
         });
     });
+
     document.querySelectorAll(".btn-participantes").forEach(btn => {
-
         btn.addEventListener("click", () => {
-
             const eventoId = btn.dataset.id;
             const eventoTitulo = encodeURIComponent(btn.dataset.nombre);
-
-            window.location.href =
-                `participa.html?eventoId=${eventoId}&eventoTitulo=${eventoTitulo}&modo=participantes`;
+            window.location.href = `participa.html?eventoId=${eventoId}&eventoTitulo=${eventoTitulo}&modo=participantes`;
         });
     });
 }
