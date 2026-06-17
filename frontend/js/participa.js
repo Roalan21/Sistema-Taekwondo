@@ -1,6 +1,6 @@
-const URL_PARTICIPA = "http://localhost:3000/participa";
-const URL_ESTUDIANTES = "http://localhost:3000/estudiantes";
-const URL_EVENTOS = "http://localhost:3000/eventos";
+const URL_PARTICIPA = `${window.location.origin}/participa`;
+const URL_ESTUDIANTES = `${window.location.origin}/estudiantes`;
+const URL_EVENTOS = `${window.location.origin}/eventos`;
 
 let eventoSeleccionado = null;
 

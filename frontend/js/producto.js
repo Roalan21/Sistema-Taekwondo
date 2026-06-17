@@ -1,5 +1,5 @@
 
-const URL = "http://localhost:3000/productos";
+const URL = `${window.location.origin}/productos`;
 document.addEventListener("DOMContentLoaded", () => {
     // 1. Listar los productos existentes nada más cargar la página
     listarProductos();

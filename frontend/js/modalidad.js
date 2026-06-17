@@ -1,5 +1,5 @@
-const URL_MODALIDAD = "http://localhost:3000/modalidades";
-const URL_TURNOS = "http://localhost:3000/turnos";
+const URL_MODALIDAD = `${window.location.origin}/modalidades`;
+const URL_TURNOS = `${window.location.origin}/turnos`;
 
 document.addEventListener("DOMContentLoaded", () => {
     cargarTurnos();

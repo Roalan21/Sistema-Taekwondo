@@ -1,4 +1,4 @@
-const URL_BASE = 'http://localhost:3000';
+const URL_BASE = window.location.origin;
 
 let editando = false;
 let profesorIdEditar = null;

@@ -1,4 +1,5 @@
-const URL_EXAMENES = "http://localhost:3000/examenes";
+const URL_EXAMENES = `${window.location.origin}/examenes`;
+
 let examenesGlobal = [];
 
 let filtroActual = "vigentes";

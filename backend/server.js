@@ -1,6 +1,7 @@
+const path = require("path");
 const express = require('express');
 const cors = require('cors');
-const { conectar, sql } = require('./db/conexion');
+const { conectar, sql, config } = require('./db/conexion');
 const estudiantesRoutes = require('./routes/estudiantes.routes');
 const categoriasRoutes = require('./routes/categorias.routes');
 const profesoresRoutes =  require('./routes/profesor.routes');
@@ -26,7 +27,7 @@ const app = express();
 // Middlewares
 app.use(cors());
 app.use(express.json());
-
+app.use(express.static(path.join(__dirname, "../frontend")));
 // Definición de Rutas (Ordenadas)
 app.use('/estudiantes', estudiantesRoutes);
 app.use('/categorias', categoriasRoutes);
@@ -50,13 +51,16 @@ app.use('/realiza', realizaRoutes);
 app.use('/dashboard', dashboardRoutes);
 app.use("/reportes", require("./routes/reporte.routes"));
 // Ruta de prueba rápida
-app.get('/', (req, res) => res.send("Servidor Activo 🥋"));
+// Ruta principal
+app.get("/", (req, res) => {
+    res.sendFile(path.join(__dirname, "../frontend/index.html"));
+});
 
 async function actualizarMensualidades() {
 
     try {
 
-        const pool = await sql.connect();
+        const pool = await sql.connect(config);
 
         await pool.request()
             .execute("sp_ActualizarMensualidadesVencidas");
@@ -81,10 +85,12 @@ async function iniciarServidor() {
     try {
         await conectar(); // Primero conectamos a la DB
         await actualizarMensualidades();
-        app.listen(3000, () => {
+        const PORT = process.env.PORT || 3000;
+        app.listen(PORT, () => {
             console.log('---------------------------------------');
             console.log(' SISTEMA TAEKWONDO - UNI 2026');
             console.log('Servidor listo en: http://localhost:3000');
+            console.log(`Servidor listo en puerto ${PORT}`);
             console.log('---------------------------------------');
         });
     } catch (error) {

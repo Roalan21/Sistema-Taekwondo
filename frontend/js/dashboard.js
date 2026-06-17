@@ -1,5 +1,5 @@
-const URL = "http://localhost:3000/dashboard";
 
+const URL = `${window.location.origin}/dashboard`;
 document.addEventListener("DOMContentLoaded", () => {
     cargarDashboard();
     actualizarHora();

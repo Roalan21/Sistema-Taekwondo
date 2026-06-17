@@ -1,4 +1,4 @@
-const URL = "http://localhost:3000";
+const URL = window.location.origin;
 
 document.addEventListener("DOMContentLoaded", () => {
     const hoy = new Date().toISOString().split("T")[0];

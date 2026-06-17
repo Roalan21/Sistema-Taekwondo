@@ -1,4 +1,4 @@
-const URL = "http://localhost:3000";
+const URL = window.location.origin;
 
 let listaProductos = []; 
 let listaProductosBD = [];

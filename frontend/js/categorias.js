@@ -1,5 +1,4 @@
-const URL = "http://localhost:3000/categorias";
-
+const URL = `${window.location.origin}/categorias`;
 let editando = false;
 let idEditar = null;
 

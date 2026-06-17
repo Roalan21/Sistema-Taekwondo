@@ -1,5 +1,4 @@
-const URL = "http://localhost:3000/imparte";
-
+const URL = `${window.location.origin}/imparte`;
 document.addEventListener("DOMContentLoaded", () => {
     cargarProfesores();
     cargarTurnos();

@@ -1,6 +1,6 @@
-const URL_REALIZA = "http://localhost:3000/realiza";
-const URL_ESTUDIANTES = "http://localhost:3000/estudiantes";
-const URL_EXAMENES = "http://localhost:3000/examenes";
+const URL_REALIZA = `${window.location.origin}/realiza`;
+const URL_ESTUDIANTES = `${window.location.origin}/estudiantes`;
+const URL_EXAMENES = `${window.location.origin}/examenes`;
 
 let examenSeleccionado = null;
 

@@ -1,7 +1,7 @@
 // ==================== TURNOS ====================
-const URL_TURNOS = "http://localhost:3000/turnos";
-const URL_MODALIDAD = "http://localhost:3000/modalidades";
-const URL_CATEGORIAS = "http://localhost:3000/categorias";
+const URL_TURNOS = `${window.location.origin}/turnos`;
+const URL_MODALIDAD = `${window.location.origin}/modalidades`;
+const URL_CATEGORIAS = `${window.location.origin}/categorias`;
 let editandoTurno = false;
 let idEditarTurno = null;
 

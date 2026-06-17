@@ -1,4 +1,4 @@
-const URL = "http://localhost:3000";
+const URL = window.location.origin;
 
 
 // CAMBIO TIPO PAGO

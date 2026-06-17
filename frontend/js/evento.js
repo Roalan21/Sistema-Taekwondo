@@ -1,5 +1,4 @@
-const URL_EVENTOS = "http://localhost:3000/eventos";
-
+const URL_EVENTOS = `${window.location.origin}/eventos`;
 let eventosGlobal = [];
 let filtroActual = "vigentes"; // vigentes, caducados
 

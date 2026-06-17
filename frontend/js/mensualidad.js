@@ -1,4 +1,4 @@
-const URL = "http://localhost:3000/mensualidades";
+const URL = `${window.location.origin}/mensualidades`;
 let mensualidadesGlobal = [];
 let filtroActual = "pendientes";
 document.addEventListener("DOMContentLoaded", () => {
